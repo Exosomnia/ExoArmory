@@ -1,4 +1,35 @@
 {
   "item.exoarmory.giga_sword": "GIGA Sword",
-  "item.exoarmory.solar_sword": "Solar Sword"
+  "item.exoarmory.solar_sword": "Solar Sword",
+
+  "item.exoarmory.tier_2_smithing_template": "Rank 1 » 2 Template",
+  "item.exoarmory.tier_3_smithing_template": "Rank 2 » 3 Template",
+  "item.exoarmory.tier_4_smithing_template": "Rank 3 » 4 Template",
+  "item.exoarmory.tier_5_smithing_template": "Rank 4 » 5 Template",
+  "item.exoarmory.info.smithing_template.line.1": "Use in a smithing table with an",
+  "item.exoarmory.info.smithing_template.line.2": "equipment's rank up materials to",
+  "item.exoarmory.info.smithing_template.line.3.1": "upgrade from rank ",
+  "item.exoarmory.info.smithing_template.line.3.2": " to rank ",
+
+  "tab.exoarmory.equipment": "ExoArmory Equipment",
+  "tab.exoarmory.items": "ExoArmory Items",
+
+  "item.exoarmory.info.rank": "Rank",
+  "item.exoarmory.info.ability": "Ability",
+
+  "ability.exoarmory.name.solar_flare": "Solar Flare",
+  "ability.exoarmory.desc.solar_flare.line.1": "Creates a fiery explosion when performing",
+  "ability.exoarmory.desc.solar_flare.line.2": "a critical attack.",
+
+  "ability.exoarmory.name.sunfire_surge": "Stellar Infusion",
+  "ability.exoarmory.desc.sunfire_surge.line.1": "Charge for a duration to gain a surge",
+  "ability.exoarmory.desc.sunfire_surge.line.2": "of energy. You move and attack faster,",
+  "ability.exoarmory.desc.sunfire_surge.line.3": "and your attacks cause a {Solar Flare}.",
+
+  "resource.exoarmory.name.solar_flare": "Energy",
+  "resource.exoarmory.desc.solar_flare.line.1": "Charges while you are in direct",
+  "resource.exoarmory.desc.solar_flare.line.2": "sunlight, or are on fire.",
+
+  "effect.exoarmory.sunfire_surge": "Sunfire Surge",
+  "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare."
 }

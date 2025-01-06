@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "exoarmory:item/tier_2_smithing_template"
+  }
+}

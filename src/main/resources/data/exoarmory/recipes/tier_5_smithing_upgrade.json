@@ -1,0 +1,12 @@
+{
+  "type": "exoarmory:smithing_upgrade",
+  "template": {
+    "item": "exoarmory:tier_5_smithing_template"
+  },
+  "base": {
+    "tag": "exoarmory:armory_item"
+  },
+  "addition": {
+    "item": "minecraft:diamond"
+  }
+}

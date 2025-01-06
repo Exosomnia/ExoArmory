@@ -2,8 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"1": "exoarmory:item/giga_sword",
-		"particle": "exoarmory:item/giga_sword",
 		"layer0": "exoarmory:item/solar_sword"
 	},
 	"display": {
@@ -26,9 +24,6 @@
 			"rotation": [0, 90, -25],
 			"translation": [1.13, 3.2, 1.13],
 			"scale": [0.75, 0.75, 0.68]
-		},
-		"gui": {
-			"scale": [0.75, 0.75, 1]
 		}
 	}
 }

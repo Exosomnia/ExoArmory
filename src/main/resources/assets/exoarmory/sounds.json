@@ -1,0 +1,12 @@
+{
+  "fiery_explosion": {
+    "sounds": [
+      "exoarmory:fiery_explosion"
+    ]
+  },
+  "fiery_effect": {
+    "sounds": [
+      "exoarmory:fiery_effect"
+    ]
+  }
+}
