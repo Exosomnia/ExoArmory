@@ -1,14 +1,11 @@
 package com.exosomnia.exoarmory;
 
-import com.exosomnia.exoarmory.client.managers.DisplayManager;
-import net.minecraft.client.Minecraft;
+import com.exosomnia.exoarmory.rendering.client.managers.RenderingManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -23,7 +20,7 @@ public class ExoArmory
     public static final Registry REGISTRY = new Registry();
 
     @OnlyIn(Dist.CLIENT)
-    public static DisplayManager DISPLAY_MANAGER;
+    public static RenderingManager DISPLAY_MANAGER;
 
     public ExoArmory()
     {
@@ -38,7 +35,7 @@ public class ExoArmory
 
     @OnlyIn(Dist.CLIENT)
     public void setupClient(FMLClientSetupEvent event) {
-        DISPLAY_MANAGER = new DisplayManager();
+        DISPLAY_MANAGER = new RenderingManager();
     }
 
     @OnlyIn(Dist.CLIENT)

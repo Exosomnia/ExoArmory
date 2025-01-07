@@ -1,6 +1,6 @@
-package com.exosomnia.exoarmory.items.swords;
+package com.exosomnia.exoarmory.items.armory.swords;
 
-import com.exosomnia.exoarmory.items.ArmoryItem;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

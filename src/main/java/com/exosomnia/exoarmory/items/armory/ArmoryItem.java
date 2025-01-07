@@ -1,5 +1,6 @@
-package com.exosomnia.exoarmory.items;
+package com.exosomnia.exoarmory.items.armory;
 
+import com.exosomnia.exoarmory.utils.TooltipUtils;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -18,10 +19,6 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class ArmoryItem extends Item {
-
-    protected final static Style TITLE_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(0x9c679f)).withUnderlined(true).withItalic(true);
-    protected final static Style COLON_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(0x9c679f)).withUnderlined(false).withItalic(true);
-    protected final static Style BLANK_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE).withUnderlined(false).withBold(false).withItalic(false);
 
     protected static final UUID BASE_MOVEMENT_SPEED_UUID = UUID.fromString("6024bfa5-cd10-4ccb-bfa6-bc8255087ee4");
 
@@ -52,13 +49,11 @@ public abstract class ArmoryItem extends Item {
         //Add rank info
         int itemRank = getRank(itemStack);
         components.add(Component.translatable("item.exoarmory.info.rank")
-                        .withStyle(TITLE_STYLE)
+                        .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle())
                 .append(Component.literal(": ")
-                        .withStyle(COLON_STYLE))
+                        .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
                 .append(Component.literal(String.valueOf(itemRank + 1))
                         .withStyle(getRankFormatting(itemRank))));
-
-        components.add(Component.literal(""));
     }
     //endregion
 
@@ -82,12 +77,12 @@ public abstract class ArmoryItem extends Item {
 
     public static Style getRankFormatting(int rank) {
         return switch (rank) {
-            case 0 -> BLANK_STYLE.withColor(ChatFormatting.GRAY);
-            case 1 -> BLANK_STYLE.withColor(ChatFormatting.GREEN);
-            case 2 -> BLANK_STYLE.withColor(ChatFormatting.AQUA);
-            case 3 -> BLANK_STYLE.withColor(ChatFormatting.LIGHT_PURPLE);
-            case 4 -> BLANK_STYLE.withColor(ChatFormatting.RED);
-            default -> BLANK_STYLE.withColor(ChatFormatting.DARK_RED).withObfuscated(true);
+            case 0 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY);
+            case 1 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GREEN);
+            case 2 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA);
+            case 3 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.LIGHT_PURPLE);
+            case 4 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.RED);
+            default -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.DARK_RED).withObfuscated(true);
         };
     }
 }

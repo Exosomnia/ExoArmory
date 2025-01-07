@@ -1,9 +1,9 @@
-package com.exosomnia.exoarmory.client.managers;
+package com.exosomnia.exoarmory.rendering.client.managers;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.AbilityItem;
-import com.exosomnia.exoarmory.items.ArmoryItem;
-import com.exosomnia.exoarmory.items.ResourcedItem;
+import com.exosomnia.exoarmory.items.armory.AbilityItem;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
+import com.exosomnia.exoarmory.items.armory.ResourcedItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class DisplayManager {
+public class RenderingManager {
 
     private final static double secondsVisible = 2.0;
     private final static double secondDeltaTotal = 20.0; //delta time total for one second

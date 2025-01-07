@@ -1,8 +1,8 @@
 package com.exosomnia.exoarmory.networking.packets;
 
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.items.ArmoryItem;
-import com.exosomnia.exoarmory.items.ResourcedItem;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
+import com.exosomnia.exoarmory.items.armory.ResourcedItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;

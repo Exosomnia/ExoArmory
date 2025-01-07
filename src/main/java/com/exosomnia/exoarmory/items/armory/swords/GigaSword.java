@@ -1,4 +1,4 @@
-package com.exosomnia.exoarmory.items.swords;
+package com.exosomnia.exoarmory.items.armory.swords;
 
 import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.world.entity.ai.attributes.Attribute;

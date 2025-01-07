@@ -8,8 +8,7 @@
   "item.exoarmory.tier_5_smithing_template": "Rank 4 » 5 Template",
   "item.exoarmory.info.smithing_template.line.1": "Use in a smithing table with an",
   "item.exoarmory.info.smithing_template.line.2": "equipment's rank up materials to",
-  "item.exoarmory.info.smithing_template.line.3.1": "upgrade from rank ",
-  "item.exoarmory.info.smithing_template.line.3.2": " to rank ",
+  "item.exoarmory.info.smithing_template.line.3": "upgrade from rank 0{%1$d} to rank 1{%2$d}",
 
   "tab.exoarmory.equipment": "ExoArmory Equipment",
   "tab.exoarmory.items": "ExoArmory Items",
@@ -18,17 +17,17 @@
   "item.exoarmory.info.ability": "Ability",
 
   "ability.exoarmory.name.solar_flare": "Solar Flare",
-  "ability.exoarmory.desc.solar_flare.line.1": "Creates a fiery explosion when performing",
-  "ability.exoarmory.desc.solar_flare.line.2": "a critical attack.",
+  "ability.exoarmory.desc.solar_flare.line.1": "Creates a fiery explosion when",
+  "ability.exoarmory.desc.solar_flare.line.2": "performing a critical attack.",
 
-  "ability.exoarmory.name.sunfire_surge": "Stellar Infusion",
+  "ability.exoarmory.name.sunfire_surge": "Sunfire Surge",
   "ability.exoarmory.desc.sunfire_surge.line.1": "Charge for a duration to gain a surge",
-  "ability.exoarmory.desc.sunfire_surge.line.2": "of energy. You move and attack faster,",
-  "ability.exoarmory.desc.sunfire_surge.line.3": "and your attacks cause a {Solar Flare}.",
+  "ability.exoarmory.desc.sunfire_surge.line.2": "of power. You move and attack faster,",
+  "ability.exoarmory.desc.sunfire_surge.line.3": "and your 0{Solar Flares} cost no energy.",
 
-  "resource.exoarmory.name.solar_flare": "Energy",
-  "resource.exoarmory.desc.solar_flare.line.1": "Charges while you are in direct",
-  "resource.exoarmory.desc.solar_flare.line.2": "sunlight, or are on fire.",
+  "resource.exoarmory.name.solar_sword": "Energy",
+  "resource.exoarmory.desc.solar_sword.line.1": "Charges while you are in direct",
+  "resource.exoarmory.desc.solar_sword.line.2": "sunlight, or are on fire.",
 
   "effect.exoarmory.sunfire_surge": "Sunfire Surge",
   "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare."

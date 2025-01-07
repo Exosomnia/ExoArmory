@@ -14,7 +14,10 @@ public class ArmoryResourceStorage implements IArmoryResourceStorage {
     public void setCharge(double amount) { charge = amount; }
 
     @Override
-    public void addCharge(double amount, double max) { charge = Math.min(Math.max(charge + amount, 0), max); }
+    public void addCharge(double amount, double max) { charge = Math.min(charge + amount, max); }
+
+    @Override
+    public void removeCharge(double amount) { charge = Math.max(charge - amount, 0); }
 
     @Override
     public double getCharge() { return charge; }

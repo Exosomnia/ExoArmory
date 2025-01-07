@@ -1,11 +1,13 @@
 package com.exosomnia.exoarmory;
 
+import com.exosomnia.exoarmory.items.abilities.SolarFlareAbility;
+import com.exosomnia.exoarmory.items.abilities.SunfireSurgeAbility;
 import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
 import com.exosomnia.exoarmory.effects.StellarInfusionEffect;
-import com.exosomnia.exoarmory.items.ArmoryItem;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
-import com.exosomnia.exoarmory.items.swords.GigaSword;
-import com.exosomnia.exoarmory.items.swords.SolarSword;
+import com.exosomnia.exoarmory.items.armory.swords.GigaSword;
+import com.exosomnia.exoarmory.items.armory.swords.SolarSword;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.recipes.smithing.SmithingUpgradeRecipe;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +20,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -79,6 +80,8 @@ public class Registry {
             })
             .build());
 
+    public final SolarFlareAbility ABILITY_SOLAR_FLARE = new SolarFlareAbility();
+    public final SunfireSurgeAbility ABILITY_SUNFIRE_SURGE = new SunfireSurgeAbility();
 
     public void registerCommon() {
         PacketHandler.register();   //Register our packets
