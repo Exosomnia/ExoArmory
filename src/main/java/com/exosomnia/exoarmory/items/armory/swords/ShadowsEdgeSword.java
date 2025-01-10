@@ -3,10 +3,15 @@ package com.exosomnia.exoarmory.items.armory.swords;
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.UmbralAssaultAction;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
+import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
+import com.exosomnia.exoarmory.items.abilities.ShadowStrikeAbility;
+import com.exosomnia.exoarmory.items.abilities.VeilOfDarknessAbility;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import com.exosomnia.exoarmory.items.resource.ShadowsEdgeResource;
+import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
 import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
@@ -23,6 +28,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -47,12 +54,11 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
 
     public ShadowsEdgeSword() { super(itemProperties); }
 
-    public ArmoryAbility[] getAbilities(ItemStack itemStack) {
+    public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
         return switch (getRank(itemStack)) {
-            case 0 -> new ArmoryAbility[]{ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT};
-            case 1, 2 -> new ArmoryAbility[]{ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT, ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS};
-            default -> new ArmoryAbility[]{ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT,
-                    ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, ExoArmory.REGISTRY.ABILITY_SHADOW_STRIKE};
+            case 0 -> List.of(ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT);
+            case 1, 2 -> List.of(ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT, ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS);
+            default -> List.of(ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT, ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, ExoArmory.REGISTRY.ABILITY_SHADOW_STRIKE);
         };
     }
     public ArmoryResource getResource() { return RESOURCE; }
@@ -118,6 +124,15 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
     //region Item Overrides
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slotIndex, boolean selectedIndex) {
+        if (level.isClientSide) { return; }
+
+        if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SHADOWS_EDGE)) {
+            LivingEntity owner = (LivingEntity) entity;
+            VeilOfDarknessAbility ability = hasAbility(ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, itemStack, getRank(itemStack));
+            if (ability != null && owner.hasEffect(MobEffects.INVISIBILITY)) {
+                owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 50, 0, true, false, true));
+            }
+        }
     }
 
     @Override

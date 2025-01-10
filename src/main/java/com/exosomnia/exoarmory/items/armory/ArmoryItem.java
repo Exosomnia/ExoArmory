@@ -83,11 +83,11 @@ public abstract class ArmoryItem extends Item {
         return itemUUID;
     }
 
-    public int getRank(ItemStack itemStack) {
+    public static int getRank(ItemStack itemStack) {
         return itemStack.getTag().getInt("Rank");
     }
 
-    public void setRank(ItemStack itemStack, int rank) {
+    public static void setRank(ItemStack itemStack, int rank) {
         itemStack.getTag().putInt("Rank", rank);
     }
 

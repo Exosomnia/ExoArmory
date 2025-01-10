@@ -12,7 +12,6 @@ import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
 import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
 import com.google.common.collect.ImmutableMultimap;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,12 +28,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SolarSword extends SwordArmoryItem implements ResourcedItem {
 
 //    private static final ArmoryAbility[] ABILITIES = {ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE,
@@ -50,11 +47,10 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
         super(itemProperties);
     }
 
-    public ArmoryAbility[] getAbilities(ItemStack itemStack) {
+    public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
         return switch (getRank(itemStack)) {
-            case 0 -> new ArmoryAbility[]{ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE};
-            default -> new ArmoryAbility[]{ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE,
-                    ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE};
+            case 0 -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE);
+            default -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE, ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE);
         };
     }
     public ArmoryResource getResource() { return RESOURCE; }

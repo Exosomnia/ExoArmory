@@ -2,8 +2,13 @@ package com.exosomnia.exoarmory.items.abilities;
 
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public interface AbilityItem {
 
-    public ArmoryAbility[] getAbilities(ItemStack itemStack);
+    public List<ArmoryAbility> getAbilities(ItemStack itemStack);
+    public default <T extends ArmoryAbility> T hasAbility(T ability, ItemStack itemStack, int rank) {
+        return getAbilities(itemStack).contains(ability) ? ability : null;
+    }
 
 }

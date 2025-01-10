@@ -18,6 +18,8 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderGUIOverlayHandler {
 
@@ -69,12 +71,12 @@ public class RenderGUIOverlayHandler {
         if (item instanceof AbilityItem abilityItem) {
             visibility = (float) renderingManager.getAbilityVisibility();
             if (visibility > 0) {
-                ArmoryAbility[] abilities = abilityItem.getAbilities(itemStack);
+                List<ArmoryAbility> abilities = abilityItem.getAbilities(itemStack);
 
                 //Because we pad two pixels between each ability when drawing, start at -2 width
                 int abilitiesWidth = -2;
                 //Records that store the starting x draw location for each ability, avoids having to calculate them again after calculating total width
-                int[] drawSections = new int[abilities.length];
+                int[] drawSections = new int[abilities.size()];
                 int index = 0; //Keeps track of the array index
 
                 /*

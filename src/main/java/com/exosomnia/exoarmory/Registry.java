@@ -103,6 +103,7 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addListener(this::registerCapabilities);
         MinecraftForge.EVENT_BUS.register(ABILITY_SOLAR_FLARE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SUNFIRE_SURGE);
+        MinecraftForge.EVENT_BUS.register(ABILITY_SHADOW_STRIKE);
     }
 
     public void registerObjects(IEventBus eventBus) {
