@@ -24,6 +24,7 @@ public class VeilOfDarknessAbility extends ArmoryAbility {
             case DESCRIPTION:
                 description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
                 description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.3"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
                 break;

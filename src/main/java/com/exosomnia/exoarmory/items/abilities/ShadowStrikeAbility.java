@@ -79,7 +79,7 @@ public class ShadowStrikeAbility extends ArmoryAbility {
                 ShadowStrikeAbility ability = weapon.hasAbility(ExoArmory.REGISTRY.ABILITY_SHADOW_STRIKE, itemStack, rank);
                 if (ability != null && attacker.hasEffect(MobEffects.INVISIBILITY)) {
                     MobEffectInstance currentEffect = attacker.getEffect(MobEffects.INVISIBILITY);
-                    attacker.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, (int) (currentEffect.getDuration() + getStatForRank(Stats.DURATION, rank)),
+                    attacker.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, (int) (currentEffect.getDuration() + getStatForRank(Stats.DURATION, rank) * 20.0),
                             currentEffect.getAmplifier(), true, false, true));
                 }
             }

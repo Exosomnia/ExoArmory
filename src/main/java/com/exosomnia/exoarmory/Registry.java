@@ -8,6 +8,7 @@ import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
 import com.exosomnia.exoarmory.items.armory.swords.GigaSword;
 import com.exosomnia.exoarmory.items.armory.swords.ShadowsEdgeSword;
 import com.exosomnia.exoarmory.items.armory.swords.SolarSword;
+import com.exosomnia.exoarmory.items.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.recipes.smithing.SmithingUpgradeRecipe;
 import net.minecraft.core.registries.Registries;
@@ -101,6 +102,7 @@ public class Registry {
     public void registerCommon() {
         PacketHandler.register();   //Register our packets
         MinecraftForge.EVENT_BUS.addListener(this::registerCapabilities);
+        MinecraftForge.EVENT_BUS.addListener(ShadowsEdgeResource::livingAttackEvent);
         MinecraftForge.EVENT_BUS.register(ABILITY_SOLAR_FLARE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SUNFIRE_SURGE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SHADOW_STRIKE);

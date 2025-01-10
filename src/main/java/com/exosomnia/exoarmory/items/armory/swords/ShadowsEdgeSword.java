@@ -3,10 +3,7 @@ package com.exosomnia.exoarmory.items.armory.swords;
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.UmbralAssaultAction;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.items.abilities.AbilityItem;
-import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
-import com.exosomnia.exoarmory.items.abilities.ShadowStrikeAbility;
-import com.exosomnia.exoarmory.items.abilities.VeilOfDarknessAbility;
+import com.exosomnia.exoarmory.items.abilities.*;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
@@ -129,7 +126,7 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
         if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SHADOWS_EDGE)) {
             LivingEntity owner = (LivingEntity) entity;
             VeilOfDarknessAbility ability = hasAbility(ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, itemStack, getRank(itemStack));
-            if (ability != null && owner.hasEffect(MobEffects.INVISIBILITY)) {
+            if (ability != null) {
                 owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 50, 0, true, false, true));
             }
         }
@@ -145,13 +142,19 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (level.isClientSide) {
-            player.playSound(ExoArmory.REGISTRY.SOUND_DARK_AMBIENT_CHARGE.get(), 0.34F, 1.0F);
-        }
-
         ItemStack itemStack = player.getItemInHand(hand);
-        player.startUsingItem(hand);
-        return InteractionResultHolder.consume(itemStack);
+        int rank = getRank(itemStack);
+
+        if (ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT.getStatForRank(UmbralAssaultAbility.Stats.COST, rank)
+            <= getResource().getResource(itemStack)) {
+
+            if (level.isClientSide) { player.playSound(ExoArmory.REGISTRY.SOUND_DARK_AMBIENT_CHARGE.get(),
+                    0.34F, 1.0F); }
+
+            player.startUsingItem(hand);
+            return InteractionResultHolder.consume(itemStack);
+        }
+        return InteractionResultHolder.pass(itemStack);
     }
 
     @Override
@@ -181,6 +184,10 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
             level.playSound(null, player.blockPosition(), ExoArmory.REGISTRY.SOUNG_MAGIC_CLASH.get(), SoundSource.PLAYERS, 0.34F, 1.0F);
             ExoArmory.ACTION_MANAGER.scheduleAction(new UmbralAssaultAction(ExoArmory.ACTION_MANAGER, player, 6.0, 10, 8.0), 1);
             player.getCooldowns().addCooldown(itemStack.getItem(), 600);
+
+            int rank = getRank(itemStack);
+            RESOURCE.removeResource(itemStack, ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT.getStatForRank(
+                    UmbralAssaultAbility.Stats.COST, rank));
         }
         return itemStack;
     }

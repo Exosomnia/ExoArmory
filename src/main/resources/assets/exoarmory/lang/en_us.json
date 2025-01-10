@@ -56,8 +56,9 @@
   "ability.exoarmory.stat.umbral_assault.line.4": "Damage: 0{%.1f}",
 
   "ability.exoarmory.name.veil_of_darkness": "Veil of Darkness",
-  "ability.exoarmory.desc.veil_of_darkness.line.1": "When in complete darkness, shadows",
-  "ability.exoarmory.desc.veil_of_darkness.line.2": "surround you, granting invisibility.",
+  "ability.exoarmory.desc.veil_of_darkness.line.1": "Wielding Shadow's Edge in complete",
+  "ability.exoarmory.desc.veil_of_darkness.line.2": "darkness, causes shadows to surround",
+  "ability.exoarmory.desc.veil_of_darkness.line.3": "you, granting invisibility.",
 
   "ability.exoarmory.name.shadow_strike": "Shadow Strike",
   "ability.exoarmory.desc.shadow_strike.line.1": "While you're invisible, you gain additional",
