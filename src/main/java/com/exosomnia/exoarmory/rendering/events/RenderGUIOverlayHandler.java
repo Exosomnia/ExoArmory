@@ -2,9 +2,11 @@ package com.exosomnia.exoarmory.rendering.events;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
-import com.exosomnia.exoarmory.rendering.client.managers.RenderingManager;
-import com.exosomnia.exoarmory.items.armory.AbilityItem;
-import com.exosomnia.exoarmory.items.armory.ResourcedItem;
+import com.exosomnia.exoarmory.items.resource.ArmoryResource;
+import com.exosomnia.exoarmory.rendering.client.RenderingManager;
+import com.exosomnia.exoarmory.items.abilities.AbilityItem;
+import com.exosomnia.exoarmory.items.resource.ResourcedItem;
+import com.exosomnia.exolib.utils.ColorUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -35,7 +37,7 @@ public class RenderGUIOverlayHandler {
         if (player == null) return;
 
         GuiGraphics gui = event.getGuiGraphics();
-        RenderingManager renderingManager = ExoArmory.DISPLAY_MANAGER;
+        RenderingManager renderingManager = ExoArmory.RENDERING_MANAGER;
         ItemStack itemStack = player.getMainHandItem();
         Item item = itemStack.getItem();
 
@@ -49,10 +51,11 @@ public class RenderGUIOverlayHandler {
             visibility = (float) renderingManager.getResourceVisibility();
             if (visibility > 0) {
                 RenderSystem.enableBlend();
-                double chargeAmount = resourceItem.getResource(itemStack) / resourceItem.getResourceMax();
+                ArmoryResource resource = resourceItem.getResource();
+                double chargeAmount = resource.getResource(itemStack) / resource.getResourceMax();
 
                 int filledWidth = (int) (barWidth * chargeAmount);
-                float[] rgb = resourceItem.getBarRGB();
+                float[] rgb = ColorUtils.intToFloats(resource.getRGB());
 
                 RenderSystem.setShaderColor(rgb[0], rgb[1], rgb[2], visibility);
                 gui.blit(RESOURCE_BAR, baseWidth - barWidth / 2, baseHeight - 5, 0, 5, barWidth, 5, barWidth, 10);
@@ -66,7 +69,7 @@ public class RenderGUIOverlayHandler {
         if (item instanceof AbilityItem abilityItem) {
             visibility = (float) renderingManager.getAbilityVisibility();
             if (visibility > 0) {
-                ArmoryAbility[] abilities = abilityItem.getAbilities();
+                ArmoryAbility[] abilities = abilityItem.getAbilities(itemStack);
 
                 //Because we pad two pixels between each ability when drawing, start at -2 width
                 int abilitiesWidth = -2;
@@ -100,7 +103,7 @@ public class RenderGUIOverlayHandler {
                     ResourceLocation icon = ability.getIcon();
                     String name = ability.getDisplayName();
                     int nameWidth = mc.font.width(name);
-                    int rgb = ability.getRgb();
+                    int rgb = ability.getRGB();
 
                     //The x value to base our drawing off of for this ability based on the initial X and the widths previous calculated
                     int thisDrawX = initialX + drawSections[index];

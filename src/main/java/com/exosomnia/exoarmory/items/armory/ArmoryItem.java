@@ -1,12 +1,15 @@
 package com.exosomnia.exoarmory.items.armory;
 
+import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.utils.TooltipUtils;
+import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -46,16 +49,29 @@ public abstract class ArmoryItem extends Item {
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(itemStack, level, components, flag);
 
+        DetailLevel detail = DetailLevel.BASIC;
+        detail = Screen.hasShiftDown() ? DetailLevel.DESCRIPTION : detail;
+        detail = Screen.hasControlDown() ? DetailLevel.STATISTICS : detail;
+
         //Add rank info
-        int itemRank = getRank(itemStack);
+        int rank = getRank(itemStack);
         components.add(Component.translatable("item.exoarmory.info.rank")
                         .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle())
                 .append(Component.literal(": ")
                         .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
-                .append(Component.literal(String.valueOf(itemRank + 1))
-                        .withStyle(getRankFormatting(itemRank))));
+                .append(Component.literal(String.valueOf(rank + 1))
+                        .withStyle(getRankFormatting(rank))));
+
+        appendTooltip(itemStack, level, components, flag, rank, detail);
+
+        if (!Config.hideHelp && detail == DetailLevel.BASIC) {
+            components.add(TooltipUtils.formatLine(I18n.get("item.exoarmory.info.help"),
+                    TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_DESC.getStyle()));
+        }
     }
     //endregion
+
+    public abstract void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail);
 
     public abstract void buildRanks();
 
@@ -82,7 +98,7 @@ public abstract class ArmoryItem extends Item {
             case 2 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA);
             case 3 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.LIGHT_PURPLE);
             case 4 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.RED);
-            default -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.DARK_RED).withObfuscated(true);
+            default -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.DARK_RED).withBold(true).withObfuscated(true);
         };
     }
 }

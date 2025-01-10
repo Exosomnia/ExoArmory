@@ -1,39 +1,37 @@
-package com.exosomnia.exoarmory.rendering.client.managers;
+package com.exosomnia.exoarmory.rendering.client;
 
-import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.armory.AbilityItem;
+import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
-import com.exosomnia.exoarmory.items.armory.ResourcedItem;
+import com.exosomnia.exoarmory.items.resource.ArmoryResource;
+import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderingManager {
 
-    private final static double secondsVisible = 2.0;
-    private final static double secondDeltaTotal = 20.0; //delta time total for one second
-    private final static double deltaVisible = secondsVisible * secondDeltaTotal; //Total delta time to make displays visible
-    private final static Minecraft mc = Minecraft.getInstance();
+    private final static double SECONDS_VISIBLE = 2.0;
+    private final static double DELTA_PER_SECOND = 20.0; //delta time total for one second
+    private final static double DELTA_VISIBLE = SECONDS_VISIBLE * DELTA_PER_SECOND; //Total delta time to make displays visible
+    private final static Minecraft MC = Minecraft.getInstance();
 
-    ItemStack previousItem;
-    double previousResource = -1.0;
+    private ItemStack previousItem;
+    private double previousResource = -1.0;
 
-    public double abilityVisibileTime = 0.0;
-    public double resourceVisibleTime = 0.0;
+    private double abilityVisibileTime = 0.0;
+    private double resourceVisibleTime = 0.0;
 
     public void tick() {
-        LocalPlayer player = mc.player;
+        LocalPlayer player = MC.player;
         if (player == null) {
             previousItem = null;
             previousResource = -1.0;
             return;
         }
 
-        abilityVisibileTime = Math.max(0.0, abilityVisibileTime - mc.getDeltaFrameTime());
-        resourceVisibleTime = Math.max(0.0, resourceVisibleTime - mc.getDeltaFrameTime());
+        //Resource and ability rendering logic
+        abilityVisibileTime = Math.max(0.0, abilityVisibileTime - MC.getDeltaFrameTime());
+        resourceVisibleTime = Math.max(0.0, resourceVisibleTime - MC.getDeltaFrameTime());
         ItemStack currentItem = player.getMainHandItem();
 
         boolean sameItem = currentItem == previousItem;
@@ -41,10 +39,11 @@ public class RenderingManager {
 
         if (!sameItem && !sameUUID && (currentItem.getItem() instanceof AbilityItem)) { resetAbilityVisible(); }
         if (currentItem.getItem() instanceof ResourcedItem currentResourceItem) {
-            if ( (!sameItem && !sameUUID) || (sameUUID && currentResourceItem.getResource(currentItem) != previousResource) ) {
+            ArmoryResource resource = currentResourceItem.getResource();
+            if ( (!sameItem && !sameUUID) || (sameUUID && resource.getResource(currentItem) != previousResource) ) {
                 resetResourceVisible();
             }
-            previousResource = currentResourceItem.getResource(currentItem);
+            previousResource = resource.getResource(currentItem);
         }
         previousItem = currentItem;
     }
@@ -58,11 +57,11 @@ public class RenderingManager {
     }
 
     public void resetResourceVisible() {
-        resourceVisibleTime = deltaVisible;
+        resourceVisibleTime = DELTA_VISIBLE;
     }
 
     public void resetAbilityVisible() {
-        abilityVisibileTime = deltaVisible;
+        abilityVisibileTime = DELTA_VISIBLE;
     }
 
     /***

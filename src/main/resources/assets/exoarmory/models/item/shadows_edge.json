@@ -1,0 +1,29 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "exoarmory:item/shadows_edge"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 90, 55],
+			"translation": [0, 5.25, 2.5],
+			"scale": [0.95, 0.95, 0.85]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, -90, -55],
+			"translation": [0, 5.25, 2.5],
+			"scale": [0.95, 0.95, 0.85]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 90, 60],
+			"translation": [1.13, 3.2, 1.25],
+			"scale": [0.75, 0.75, 0.68]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -90, -60],
+			"translation": [1.13, 3.2, 1.25],
+			"scale": [0.75, 0.75, 0.68]
+		}
+	}
+}

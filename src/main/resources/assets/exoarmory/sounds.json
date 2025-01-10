@@ -8,5 +8,20 @@
     "sounds": [
       "exoarmory:fiery_effect"
     ]
+  },
+  "dark_ambient_charge": {
+    "sounds": [
+      "exoarmory:dark_ambient_charge"
+    ]
+  },
+  "magic_clash": {
+    "sounds": [
+      "exoarmory:magic_clash"
+    ]
+  },
+  "magic_teleport": {
+    "sounds": [
+      "exoarmory:magic_teleport"
+    ]
   }
 }

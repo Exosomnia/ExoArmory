@@ -1,11 +1,12 @@
 package com.exosomnia.exoarmory.items.abilities;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.items.armory.swords.SolarSword;
+import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
 import com.exosomnia.exoarmory.utils.TooltipUtils;
+import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
 import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
 import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
@@ -27,49 +28,74 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SolarFlareAbility extends ArmoryAbility {
+
+    public enum Stats implements AbilityStat {
+        COST,
+        RADIUS,
+        DAMAGE,
+        BURN_TIME
+    }
 
     public SolarFlareAbility() {
         super("solar_flare", 0xFFBF00);
     }
 
-    @Override
-    public List<MutableComponent> getTooltip(boolean detailed, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detailed, rank));
-
-        if (detailed) {
-            description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-            description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-        }
-
-        return description;
+    //region ArmoryAbility Overrides
+    public void buildRanks() {
+        RANK_STATS.put(Stats.COST, new double[]{25.0, 25.0, 25.0, 25.0, 25.0});
+        RANK_STATS.put(Stats.RADIUS, new double[]{2.5, 2.5, 3.0, 3.0, 3.5});
+        RANK_STATS.put(Stats.DAMAGE, new double[]{3.0, 3.0, 4.0, 4.0, 5.0});
+        RANK_STATS.put(Stats.BURN_TIME, new double[]{3.0, 3.0, 4.0, 4.0, 5.0});
     }
 
+    @Override
+    public List<MutableComponent> getTooltip(DetailLevel detail, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+
+        switch (detail) {
+            case DESCRIPTION:
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                break;
+            case STATISTICS:
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.1", getStatForRank(Stats.COST, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.2", getStatForRank(Stats.RADIUS, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.3", getStatForRank(Stats.DAMAGE, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.4", (int)getStatForRank(Stats.BURN_TIME, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                break;
+        }
+        return description;
+    }
+    //endregion
+
     //region Ability Logic
-    public static void createSolarFlare(Vec3 position, ServerLevel level, @Nullable LivingEntity owner, @Nullable LivingEntity defender) {
-        double size = 3.0;
-        int burnTime = 5;
-        float damage = 6.0F;
+    public void createSolarFlare(Vec3 position, ServerLevel level, int rank, @Nullable LivingEntity owner, @Nullable LivingEntity defender) {
+        double radius = getStatForRank(Stats.RADIUS, rank);
+        int burnTime = (int)getStatForRank(Stats.BURN_TIME, rank);
+        float damage = (float)getStatForRank(Stats.RADIUS, rank);
         DamageSource source = owner == null ? level.damageSources().explosion(null, null) :
                 owner.damageSources().explosion(owner, owner);
 
-        List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(position, position).inflate(size), livingEntity -> {
-            if (!livingEntity.isAlive() || livingEntity == owner || livingEntity.equals(defender)) { return false; }
+        List<LivingEntity> nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(position, position).inflate(radius), livingEntity -> {
+            if (!livingEntity.isAlive() || livingEntity == owner || livingEntity == defender) { return false; }
             else if ( (livingEntity instanceof TamableAnimal tamableAnimal) && (tamableAnimal.isTame()) ) { return false; }
             else return (!(livingEntity instanceof NeutralMob neutralMob)) || ((owner != null) && (neutralMob.isAngryAt(owner)));
         });
 
-        //if (defender != null) { defender.setSecondsOnFire(burnTime); }
+        if (defender != null) { defender.setSecondsOnFire(burnTime); }
         for (LivingEntity entity : nearbyEntities) {
             Vec3 entityPos = new Vec3(entity.position().toVector3f());
-            if (entityPos.distanceTo(position) <= size) {
+            if (entityPos.distanceTo(position) <= radius) {
                 entity.setSecondsOnFire(burnTime);
                 entity.hurt(source, damage);
                 entityPos = entityPos.subtract(position).normalize().multiply(0.67, 0.33, 0.67);
@@ -83,12 +109,12 @@ public class SolarFlareAbility extends ArmoryAbility {
         for(ServerPlayer player : level.players()) {
             com.exosomnia.exolib.networking.PacketHandler.sendToPlayer(new ParticleShapePacket(
                     new ParticleShapeDome(new RGBSParticleOptions(ExoLib.REGISTRY.SPIRAL_PARTICLE.get(), 1.0F, 0.5F, 0.0F, 0.1f),
-                            position, new ParticleShapeOptions.Dome(3.0F, 128))), player);
+                            position, new ParticleShapeOptions.Dome((float)radius, 128))), player);
         }
     }
 
     @SubscribeEvent
-    public static void onEntityCrit(CriticalHitEvent event) {
+    public void onEntityCrit(CriticalHitEvent event) {
         Player player = event.getEntity();
         if (!(player.level() instanceof ServerLevel level)
                 || !event.isVanillaCritical()
@@ -97,16 +123,17 @@ public class SolarFlareAbility extends ArmoryAbility {
         ServerPlayer attacker = (ServerPlayer)player;
         ItemStack attackerItem = attacker.getMainHandItem();
         if (attackerItem.getItem() instanceof SolarSword solarSword) {
+            int rank = solarSword.getRank(attackerItem);
             if (attacker.hasEffect(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get())) {
-                createSolarFlare(defender.position(), level, attacker, defender);
+                createSolarFlare(defender.position(), level, rank, attacker, defender);
+                return;
             }
-            else if (solarSword.getResource(attackerItem) >= 25.0) {
-                createSolarFlare(defender.position(), level, attacker, defender);
-                attackerItem.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).ifPresent(iArmoryResourceStorage -> {
-                    iArmoryResourceStorage.removeCharge(25.0);
-                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(solarSword.getUUID(attackerItem), attacker.getInventory().selected, iArmoryResourceStorage.getCharge()),
-                            attacker);
-                });
+            ArmoryResource resource = solarSword.getResource();
+            if (resource.getResource(attackerItem) >= getStatForRank(Stats.COST, rank)) {
+                createSolarFlare(defender.position(), level, rank, attacker, defender);
+                resource.removeResource(attackerItem, getStatForRank(Stats.COST, rank));
+                PacketHandler.sendToPlayer(new ArmoryResourcePacket(solarSword.getUUID(attackerItem), attacker.getInventory().selected, resource.getResource(attackerItem)),
+                        attacker);
             }
         }
     }

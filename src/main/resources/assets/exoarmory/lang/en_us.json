@@ -1,6 +1,7 @@
 {
   "item.exoarmory.giga_sword": "GIGA Sword",
   "item.exoarmory.solar_sword": "Solar Sword",
+  "item.exoarmory.shadows_edge": "Shadow's Edge",
 
   "item.exoarmory.tier_2_smithing_template": "Rank 1 » 2 Template",
   "item.exoarmory.tier_3_smithing_template": "Rank 2 » 3 Template",
@@ -15,19 +16,60 @@
 
   "item.exoarmory.info.rank": "Rank",
   "item.exoarmory.info.ability": "Ability",
+  "item.exoarmory.info.help": "Press 0{Shift}/0{Ctrl} for more info",
+
+  "_comment": "+=============+",
+  "_comment": "| SOLAR SWORD |",
+  "_comment": "+=============+",
 
   "ability.exoarmory.name.solar_flare": "Solar Flare",
   "ability.exoarmory.desc.solar_flare.line.1": "Creates a fiery explosion when",
   "ability.exoarmory.desc.solar_flare.line.2": "performing a critical attack.",
+  "ability.exoarmory.stat.solar_flare.line.1": "Energy cost: 0{%.1f}",
+  "ability.exoarmory.stat.solar_flare.line.2": "Flare radius: 0{%.1f}",
+  "ability.exoarmory.stat.solar_flare.line.3": "Flare damage: 0{%.1f}",
+  "ability.exoarmory.stat.solar_flare.line.4": "Burn time: 0{%d} seconds",
 
   "ability.exoarmory.name.sunfire_surge": "Sunfire Surge",
   "ability.exoarmory.desc.sunfire_surge.line.1": "Charge for a duration to gain a surge",
   "ability.exoarmory.desc.sunfire_surge.line.2": "of power. You move and attack faster,",
   "ability.exoarmory.desc.sunfire_surge.line.3": "and your 0{Solar Flares} cost no energy.",
+  "ability.exoarmory.stat.sunfire_surge.line.1": "Surge duration: 0{%d} seconds",
+  "ability.exoarmory.stat.sunfire_surge.line.2": "Cooldown: 0{%d} seconds",
 
   "resource.exoarmory.name.solar_sword": "Energy",
-  "resource.exoarmory.desc.solar_sword.line.1": "Charges while you are in direct",
-  "resource.exoarmory.desc.solar_sword.line.2": "sunlight, or are on fire.",
+  "resource.exoarmory.desc.solar_sword.line.1": "Charges during the day while",
+  "resource.exoarmory.desc.solar_sword.line.2": "in direct sunlight or on fire.",
+  "resource.exoarmory.stat.solar_sword.line.1": "Charge rate: 0{%.1f}/s",
+
+  "_comment": "+===============+",
+  "_comment": "| SHADOW'S EDGE |",
+  "_comment": "+===============+",
+
+  "ability.exoarmory.name.umbral_assault": "Umbral Assault",
+  "ability.exoarmory.desc.umbral_assault.line.1": "Charge for a duration to become one with",
+  "ability.exoarmory.desc.umbral_assault.line.2": "the shadows. You teleport behind your",
+  "ability.exoarmory.desc.umbral_assault.line.3": "foes, and strike them in quick succession.",
+  "ability.exoarmory.stat.umbral_assault.line.1": "Umbra cost: 0{%.1f}",
+  "ability.exoarmory.stat.umbral_assault.line.2": "Assault radius: 0{%.1f}",
+  "ability.exoarmory.stat.umbral_assault.line.3": "Max targets: 0{%d}",
+  "ability.exoarmory.stat.umbral_assault.line.4": "Damage: 0{%.1f}",
+
+  "ability.exoarmory.name.veil_of_darkness": "Veil of Darkness",
+  "ability.exoarmory.desc.veil_of_darkness.line.1": "When in complete darkness, shadows",
+  "ability.exoarmory.desc.veil_of_darkness.line.2": "surround you, granting invisibility.",
+
+  "ability.exoarmory.name.shadow_strike": "Shadow Strike",
+  "ability.exoarmory.desc.shadow_strike.line.1": "While you're invisible, you gain additional",
+  "ability.exoarmory.desc.shadow_strike.line.2": "power. Your attacks deal more damage and",
+  "ability.exoarmory.desc.shadow_strike.line.3": "killing an enemy extends your invisibility.",
+  "ability.exoarmory.stat.shadow_strike.line.1": "Additional damage: 0{%.1f}",
+  "ability.exoarmory.stat.shadow_strike.line.2": "Duration extension: 0{%d} seconds",
+
+  "resource.exoarmory.name.shadows_edge": "Umbra",
+  "resource.exoarmory.desc.shadows_edge.line.1": "Gain charge when you attack",
+  "resource.exoarmory.desc.shadows_edge.line.2": "enemies while you are invisible.",
+  "resource.exoarmory.stat.shadows_edge.line.1": "Charge rate: 0{%.1f}/attack",
 
   "effect.exoarmory.sunfire_surge": "Sunfire Surge",
   "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare."

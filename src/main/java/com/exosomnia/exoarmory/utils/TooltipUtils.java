@@ -21,7 +21,8 @@ public class TooltipUtils {
         NO_COLOR(Style.EMPTY.withColor(ChatFormatting.WHITE)),
         INFO_HEADER(Style.EMPTY.withColor(TextColor.fromRgb(0x9c679f)).withUnderlined(true).withBold(false).withItalic(true).withStrikethrough(false).withObfuscated(false)),
         DEFAULT_DESC(Style.EMPTY.withColor(TextColor.fromRgb(0x808080)).withUnderlined(false).withBold(false).withItalic(true).withStrikethrough(false).withObfuscated(false)),
-        HIGHLIGHT_DESC(Style.EMPTY.withColor(TextColor.fromRgb(0xFFFF80)).withUnderlined(true).withBold(false).withItalic(true).withStrikethrough(false).withObfuscated(false));
+        HIGHLIGHT_DESC(Style.EMPTY.withColor(TextColor.fromRgb(0xFFFF80)).withUnderlined(true).withBold(false).withItalic(true).withStrikethrough(false).withObfuscated(false)),
+        HIGHLIGHT_STAT(Style.EMPTY.withColor(TextColor.fromRgb(0xFFFF80)).withUnderlined(false).withBold(false).withItalic(true).withStrikethrough(false).withObfuscated(false));
 
         private final Style style;
 
@@ -32,6 +33,12 @@ public class TooltipUtils {
         public Style getStyle() {
             return style;
         }
+    }
+
+    public enum DetailLevel {
+        BASIC,
+        DESCRIPTION,
+        STATISTICS
     }
 
     public static MutableComponent formatLine(String translation, Style defaultStyle, Style... styles) {
@@ -55,7 +62,7 @@ public class TooltipUtils {
 
         MutableComponent line = Component.empty();
         for (String piece : pieces) {
-            boolean formatted = (piece.charAt(1) == '{' && piece.endsWith("}"));
+            boolean formatted = piece.length() > 2 && (piece.charAt(1) == '{' && piece.endsWith("}"));
             Style style = formatted ? styles[Character.getNumericValue(piece.charAt(0))] : defaultStyle;
             piece = formatted ? piece.substring(2, piece.length() - 1) : piece;
 

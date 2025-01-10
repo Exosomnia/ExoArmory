@@ -2,6 +2,7 @@ package com.exosomnia.exoarmory.items.abilities;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.utils.TooltipUtils;
+import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,34 +13,52 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SunfireSurgeAbility extends ArmoryAbility {
+
+    public enum Stats implements AbilityStat {
+        DURATION,
+        COOLDOWN
+    }
 
     public SunfireSurgeAbility() {
         super("sunfire_surge", 0xFF3F00);
     }
 
-    @Override
-    public List<MutableComponent> getTooltip(boolean detailed, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detailed, rank));
+    //region ArmoryAbility Overrides
+    public void buildRanks() {
+        RANK_STATS.put(Stats.DURATION, new double[]{0.0, 15.0, 20.0, 25.0, 30.0});
+        RANK_STATS.put(Stats.COOLDOWN, new double[]{120.0, 120.0, 120.0, 120.0, 120.0});
+    }
 
-        if (detailed) {
-            description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-            description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-            description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.3"), TooltipUtils.Styles.DEFAULT_DESC.getStyle(),
-                    TooltipUtils.Styles.HIGHLIGHT_DESC.getStyle()));
+    @Override
+    public List<MutableComponent> getTooltip(DetailLevel detail, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+
+        switch (detail) {
+            case DESCRIPTION:
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.3"), TooltipUtils.Styles.DEFAULT_DESC.getStyle(),
+                        TooltipUtils.Styles.HIGHLIGHT_DESC.getStyle()));
+                break;
+            case STATISTICS:
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.1", (int)getStatForRank(Stats.DURATION, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.2", (int)getStatForRank(Stats.COOLDOWN, rank)),
+                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                break;
         }
         return description;
     }
+    //endregion
 
     //region Ability Logic
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         Level level = player.level();
         if (level.isClientSide || !player.hasEffect(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get())) { return; }
