@@ -5,8 +5,8 @@ import com.exosomnia.exoarmory.items.armory.swords.SolarSword;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
-import com.exosomnia.exoarmory.utils.TooltipUtils;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
 import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
@@ -60,18 +60,18 @@ public class SolarFlareAbility extends ArmoryAbility {
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.solar_flare.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.1", getStatForRank(Stats.COST, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.2", getStatForRank(Stats.RADIUS, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.3", getStatForRank(Stats.DAMAGE, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.4", (int)getStatForRank(Stats.BURN_TIME, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.1", getStatForRank(Stats.COST, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.2", getStatForRank(Stats.RADIUS, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.3", getStatForRank(Stats.DAMAGE, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.solar_flare.line.4", (int)getStatForRank(Stats.BURN_TIME, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }
         return description;

@@ -2,6 +2,9 @@
   "item.exoarmory.giga_sword": "GIGA Sword",
   "item.exoarmory.solar_sword": "Solar Sword",
   "item.exoarmory.shadows_edge": "Shadow's Edge",
+  "item.exoarmory.luminis_edge": "Luminis' Edge",
+  "item.exoarmory.frostbite": "Frostbite",
+  "item.exoarmory.heros_testament": "Hero's Testament",
 
   "item.exoarmory.tier_2_smithing_template": "Rank 1 » 2 Template",
   "item.exoarmory.tier_3_smithing_template": "Rank 2 » 3 Template",
@@ -57,7 +60,7 @@
 
   "ability.exoarmory.name.veil_of_darkness": "Veil of Darkness",
   "ability.exoarmory.desc.veil_of_darkness.line.1": "Wielding Shadow's Edge in complete",
-  "ability.exoarmory.desc.veil_of_darkness.line.2": "darkness, causes shadows to surround",
+  "ability.exoarmory.desc.veil_of_darkness.line.2": "darkness causes shadows to surround",
   "ability.exoarmory.desc.veil_of_darkness.line.3": "you, granting invisibility.",
 
   "ability.exoarmory.name.shadow_strike": "Shadow Strike",
@@ -71,6 +74,54 @@
   "resource.exoarmory.desc.shadows_edge.line.1": "Gain charge when you attack",
   "resource.exoarmory.desc.shadows_edge.line.2": "enemies while you are invisible.",
   "resource.exoarmory.stat.shadows_edge.line.1": "Charge rate: 0{%.1f}/attack",
+
+  "_comment": "+===============+",
+  "_comment": "| LUMINIS' EDGE |",
+  "_comment": "+===============+",
+
+  "ability.exoarmory.name.WIP1": "Umbral Assault",
+  "ability.exoarmory.desc.WIP1.line.1": "Charge for a duration to become one with",
+  "ability.exoarmory.stat.WIP1.line.1": "Max targets: 0{%d}",
+
+  "ability.exoarmory.name.WIP2": "Veil of Darkness",
+  "ability.exoarmory.desc.WIP2.line.1": "Wielding Shadow's Edge in complete",
+
+  "ability.exoarmory.name.WIP3": "Shadow Strike",
+  "ability.exoarmory.desc.WIP3.line.1": "While you're invisible, you gain additional",
+  "ability.exoarmory.stat.WIP3.line.1": "Additional damage: 0{%.1f}",
+
+  "resource.exoarmory.name.luminis_edge": "Radiance",
+  "resource.exoarmory.desc.luminis_edge.line.1": "Gain charge when you attack",
+  "resource.exoarmory.stat.luminis_edge.line.1": "Charge rate: 0{%.1f}/attack",
+
+  "_comment": "+===========+",
+  "_comment": "| FROSTBITE |",
+  "_comment": "+===========+",
+
+  "ability.exoarmory.name.frigid_flurry": "Frigid Flurry",
+  "ability.exoarmory.desc.frigid_flurry.line.1": "Fires a projectile of freezing ice. Enemies",
+  "ability.exoarmory.desc.frigid_flurry.line.2": "hit become 0{Frosted}, reducing their armor",
+  "ability.exoarmory.desc.frigid_flurry.line.3": "and speed. Killing a 0{Frosted} entity resets",
+  "ability.exoarmory.desc.frigid_flurry.line.4": "this cooldown. Hold 0{Alt} while charging to",
+  "ability.exoarmory.desc.frigid_flurry.line.5": "empower. When empowered, launches a flurry",
+  "ability.exoarmory.desc.frigid_flurry.line.6": "of projectiles that also deal damage.",
+  "ability.exoarmory.stat.frigid_flurry.line.1": "Cooldown: 0{%d} seconds",
+  "ability.exoarmory.stat.frigid_flurry.line.2": "Frosted Duration: 0{%d} seconds",
+  "ability.exoarmory.stat.frigid_flurry.line.3": "Armor Reduction: 0{%d}",
+  "ability.exoarmory.stat.frigid_flurry.line.4": "Empowered Flurry:",
+  "ability.exoarmory.stat.frigid_flurry.line.5": "Permafrost cost: 0{%.1f}",
+  "ability.exoarmory.stat.frigid_flurry.line.6": "Projectiles: 0{%d}",
+  "ability.exoarmory.stat.frigid_flurry.line.7": "Damage: 0{%.1f}",
+
+  "ability.exoarmory.name.cold_snap": "Cold Snap",
+  "ability.exoarmory.desc.cold_snap.line.1": "Killing an entity affected by 0{Frosted}",
+  "ability.exoarmory.desc.cold_snap.line.2": "spreads the effect to nearby entities.",
+  "ability.exoarmory.stat.cold_snap.line.1": "Spread radius: 0{%.1f}",
+
+  "resource.exoarmory.name.frostbite": "Permafrost",
+  "resource.exoarmory.desc.frostbite.line.1": "Gain charge when killing enemies",
+  "resource.exoarmory.desc.frostbite.line.2": "effected by 0{Frosted}.",
+  "resource.exoarmory.stat.frostbite.line.1": "Charge rate: 0{%.1f}/kill",
 
   "effect.exoarmory.sunfire_surge": "Sunfire Surge",
   "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare."

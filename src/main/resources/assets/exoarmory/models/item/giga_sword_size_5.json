@@ -1,0 +1,29 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "exoarmory:item/giga_sword"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -90, 55],
+			"translation": [0, 18.5, 0.5],
+			"scale": [3.4, 3.4, 1.7]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, 90, -55],
+			"translation": [0, 18.5, 0.5],
+			"scale": [3.4, 3.4, 1.7]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -90, 25],
+			"translation": [1.13, 11.2, 1.13],
+			"scale": [2.38, 2.38, 1.19]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, -25],
+			"translation": [1.13, 11.2, 1.13],
+			"scale": [2.38, 2.38, 1.19]
+		}
+	}
+}

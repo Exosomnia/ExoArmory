@@ -1,7 +1,7 @@
 package com.exosomnia.exoarmory.items;
 
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
-import com.exosomnia.exoarmory.utils.TooltipUtils;
+import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -28,9 +28,9 @@ public class UpgradeTemplateItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        components.add(Component.translatable("item.exoarmory.info.smithing_template.line.1").withStyle(TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-        components.add(Component.translatable("item.exoarmory.info.smithing_template.line.2").withStyle(TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-        components.add(TooltipUtils.formatLine(I18n.get("item.exoarmory.info.smithing_template.line.3", rankFrom + 1, rankTo + 1), TooltipUtils.Styles.DEFAULT_DESC.getStyle(),
+        components.add(Component.translatable("item.exoarmory.info.smithing_template.line.1").withStyle(ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+        components.add(Component.translatable("item.exoarmory.info.smithing_template.line.2").withStyle(ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+        components.add(ComponentUtils.formatLine(I18n.get("item.exoarmory.info.smithing_template.line.3", rankFrom + 1, rankTo + 1), ComponentUtils.Styles.DEFAULT_DESC.getStyle(),
                 ArmoryItem.getRankFormatting(rankFrom).withItalic(true), ArmoryItem.getRankFormatting(rankTo).withItalic(true)));
     }
 }

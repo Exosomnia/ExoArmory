@@ -7,7 +7,7 @@ import java.util.List;
 public interface AbilityItem {
 
     public List<ArmoryAbility> getAbilities(ItemStack itemStack);
-    public default <T extends ArmoryAbility> T hasAbility(T ability, ItemStack itemStack, int rank) {
+    public default <T extends ArmoryAbility> T getAbility(T ability, ItemStack itemStack, int rank) {
         return getAbilities(itemStack).contains(ability) ? ability : null;
     }
 

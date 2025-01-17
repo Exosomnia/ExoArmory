@@ -2,9 +2,8 @@ package com.exosomnia.exoarmory.items.resource;
 
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
-import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
-import com.exosomnia.exoarmory.utils.TooltipUtils;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -45,11 +44,11 @@ public abstract class ArmoryResource {
 
     public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) { return List.of(getDefaultTooltip(itemStack)); }
     protected MutableComponent getDefaultTooltip(ItemStack itemStack) {
-        return Component.translatable(String.format(NAME_TRANSLATION_FORMAT, id)).withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle())
-            .append(Component.literal(": ").withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
-            .append(Component.literal(String.valueOf((int)getResource(itemStack))).withStyle(TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)))
-            .append(Component.literal("/").withStyle(TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY)))
-            .append(Component.literal(String.valueOf((int)max)).withStyle(TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)));
+        return Component.translatable(String.format(NAME_TRANSLATION_FORMAT, id)).withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
+            .append(Component.literal(": ").withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
+            .append(Component.literal(String.valueOf((int)getResource(itemStack))).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)))
+            .append(Component.literal("/").withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY)))
+            .append(Component.literal(String.valueOf((int)max)).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)));
     }
 
     public abstract void buildRanks();

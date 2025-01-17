@@ -2,28 +2,22 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"layer0": "exoarmory:item/giga_sword"
+		"layer0": "exoarmory:item/heros_testament"
 	},
-	"overrides": [
-		{"predicate": {"exoarmory:rank": 1}, "model": "exoarmory:item/giga_sword_size_2"},
-		{"predicate": {"exoarmory:rank": 2}, "model": "exoarmory:item/giga_sword_size_3"},
-		{"predicate": {"exoarmory:rank": 3}, "model": "exoarmory:item/giga_sword_size_4"},
-		{"predicate": {"exoarmory:rank": 4}, "model": "exoarmory:item/giga_sword_size_5"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, -90, 55],
-			"translation": [0, 9.5, 0.5],
+			"translation": [0, 10.5, 0.5],
 			"scale": [1.7, 1.7, 0.85]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [0, 90, -55],
-			"translation": [0, 9.5, 0.5],
+			"translation": [0, 10.5, 0.5],
 			"scale": [1.7, 1.7, 0.85]
 		},
 		"firstperson_righthand": {
 			"rotation": [0, -90, 25],
-			"translation": [1.13, 4.8, 1.13],
+			"translation": [1.5, 4.8, 1.13],
 			"scale": [1.02, 1.02, 0.68]
 		},
 		"firstperson_lefthand": {

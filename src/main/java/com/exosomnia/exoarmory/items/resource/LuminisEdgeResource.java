@@ -17,18 +17,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShadowsEdgeResource extends ArmoryResource {
+public class LuminisEdgeResource extends ArmoryResource {
 
     public enum Stats implements ResourceStat {
         CHARGE
     }
 
-    public ShadowsEdgeResource() {
-        super("shadows_edge", 0x705685, 50.0);
+    public LuminisEdgeResource() {
+        super("luminis_edge", 0xF5F564, 100.0);
     }
 
     public void buildRanks() {
-        RANK_STATS.put(Stats.CHARGE, new double[]{1.0, 1.25, 1.5, 1.75, 2.0});
+        RANK_STATS.put(Stats.CHARGE, new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
     }
 
     @Override
@@ -37,11 +37,10 @@ public class ShadowsEdgeResource extends ArmoryResource {
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.shadows_edge.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.shadows_edge.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.luminis_edge.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
-                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.stat.shadows_edge.line.1", getStatForRank(Stats.CHARGE, rank)),
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.stat.luminis_edge.line.1", getStatForRank(Stats.CHARGE, rank)),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }

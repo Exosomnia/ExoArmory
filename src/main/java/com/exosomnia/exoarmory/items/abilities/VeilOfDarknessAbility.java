@@ -1,6 +1,6 @@
 package com.exosomnia.exoarmory.items.abilities;
 
-import com.exosomnia.exoarmory.utils.TooltipUtils;
+import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -17,14 +17,14 @@ public class VeilOfDarknessAbility extends ArmoryAbility {
     public void buildRanks() {}
 
     @Override
-    public List<MutableComponent> getTooltip(TooltipUtils.DetailLevel detail, int rank) {
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
         List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.3"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.veil_of_darkness.line.3"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
                 break;

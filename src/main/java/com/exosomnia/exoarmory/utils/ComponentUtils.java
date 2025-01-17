@@ -5,13 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import org.apache.logging.log4j.core.pattern.PatternConverter;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TooltipUtils {
+public class ComponentUtils {
 
     private static Pattern FORMAT_PATTERN = Pattern.compile("\\d\\{.*?}");
 

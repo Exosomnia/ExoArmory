@@ -4,15 +4,15 @@ import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.UmbralAssaultAction;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.items.abilities.*;
-import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import com.exosomnia.exoarmory.items.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exoarmory.networking.PacketHandler;
+import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
-import com.exosomnia.exolib.particles.shapes.ParticleShape;
 import com.exosomnia.exolib.particles.shapes.ParticleShapeDome;
 import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
 import com.exosomnia.exolib.utils.ColorUtils;
@@ -22,6 +22,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -125,7 +126,7 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
 
         if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SHADOWS_EDGE)) {
             LivingEntity owner = (LivingEntity) entity;
-            VeilOfDarknessAbility ability = hasAbility(ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, itemStack, getRank(itemStack));
+            VeilOfDarknessAbility ability = getAbility(ExoArmory.REGISTRY.ABILITY_VEIL_OF_DARKNESS, itemStack, getRank(itemStack));
             if (ability != null) {
                 owner.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 50, 0, true, false, true));
             }
@@ -180,7 +181,7 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
 
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity entity) {
-        if (!level.isClientSide && entity instanceof Player player) {
+        if (!level.isClientSide && entity instanceof ServerPlayer player) {
             level.playSound(null, player.blockPosition(), ExoArmory.REGISTRY.SOUNG_MAGIC_CLASH.get(), SoundSource.PLAYERS, 0.34F, 1.0F);
             ExoArmory.ACTION_MANAGER.scheduleAction(new UmbralAssaultAction(ExoArmory.ACTION_MANAGER, player, 6.0, 10, 8.0), 1);
             player.getCooldowns().addCooldown(itemStack.getItem(), 600);
@@ -188,6 +189,8 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
             int rank = getRank(itemStack);
             RESOURCE.removeResource(itemStack, ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT.getStatForRank(
                     UmbralAssaultAbility.Stats.COST, rank));
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack),
+                    player.getInventory().selected, RESOURCE.getResource(itemStack)), player);
         }
         return itemStack;
     }

@@ -1,12 +1,10 @@
 package com.exosomnia.exoarmory.items.resource;
 
-import com.exosomnia.exoarmory.utils.TooltipUtils;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +29,12 @@ public class SolarSwordResource extends ArmoryResource {
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(TooltipUtils.formatLine(I18n.get("resource.exoarmory.desc.solar_sword.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("resource.exoarmory.desc.solar_sword.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.solar_sword.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.solar_sword.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
-                description.add(TooltipUtils.formatLine(I18n.get("resource.exoarmory.stat.solar_sword.line.1", 2 * getStatForRank(Stats.CHARGE, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.stat.solar_sword.line.1", 2 * getStatForRank(Stats.CHARGE, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }
         return description;

@@ -1,8 +1,8 @@
 package com.exosomnia.exoarmory.items.armory;
 
 import com.exosomnia.exoarmory.Config;
-import com.exosomnia.exoarmory.utils.TooltipUtils;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class ArmoryItem extends Item {
-
-    protected static final UUID BASE_MOVEMENT_SPEED_UUID = UUID.fromString("6024bfa5-cd10-4ccb-bfa6-bc8255087ee4");
 
     protected final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
 
@@ -56,17 +54,17 @@ public abstract class ArmoryItem extends Item {
         //Add rank info
         int rank = getRank(itemStack);
         components.add(Component.translatable("item.exoarmory.info.rank")
-                        .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle())
+                        .withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
                 .append(Component.literal(": ")
-                        .withStyle(TooltipUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
+                        .withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
                 .append(Component.literal(String.valueOf(rank + 1))
                         .withStyle(getRankFormatting(rank))));
 
         appendTooltip(itemStack, level, components, flag, rank, detail);
 
         if (!Config.hideHelp && detail == DetailLevel.BASIC) {
-            components.add(TooltipUtils.formatLine(I18n.get("item.exoarmory.info.help"),
-                    TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_DESC.getStyle()));
+            components.add(ComponentUtils.formatLine(I18n.get("item.exoarmory.info.help"),
+                    ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
         }
     }
     //endregion
@@ -93,12 +91,12 @@ public abstract class ArmoryItem extends Item {
 
     public static Style getRankFormatting(int rank) {
         return switch (rank) {
-            case 0 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY);
-            case 1 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GREEN);
-            case 2 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA);
-            case 3 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.LIGHT_PURPLE);
-            case 4 -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.RED);
-            default -> TooltipUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.DARK_RED).withBold(true).withObfuscated(true);
+            case 0 -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY);
+            case 1 -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GREEN);
+            case 2 -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA);
+            case 3 -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.LIGHT_PURPLE);
+            case 4 -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.RED);
+            default -> ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.DARK_RED).withBold(true).withObfuscated(true);
         };
     }
 }

@@ -1,25 +1,26 @@
 package com.exosomnia.exoarmory.items.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
+import com.exosomnia.exoarmory.actions.FrigidFlurryAction;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.items.abilities.SunfireSurgeAbility;
+import com.exosomnia.exoarmory.entities.GenericProjectile;
+import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
+import com.exosomnia.exoarmory.items.abilities.FrigidFlurryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
+import com.exosomnia.exoarmory.items.resource.FrostbiteResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
-import com.exosomnia.exoarmory.items.resource.SolarSwordResource;
-import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
-import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -27,30 +28,29 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarSword extends SwordArmoryItem implements ResourcedItem {
+public class FrostbiteSword extends SwordArmoryItem implements ResourcedItem {
 
-//    private static final ArmoryAbility[] ABILITIES = {ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE,
-//            ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE};
-    private static final ArmoryResource RESOURCE = new SolarSwordResource();
+    private static final ArmoryResource RESOURCE = new FrostbiteResource();
 
     private static final Item.Properties itemProperties = new Item.Properties()
             .durability(782)
             .rarity(Rarity.UNCOMMON);
 
 
-    public SolarSword() {
+    public FrostbiteSword() {
         super(itemProperties);
     }
 
     public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
         return switch (getRank(itemStack)) {
-            case 0, 1 -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE);
-            default -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE, ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE);
+            case 0, 1 -> List.of(ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY);
+            default -> List.of(ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY, ExoArmory.REGISTRY.ABILITY_COLD_SNAP);
         };
     }
     public ArmoryResource getResource() { return RESOURCE; }
@@ -90,7 +90,8 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
         this.RANK_ATTRIBUTES[4] = builder.build();
     }
 
-    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {
+    @Override
+    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, ComponentUtils.DetailLevel detail) {
         components.add(Component.literal(""));
 
         //Ability Info
@@ -113,18 +114,7 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
 
     //region Item Overrides
     @Override
-    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slotIndex, boolean selectedIndex) {
-        if (level.isClientSide) { return; }
-
-        if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SOLAR_SWORD)) {
-            RESOURCE.addResource(itemStack, getResource().getStatForRank(SolarSwordResource.Stats.CHARGE, getRank(itemStack)));
-            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), slotIndex, RESOURCE.getResource(itemStack)),
-                    (ServerPlayer)entity);
-        }
-    }
-
-    @Override
-    public int getUseDuration(ItemStack itemStack) { return 20; }
+    public int getUseDuration(ItemStack itemStack) { return 72000; }
 
     @Override
     public UseAnim getUseAnimation(ItemStack itemStack) {
@@ -134,24 +124,37 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (getRank(itemStack) > 0) {
+        if (Screen.hasAltDown() && RESOURCE.getResource(itemStack) >=
+                ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COST, getRank(itemStack))) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(itemStack);
         }
-        return InteractionResultHolder.pass(itemStack);
+
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.PLAYERS, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
+        GenericProjectile projectile = new GenericProjectile(player, level, 0.0);
+        projectile.setItem(new ItemStack(Items.PACKED_ICE));
+        projectile.getPersistentData().putBoolean("FROSTBITE", true);
+        Vec3 looking = player.getLookAngle();
+        projectile.shoot(looking.x, looking.y, looking.z, 2.0F, 1.0F);
+        level.addFreshEntity(projectile);
+
+        player.getCooldowns().addCooldown(this, (int)ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COOLDOWN,
+                getRank(itemStack)) * 20);
+
+        return InteractionResultHolder.consume(itemStack);
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity entity) {
-        int rank = getRank(itemStack);
-        if (!level.isClientSide && entity instanceof Player player) {
-            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.DURATION, rank), 0));
-            player.addEffect(new MobEffectInstance(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get(), 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.DURATION, rank), 0));
-            player.getCooldowns().addCooldown(itemStack.getItem(), 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.COOLDOWN, rank));
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity entity, int ticksLeft) {
+        if (!level.isClientSide && entity instanceof ServerPlayer player && ticksLeft <= 71980) {
+            ExoArmory.ACTION_MANAGER.scheduleAction(new FrigidFlurryAction(ExoArmory.ACTION_MANAGER, entity, 40, ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.DAMAGE, getRank(itemStack))), 1);
+            player.getCooldowns().addCooldown(this, (int)ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COOLDOWN,
+                    getRank(itemStack)) * 20);
+
+            RESOURCE.removeResource(itemStack, ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COST, getRank(itemStack)));
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack),
+                    player.getInventory().selected, RESOURCE.getResource(itemStack)), player);
         }
-        entity.playSound(ExoArmory.REGISTRY.SOUND_FIERY_EFFECT.get(), 0.34F, 1.25F);
-        return itemStack;
     }
     //endregion
 }
-

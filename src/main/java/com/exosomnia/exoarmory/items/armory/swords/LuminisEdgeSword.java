@@ -1,56 +1,43 @@
 package com.exosomnia.exoarmory.items.armory.swords;
 
-import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.items.abilities.SunfireSurgeAbility;
+import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
+import com.exosomnia.exoarmory.items.resource.LuminisEdgeResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
-import com.exosomnia.exoarmory.items.resource.SolarSwordResource;
-import com.exosomnia.exoarmory.managers.ConditionalManager;
-import com.exosomnia.exoarmory.networking.PacketHandler;
-import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
-import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarSword extends SwordArmoryItem implements ResourcedItem {
+public class LuminisEdgeSword extends SwordArmoryItem implements ResourcedItem {
 
-//    private static final ArmoryAbility[] ABILITIES = {ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE,
-//            ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE};
-    private static final ArmoryResource RESOURCE = new SolarSwordResource();
+    private static final ArmoryResource RESOURCE = new LuminisEdgeResource();
 
-    private static final Item.Properties itemProperties = new Item.Properties()
+    private static final Properties itemProperties = new Properties()
             .durability(782)
             .rarity(Rarity.UNCOMMON);
 
 
-    public SolarSword() {
+    public LuminisEdgeSword() {
         super(itemProperties);
     }
 
     public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
         return switch (getRank(itemStack)) {
-            case 0, 1 -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE);
-            default -> List.of(ExoArmory.REGISTRY.ABILITY_SOLAR_FLARE, ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE);
+            case 0 -> List.of();
+            default -> List.of();
         };
     }
     public ArmoryResource getResource() { return RESOURCE; }
@@ -90,7 +77,8 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
         this.RANK_ATTRIBUTES[4] = builder.build();
     }
 
-    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {
+    @Override
+    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, ComponentUtils.DetailLevel detail) {
         components.add(Component.literal(""));
 
         //Ability Info
@@ -110,48 +98,4 @@ public class SolarSword extends SwordArmoryItem implements ResourcedItem {
         return new ArmoryResourceProvider();
     }
     //endregion
-
-    //region Item Overrides
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slotIndex, boolean selectedIndex) {
-        if (level.isClientSide) { return; }
-
-        if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SOLAR_SWORD)) {
-            RESOURCE.addResource(itemStack, getResource().getStatForRank(SolarSwordResource.Stats.CHARGE, getRank(itemStack)));
-            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), slotIndex, RESOURCE.getResource(itemStack)),
-                    (ServerPlayer)entity);
-        }
-    }
-
-    @Override
-    public int getUseDuration(ItemStack itemStack) { return 20; }
-
-    @Override
-    public UseAnim getUseAnimation(ItemStack itemStack) {
-        return UseAnim.BOW;
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (getRank(itemStack) > 0) {
-            player.startUsingItem(hand);
-            return InteractionResultHolder.consume(itemStack);
-        }
-        return InteractionResultHolder.pass(itemStack);
-    }
-
-    @Override
-    public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity entity) {
-        int rank = getRank(itemStack);
-        if (!level.isClientSide && entity instanceof Player player) {
-            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.DURATION, rank), 0));
-            player.addEffect(new MobEffectInstance(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get(), 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.DURATION, rank), 0));
-            player.getCooldowns().addCooldown(itemStack.getItem(), 20 * (int)ExoArmory.REGISTRY.ABILITY_SUNFIRE_SURGE.getStatForRank(SunfireSurgeAbility.Stats.COOLDOWN, rank));
-        }
-        entity.playSound(ExoArmory.REGISTRY.SOUND_FIERY_EFFECT.get(), 0.34F, 1.25F);
-        return itemStack;
-    }
-    //endregion
 }
-

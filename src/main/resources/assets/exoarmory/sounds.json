@@ -23,5 +23,10 @@
     "sounds": [
       "exoarmory:magic_teleport"
     ]
+  },
+  "magic_ice_cast": {
+    "sounds": [
+      "exoarmory:magic_ice_cast"
+    ]
   }
 }

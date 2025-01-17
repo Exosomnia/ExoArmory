@@ -5,11 +5,14 @@ import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exoarmory.managers.DataManager;
 import com.exosomnia.exoarmory.rendering.client.RenderingManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -47,6 +50,7 @@ public class ExoArmory
         REGISTRY.registerObjects(modBus);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::setupClient) );
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::registerEntityRenders) );
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MinecraftForge.EVENT_BUS.addListener(this::clientTick) );
 
         MinecraftForge.EVENT_BUS.addListener(this::serverTick);
@@ -61,6 +65,11 @@ public class ExoArmory
     @OnlyIn(Dist.CLIENT)
     public void setupClient(FMLClientSetupEvent event) {
         RENDERING_MANAGER = new RenderingManager();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(REGISTRY.ENTITY_GENERIC_PROJECTILE.get(), ThrownItemRenderer::new);
     }
 
     @OnlyIn(Dist.CLIENT)

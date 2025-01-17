@@ -16,7 +16,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.UUID;
+
 public abstract class SwordArmoryItem extends ArmoryItem {
+
+    protected static final UUID BASE_MOVEMENT_SPEED_UUID = UUID.fromString("6024bfa5-cd10-4ccb-bfa6-bc8255087ee4");
 
     public SwordArmoryItem(Properties properties) {
         super(properties);

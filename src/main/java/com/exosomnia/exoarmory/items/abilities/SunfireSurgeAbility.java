@@ -1,8 +1,8 @@
 package com.exosomnia.exoarmory.items.abilities;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.utils.TooltipUtils;
-import com.exosomnia.exoarmory.utils.TooltipUtils.DetailLevel;
+import com.exosomnia.exolib.utils.ComponentUtils;
+import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,16 +40,16 @@ public class SunfireSurgeAbility extends ArmoryAbility {
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.1"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.2"), TooltipUtils.Styles.DEFAULT_DESC.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.3"), TooltipUtils.Styles.DEFAULT_DESC.getStyle(),
-                        TooltipUtils.Styles.HIGHLIGHT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.sunfire_surge.line.3"), ComponentUtils.Styles.DEFAULT_DESC.getStyle(),
+                        ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
                 break;
             case STATISTICS:
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.1", (int)getStatForRank(Stats.DURATION, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
-                description.add(TooltipUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.2", (int)getStatForRank(Stats.COOLDOWN, rank)),
-                        TooltipUtils.Styles.DEFAULT_DESC.getStyle(), TooltipUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.1", (int)getStatForRank(Stats.DURATION, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.sunfire_surge.line.2", (int)getStatForRank(Stats.COOLDOWN, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }
         return description;
