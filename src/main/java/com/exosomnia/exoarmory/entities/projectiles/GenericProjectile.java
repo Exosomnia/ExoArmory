@@ -1,4 +1,4 @@
-package com.exosomnia.exoarmory.entities;
+package com.exosomnia.exoarmory.entities.projectiles;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import net.minecraft.world.effect.MobEffectInstance;

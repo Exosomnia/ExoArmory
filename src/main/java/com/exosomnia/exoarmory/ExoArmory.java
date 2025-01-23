@@ -1,21 +1,20 @@
 package com.exosomnia.exoarmory;
 
 import com.exosomnia.exoarmory.actions.ActionManager;
+import com.exosomnia.exoarmory.client.rendering.RenderingManager;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
+import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
+import com.exosomnia.exoarmory.managers.AbilityManager;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
-import com.exosomnia.exoarmory.managers.DataManager;
-import com.exosomnia.exoarmory.rendering.client.RenderingManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,9 +35,9 @@ public class ExoArmory
     @OnlyIn(Dist.CLIENT)
     public static RenderingManager RENDERING_MANAGER;
 
-    public static DataManager DATA_MANAGER;
     public static ActionManager ACTION_MANAGER;
     public static ConditionalManager CONDITIONAL_MANAGER;
+    public static AbilityManager ABILITY_MANAGER;
 
     public ExoArmory() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -48,6 +47,7 @@ public class ExoArmory
 
         REGISTRY.registerCommon();
         REGISTRY.registerObjects(modBus);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> REGISTRY::registerClient);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::setupClient) );
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::registerEntityRenders) );
@@ -57,14 +57,28 @@ public class ExoArmory
     }
 
     public void setupCommon(FMLCommonSetupEvent event) {
-        DATA_MANAGER = new DataManager();
         ACTION_MANAGER = new ActionManager();
         CONDITIONAL_MANAGER = new ConditionalManager();
+        ABILITY_MANAGER = new AbilityManager();
     }
 
     @OnlyIn(Dist.CLIENT)
     public void setupClient(FMLClientSetupEvent event) {
         RENDERING_MANAGER = new RenderingManager();
+
+        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "using"),
+                (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F);
+        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "use_time"),
+                (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() ? (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) : 0.0F);
+        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "rank"),
+                (itemStack, level, entity, data) -> {
+                    if (itemStack.getItem() instanceof ArmoryItem armoryItem) {
+                        return (float)armoryItem.getRank(itemStack);
+                    }
+                    return 0.0F;
+                });
+        ItemProperties.register(REGISTRY.ITEM_AETHERS_EMBRACE.get(), new ResourceLocation(ExoArmory.MODID, "aether"),
+                (itemStack, level, entity, data) -> entity != null && ((AethersEmbraceBow)itemStack.getItem()).isTargeting(itemStack, level) ? 1.0F : 0.0F);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -74,10 +88,10 @@ public class ExoArmory
 
     @OnlyIn(Dist.CLIENT)
     public void clientTick(TickEvent.ClientTickEvent event) {
-        RENDERING_MANAGER.tick();
+        if(event.phase.equals(TickEvent.Phase.END)) { RENDERING_MANAGER.tick(); }
     }
 
     public void serverTick(TickEvent.ServerTickEvent event) {
-        ACTION_MANAGER.tick();
+        if(event.phase.equals(TickEvent.Phase.END)) {  ACTION_MANAGER.tick(); }
     }
 }

@@ -1,6 +1,7 @@
 package com.exosomnia.exoarmory.items;
 
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
+import com.exosomnia.exoarmory.utils.ArmoryUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -18,7 +19,6 @@ public class UpgradeTemplateItem extends Item {
 
     public final int rankTo;
     public final int rankFrom;
-    public final Style INFO_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(true);
 
     public UpgradeTemplateItem(int rankTo, Properties properties) {
         super(properties);
@@ -31,6 +31,6 @@ public class UpgradeTemplateItem extends Item {
         components.add(Component.translatable("item.exoarmory.info.smithing_template.line.1").withStyle(ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
         components.add(Component.translatable("item.exoarmory.info.smithing_template.line.2").withStyle(ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
         components.add(ComponentUtils.formatLine(I18n.get("item.exoarmory.info.smithing_template.line.3", rankFrom + 1, rankTo + 1), ComponentUtils.Styles.DEFAULT_DESC.getStyle(),
-                ArmoryItem.getRankFormatting(rankFrom).withItalic(true), ArmoryItem.getRankFormatting(rankTo).withItalic(true)));
+                ArmoryUtils.getRankFormatting(rankFrom).withItalic(true), ArmoryUtils.getRankFormatting(rankTo).withItalic(true)));
     }
 }

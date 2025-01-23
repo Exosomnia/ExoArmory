@@ -1,6 +1,6 @@
 package com.exosomnia.exoarmory.capabilities.resource;
 
-import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.CompoundTag;
 
 public class ArmoryResourceStorage implements IArmoryResourceStorage {
 
@@ -23,10 +23,14 @@ public class ArmoryResourceStorage implements IArmoryResourceStorage {
     public double getCharge() { return charge; }
 
     @Override
-    public DoubleTag serializeNBT() { return DoubleTag.valueOf(charge); }
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putDouble("Charge", charge);
+        return tag;
+    }
 
     @Override
-    public void deserializeNBT(DoubleTag nbt) {
-        charge = nbt.getAsDouble();
+    public void deserializeNBT(CompoundTag nbt) {
+        charge = nbt.getDouble("Charge");
     }
 }

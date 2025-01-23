@@ -61,7 +61,7 @@ public class SunfireSurgeAbility extends ArmoryAbility {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         Level level = player.level();
-        if (level.isClientSide || !player.hasEffect(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get())) { return; }
+        if (level.isClientSide || event.phase.equals(TickEvent.Phase.END) || !player.hasEffect(ExoArmory.REGISTRY.EFFECT_SUNFIRE_SURGE.get())) { return; }
 
         BlockPos pos = player.blockPosition();
         BlockPos belowPos = pos.below();

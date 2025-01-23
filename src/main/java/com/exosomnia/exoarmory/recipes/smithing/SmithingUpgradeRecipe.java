@@ -2,6 +2,7 @@ package com.exosomnia.exoarmory.recipes.smithing;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
+import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -37,27 +38,21 @@ public class SmithingUpgradeRecipe implements SmithingRecipe {
     @Override
     public boolean matches(Container container, Level level) {
         ItemStack baseItem = container.getItem(1);
-        return this.template.test(container.getItem(0))
-                && this.base.test(baseItem) && (baseItem.getTag().getInt("Rank") == rankFrom)
-                && this.additional.test(container.getItem(2));
+        return this.template.test(container.getItem(0)) && this.base.test(baseItem) && this.additional.test(container.getItem(2)) &&
+                (baseItem.getItem() instanceof ArmoryItem armoryItem) && (armoryItem.getRank(baseItem) == rankFrom);
     }
 
     @Override
     public ItemStack assemble(Container container, RegistryAccess registryAccess) {
         ItemStack itemstack = container.getItem(1).copy();
-        CompoundTag compoundtag = container.getItem(1).getTag();
-        if (compoundtag != null) {
-            CompoundTag newTag = compoundtag.copy();
-            itemstack.setTag(newTag);
-            newTag.putInt("Rank", rankTo);
-        }
+        if (itemstack.getItem() instanceof ArmoryItem armoryItem) { armoryItem.setRank(itemstack, rankTo); }
         return itemstack;
     }
 
     @Override
     public ItemStack getResultItem(RegistryAccess registryAccess) {
         ItemStack itemStack = new ItemStack(ExoArmory.REGISTRY.ITEM_GIGA_SWORD.get());
-        itemStack.getOrCreateTag().putInt("Rank", rankTo);
+        ((ArmoryItem)ExoArmory.REGISTRY.ITEM_GIGA_SWORD.get()).setRank(itemStack, rankTo);
         return itemStack;
     }
 

@@ -1,0 +1,7 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "exoarmory:item/aethers_embrace",
+	"textures": {
+		"layer0": "exoarmory:item/aethers_embrace_pull_3"
+	}
+}

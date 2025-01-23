@@ -17,6 +17,7 @@ import com.exosomnia.exolib.particles.shapes.ParticleShapeDome;
 import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
 import com.exosomnia.exolib.utils.ColorUtils;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,16 +42,34 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
+public class ShadowsEdgeSword extends ArmorySwordItem implements ResourcedItem {
 
     private static final ArmoryResource RESOURCE = new ShadowsEdgeResource();
+    private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
+    static {
+        RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 5.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
+                .build();
+        RANK_ATTRIBUTES[1] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 6.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
+                .build();
+        RANK_ATTRIBUTES[2] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 7.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
+                .build();
+        RANK_ATTRIBUTES[3] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 8.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
+                .build();
+        RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
+                .build();
+    }
 
-    private static final Item.Properties itemProperties = new Item.Properties()
-            .durability(782)
-            .rarity(Rarity.UNCOMMON);
-
-
-    public ShadowsEdgeSword() { super(itemProperties); }
+    public ShadowsEdgeSword() { super(); }
 
     public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
         return switch (getRank(itemStack)) {
@@ -61,44 +80,9 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
     }
     public ArmoryResource getResource() { return RESOURCE; }
 
-    @Override
-    public void buildRanks() {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder;
+    public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
 
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 5.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.4, AttributeModifier.Operation.ADDITION));
-        this.RANK_ATTRIBUTES[0] = builder.build();
-
-        //Rank 2
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 6.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.4, AttributeModifier.Operation.ADDITION));
-        this.RANK_ATTRIBUTES[1] = builder.build();
-
-        //Rank 3
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 7.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.3, AttributeModifier.Operation.ADDITION));
-        this.RANK_ATTRIBUTES[2] = builder.build();
-
-        //Rank 4
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 8.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.3, AttributeModifier.Operation.ADDITION));
-        this.RANK_ATTRIBUTES[3] = builder.build();
-
-        //Rank 5
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 9.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.2, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(BASE_MOVEMENT_SPEED_UUID, "Weapon modifier", 0.05, AttributeModifier.Operation.MULTIPLY_BASE));
-        this.RANK_ATTRIBUTES[4] = builder.build();
-    }
-
-    @Override
-    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {
+    public void addToHover(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {
         components.add(Component.literal(""));
 
         //Ability Info
@@ -182,7 +166,7 @@ public class ShadowsEdgeSword extends SwordArmoryItem implements ResourcedItem {
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity entity) {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
-            level.playSound(null, player.blockPosition(), ExoArmory.REGISTRY.SOUNG_MAGIC_CLASH.get(), SoundSource.PLAYERS, 0.34F, 1.0F);
+            level.playSound(null, player.blockPosition(), ExoArmory.REGISTRY.SOUND_MAGIC_CLASH.get(), SoundSource.PLAYERS, 0.34F, 1.0F);
             ExoArmory.ACTION_MANAGER.scheduleAction(new UmbralAssaultAction(ExoArmory.ACTION_MANAGER, player, 6.0, 10, 8.0), 1);
             player.getCooldowns().addCooldown(itemStack.getItem(), 600);
 

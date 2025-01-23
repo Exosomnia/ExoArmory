@@ -53,7 +53,7 @@ public class ShadowsEdgeResource extends ArmoryResource {
         if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof ShadowsEdgeSword weapon && attacker.hasEffect(MobEffects.INVISIBILITY)) {
-                int rank = ArmoryItem.getRank(itemStack);
+                int rank = weapon.getRank(itemStack);
                 ArmoryResource resource = weapon.getResource();
                 resource.addResource(itemStack, resource.getStatForRank(Stats.CHARGE, rank));
                 PacketHandler.sendToPlayer(new ArmoryResourcePacket(weapon.getUUID(itemStack),

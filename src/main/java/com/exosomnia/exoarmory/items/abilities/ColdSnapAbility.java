@@ -67,7 +67,7 @@ public class ColdSnapAbility extends ArmoryAbility {
         if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof AbilityItem weapon) {
-                int rank = ArmoryItem.getRank(itemStack);
+                int rank = weapon.getRank(itemStack);
                 ColdSnapAbility ability = weapon.getAbility(ExoArmory.REGISTRY.ABILITY_COLD_SNAP, itemStack, rank);
                 if (defender.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get()) && ability != null) {
                     ServerLevel level = (ServerLevel)defender.level();

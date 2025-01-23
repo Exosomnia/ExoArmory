@@ -1,16 +1,18 @@
-package com.exosomnia.exoarmory.rendering.client;
+package com.exosomnia.exoarmory.client.rendering;
 
+import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
+import com.exosomnia.exoarmory.managers.AbilityManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderingManager {
 
-    private final static double SECONDS_VISIBLE = 2.0;
+    private final static double SECONDS_VISIBLE = 2.5;
     private final static double DELTA_PER_SECOND = 20.0; //delta time total for one second
     private final static double DELTA_VISIBLE = SECONDS_VISIBLE * DELTA_PER_SECOND; //Total delta time to make displays visible
     private final static Minecraft MC = Minecraft.getInstance();
@@ -40,7 +42,7 @@ public class RenderingManager {
         if (!sameItem && !sameUUID && (currentItem.getItem() instanceof AbilityItem)) { resetAbilityVisible(); }
         if (currentItem.getItem() instanceof ResourcedItem currentResourceItem) {
             ArmoryResource resource = currentResourceItem.getResource();
-            if ( (!sameItem && !sameUUID) || (sameUUID && resource.getResource(currentItem) != previousResource) ) {
+            if ( (!sameItem && !sameUUID) || (sameUUID && resource.getResource(currentItem) != previousResource) || ExoArmory.ABILITY_MANAGER.isPlayerActive(player) ) {
                 resetResourceVisible();
             }
             previousResource = resource.getResource(currentItem);
@@ -50,8 +52,8 @@ public class RenderingManager {
 
     private boolean sameUUID(ItemStack currentItemStack, ItemStack previousItemStack) {
         if (previousItemStack == null) return false;
-        else if ( (currentItemStack.getItem() instanceof ArmoryItem leftArmoryItem) && (previousItemStack.getItem() instanceof ArmoryItem rightArmoryItem) ) {
-            return leftArmoryItem.getUUID(currentItemStack).equals(rightArmoryItem.getUUID(previousItemStack));
+        else if ( (currentItemStack.getItem() instanceof ArmoryItem leftItem) && (previousItemStack.getItem() instanceof ArmoryItem rightItem) ) {
+            return leftItem.getUUID(currentItemStack).equals(rightItem.getUUID(previousItemStack));
         }
         return false;
     }

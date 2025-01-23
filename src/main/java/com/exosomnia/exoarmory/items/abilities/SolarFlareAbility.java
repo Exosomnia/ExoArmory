@@ -124,7 +124,7 @@ public class SolarFlareAbility extends ArmoryAbility {
         ItemStack attackerItem = attacker.getMainHandItem();
         if (attackerItem.getItem() instanceof SolarSword solarSword) {
             int rank = solarSword.getRank(attackerItem);
-            if (attacker.hasEffect(ExoArmory.REGISTRY.EFFECT_STELLAR_INFUSION.get())) {
+            if (attacker.hasEffect(ExoArmory.REGISTRY.EFFECT_SUNFIRE_SURGE.get())) {
                 createSolarFlare(defender.position(), level, rank, attacker, defender);
                 return;
             }

@@ -1,6 +1,8 @@
 package com.exosomnia.exoarmory.networking;
 
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.networking.packets.AbilityActivePacket;
+import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +24,8 @@ public class PacketHandler {
         int id = 0;
 
         INSTANCE.registerMessage(id++, ArmoryResourcePacket.class, ArmoryResourcePacket::encode, ArmoryResourcePacket::new, ArmoryResourcePacket::handle);
+        INSTANCE.registerMessage(id++, AbilityActivePacket.class, AbilityActivePacket::encode, AbilityActivePacket::new, AbilityActivePacket::handle);
+        INSTANCE.registerMessage(id++, AethersEmbraceTargetPacket.class, AethersEmbraceTargetPacket::encode, AethersEmbraceTargetPacket::new, AethersEmbraceTargetPacket::handle);
     }
 
     public static void sendToPlayer(Object packet, ServerPlayer player) {

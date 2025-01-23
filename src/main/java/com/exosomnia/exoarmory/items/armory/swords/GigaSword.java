@@ -2,9 +2,11 @@ package com.exosomnia.exoarmory.items.armory.swords;
 
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,56 +17,42 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GigaSword extends SwordArmoryItem {
+public class GigaSword extends ArmorySwordItem {
 
-    private static final Item.Properties itemProperties = new Item.Properties()
-            .durability(5)
-            .rarity(Rarity.UNCOMMON);
+    private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
+    static {
+        RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 10.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.0, Operation.ADDITION))
+                .build();
+        RANK_ATTRIBUTES[1] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 14.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.1, Operation.ADDITION))
+                .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.025, Operation.MULTIPLY_TOTAL))
+                .build();
+        RANK_ATTRIBUTES[2] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 18.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.2, Operation.ADDITION))
+                .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.075, Operation.MULTIPLY_TOTAL))
+                .build();
+        RANK_ATTRIBUTES[3] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 23.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.3, Operation.ADDITION))
+                .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.15, Operation.MULTIPLY_TOTAL))
+                .build();
+        RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 32.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.4, Operation.ADDITION))
+                .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.25, Operation.MULTIPLY_TOTAL))
+                .build();
+    }
+
 
     public GigaSword() {
-        super(itemProperties);
+        super();
     }
 
-    @Override
-    public void appendTooltip(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {
-    }
+    public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
 
-    @Override
-    public void buildRanks() {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder;
-
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 10.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.0, AttributeModifier.Operation.ADDITION));
-        this.RANK_ATTRIBUTES[0] = builder.build();
-
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 14.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.1, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(BASE_MOVEMENT_SPEED_UUID, "Weapon modifier", -0.025, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        this.RANK_ATTRIBUTES[1] = builder.build();
-
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 18.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.2, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(BASE_MOVEMENT_SPEED_UUID, "Weapon modifier", -0.075, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        this.RANK_ATTRIBUTES[2] = builder.build();
-
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 23.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.3, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(BASE_MOVEMENT_SPEED_UUID, "Weapon modifier", -0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        this.RANK_ATTRIBUTES[3] = builder.build();
-
-        //Rank 1
-        builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 32.0, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3.4, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(BASE_MOVEMENT_SPEED_UUID, "Weapon modifier", -0.25, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        this.RANK_ATTRIBUTES[4] = builder.build();
-    }
+    public void addToHover(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail) {}
 }

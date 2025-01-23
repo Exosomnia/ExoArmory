@@ -1,10 +1,23 @@
 {
+  "key.exoarmory.activate": "Activate Ability",
+  "key.categories.exoarmory": "Exo Armory",
+
+  "attribute.exoarmory.ranged_strength": "Ranged Strength",
+  "attribute.exoarmory.healing_received": "Healing Received",
+  "attribute.exoarmory.vulnerability": "Vulnerability",
+
+  "effect.exoarmory.blighted": "Blighted",
+  "effect.exoarmory.blighted.description": "Reduces all healing by 20% per level.",
+  "effect.exoarmory.vulnerable": "Vulnerable",
+  "effect.exoarmory.vulnerable.description": "Increases all damage taken by 10% per level.",
+
   "item.exoarmory.giga_sword": "GIGA Sword",
   "item.exoarmory.solar_sword": "Solar Sword",
   "item.exoarmory.shadows_edge": "Shadow's Edge",
   "item.exoarmory.luminis_edge": "Luminis' Edge",
   "item.exoarmory.frostbite": "Frostbite",
   "item.exoarmory.heros_testament": "Hero's Testament",
+  "item.exoarmory.aethers_embrace": "Aether's Embrace",
 
   "item.exoarmory.tier_2_smithing_template": "Rank 1 » 2 Template",
   "item.exoarmory.tier_3_smithing_template": "Rank 2 » 3 Template",

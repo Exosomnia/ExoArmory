@@ -56,7 +56,7 @@ public class FrostbiteResource extends ArmoryResource {
         if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof FrostbiteSword weapon) {
-                int rank = ArmoryItem.getRank(itemStack);
+                int rank = weapon.getRank(itemStack);
                 ArmoryResource resource = weapon.getResource();
                 if (defender.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get())) {
                     attacker.getCooldowns().removeCooldown(weapon);

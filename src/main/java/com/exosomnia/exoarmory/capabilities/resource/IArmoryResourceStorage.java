@@ -1,9 +1,9 @@
 package com.exosomnia.exoarmory.capabilities.resource;
 
-import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IArmoryResourceStorage extends INBTSerializable<DoubleTag> {
+public interface IArmoryResourceStorage extends INBTSerializable<CompoundTag> {
 
     /**
      * Sets the specified amount to the itemstack's resource charge.

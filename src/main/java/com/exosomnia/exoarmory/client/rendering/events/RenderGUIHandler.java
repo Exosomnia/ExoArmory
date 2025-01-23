@@ -1,9 +1,10 @@
-package com.exosomnia.exoarmory.rendering.events;
+package com.exosomnia.exoarmory.client.rendering.events;
 
+import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.client.rendering.RenderingManager;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
-import com.exosomnia.exoarmory.rendering.client.RenderingManager;
 import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import com.exosomnia.exolib.utils.ColorUtils;
@@ -14,14 +15,15 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class RenderGUIOverlayHandler {
+@Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class RenderGUIHandler {
 
     private static final ResourceLocation RESOURCE_BAR = new ResourceLocation(ExoArmory.MODID, "textures/gui/resource_bar.png");
     private static final ResourceLocation ICON_FRAME = new ResourceLocation(ExoArmory.MODID, "textures/gui/icon/icon_frame.png");
@@ -54,7 +56,9 @@ public class RenderGUIOverlayHandler {
             if (visibility > 0) {
                 RenderSystem.enableBlend();
                 ArmoryResource resource = resourceItem.getResource();
-                double chargeAmount = resource.getResource(itemStack) / resource.getResourceMax();
+                double resourceValue = resource.getResource(itemStack);
+                double resourceMax = resource.getResourceMax();
+                double chargeAmount = resourceValue / resourceMax;
 
                 int filledWidth = (int) (barWidth * chargeAmount);
                 float[] rgb = ColorUtils.intToFloats(resource.getRGB());
@@ -62,6 +66,13 @@ public class RenderGUIOverlayHandler {
                 RenderSystem.setShaderColor(rgb[0], rgb[1], rgb[2], visibility);
                 gui.blit(RESOURCE_BAR, baseWidth - barWidth / 2, baseHeight - 5, 0, 5, barWidth, 5, barWidth, 10);
                 gui.blit(RESOURCE_BAR, baseWidth - barWidth / 2, baseHeight - 5, 0, 0, filledWidth, 5, barWidth, 10);
+
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, visibility);
+                if (Config.showResourceAmount) {
+                    String valueDisplay = String.format("%1$d/%2$d", (int)resourceValue, (int)resourceMax);
+                    int nameWidth = mc.font.width(valueDisplay);
+                    gui.drawString(mc.font, valueDisplay, baseWidth - (nameWidth/2), baseHeight - 6, 0xFFFFFFFF);
+                }
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
                 RenderSystem.disableBlend();

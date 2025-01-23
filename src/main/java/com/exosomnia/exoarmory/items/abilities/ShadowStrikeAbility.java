@@ -59,7 +59,7 @@ public class ShadowStrikeAbility extends ArmoryAbility {
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof AbilityItem weapon) {
-                int rank = ArmoryItem.getRank(itemStack);
+                int rank = weapon.getRank(itemStack);
                 ShadowStrikeAbility ability = weapon.getAbility(ExoArmory.REGISTRY.ABILITY_SHADOW_STRIKE, itemStack, rank);
                 if (ability != null && attacker.hasEffect(MobEffects.INVISIBILITY)) {
                     event.setAmount(event.getAmount() + (float)ability.getStatForRank(Stats.DAMAGE, rank));
@@ -73,7 +73,7 @@ public class ShadowStrikeAbility extends ArmoryAbility {
         if (event.getSource().getEntity() instanceof LivingEntity attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof AbilityItem weapon) {
-                int rank = ArmoryItem.getRank(itemStack);
+                int rank = weapon.getRank(itemStack);
                 ShadowStrikeAbility ability = weapon.getAbility(ExoArmory.REGISTRY.ABILITY_SHADOW_STRIKE, itemStack, rank);
                 if (ability != null && attacker.hasEffect(MobEffects.INVISIBILITY)) {
                     MobEffectInstance currentEffect = attacker.getEffect(MobEffects.INVISIBILITY);
