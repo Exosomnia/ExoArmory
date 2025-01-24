@@ -1,5 +1,9 @@
 package com.exosomnia.exoarmory.items.resource;
 
+import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvider;
+import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
+import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
+import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.items.armory.swords.ShadowsEdgeSword;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
@@ -23,12 +27,17 @@ public class AethersEmbraceResource extends ArmoryResource {
     }
 
     public AethersEmbraceResource() {
-        super("luminis_edge", 0xF5F564, 100.0);
+        super("aethers_embrace", 0xFFFFA0, 100.0);
     }
 
     public void buildRanks() {
-        RANK_STATS.put(Stats.CHARGE, new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        RANK_STATS.put(Stats.CHARGE, new double[]{1.0, 1.0, 1.0, 1.0, 2.0});
     }
+
+    @Override
+    public double getResource(ItemStack itemStack) { return ((IArmoryResourceStorage)itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get()).getCharge(); }
+    @Override
+    public IArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return ((IArmoryResourceStorage)itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get()); }
 
     @Override
     public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) {
@@ -36,10 +45,11 @@ public class AethersEmbraceResource extends ArmoryResource {
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.luminis_edge.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.aethers_embrace.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.desc.aethers_embrace.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
-                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.stat.luminis_edge.line.1", getStatForRank(Stats.CHARGE, rank)),
+                description.add(ComponentUtils.formatLine(I18n.get("resource.exoarmory.stat.aethers_embrace.line.1", getStatForRank(Stats.CHARGE, rank)),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }
@@ -47,10 +57,10 @@ public class AethersEmbraceResource extends ArmoryResource {
     }
 
     @SubscribeEvent
-    public static void livingAttackEvent(LivingHurtEvent event) {
+    public static void arrowImpactLivingEvent(LivingHurtEvent event) {
         if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
             ItemStack itemStack = attacker.getMainHandItem();
-            if (itemStack.getItem() instanceof ShadowsEdgeSword weapon && attacker.hasEffect(MobEffects.INVISIBILITY)) {
+            if (itemStack.getItem() instanceof AethersEmbraceBow weapon) {
                 int rank = weapon.getRank(itemStack);
                 ArmoryResource resource = weapon.getResource();
                 resource.addResource(itemStack, resource.getStatForRank(Stats.CHARGE, rank));

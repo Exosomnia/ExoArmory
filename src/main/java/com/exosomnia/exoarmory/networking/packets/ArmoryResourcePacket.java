@@ -41,8 +41,8 @@ public class ArmoryResourcePacket {
             NetworkDirection packetDirection = context.get().getDirection();
             if (packetDirection.equals(NetworkDirection.PLAY_TO_CLIENT)) {
                 ItemStack item = Minecraft.getInstance().player.getInventory().getItem(packet.slot);
-                if ((item.getItem() instanceof ArmoryItem armoryItem) && (armoryItem instanceof ResourcedItem) && (armoryItem.getUUID(item).equals(packet.uuid))){
-                    item.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get().setCharge(packet.charge);
+                if ((item.getItem() instanceof ArmoryItem armoryItem) && (armoryItem instanceof ResourcedItem resourced) && (armoryItem.getUUID(item).equals(packet.uuid))){
+                    resourced.getResource().getResourceStorage(item).setCharge(packet.charge);
                 }
             }
         });

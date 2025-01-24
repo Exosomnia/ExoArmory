@@ -37,7 +37,7 @@ public abstract class ArmoryResource {
     public String getDisplayName() { return I18n.get(String.format(NAME_TRANSLATION_FORMAT, id)); }
 
     public double getResourceMax() { return max; }
-    private IArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get(); }
+    public IArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get(); }
     public double getResource(ItemStack itemStack) { return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get().getCharge(); }
     public void addResource(ItemStack itemStack, double amount) { getResourceStorage(itemStack).addCharge(amount, max); }
     public void removeResource(ItemStack itemStack, double amount) { getResourceStorage(itemStack).removeCharge(amount); }

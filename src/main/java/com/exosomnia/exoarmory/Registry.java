@@ -14,6 +14,7 @@ import com.exosomnia.exoarmory.items.abilities.*;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.items.armory.swords.*;
+import com.exosomnia.exoarmory.items.resource.AethersEmbraceResource;
 import com.exosomnia.exoarmory.items.resource.FrostbiteResource;
 import com.exosomnia.exoarmory.items.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.managers.ProjectileManager;
@@ -164,6 +165,8 @@ public class Registry {
     public final FrigidFlurryAbility ABILITY_FRIGID_FLURRY = new FrigidFlurryAbility();
     public final ColdSnapAbility ABILITY_COLD_SNAP = new ColdSnapAbility();
 
+    //
+
     public void registerCommon() {
         PacketHandler.register();   //Register our packets
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::attributeModifyEvent);
@@ -175,6 +178,7 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapabilities);
         MinecraftForge.EVENT_BUS.addListener(ShadowsEdgeResource::livingAttackEvent);
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
+        MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
         MinecraftForge.EVENT_BUS.register(ABILITY_SOLAR_FLARE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SUNFIRE_SURGE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SHADOW_STRIKE);

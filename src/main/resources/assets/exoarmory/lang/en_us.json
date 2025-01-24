@@ -137,5 +137,18 @@
   "resource.exoarmory.stat.frostbite.line.1": "Charge rate: 0{%.1f}/kill",
 
   "effect.exoarmory.sunfire_surge": "Sunfire Surge",
-  "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare."
+  "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and attacks cause a Solar Flare.",
+
+  "_comment": "+==================+",
+  "_comment": "| AETHER'S EMBRACE |",
+  "_comment": "+==================+",
+
+  "ability.exoarmory.name.WIP3": "Shadow Strike",
+  "ability.exoarmory.desc.WIP3.line.1": "While you're invisible, you gain additional",
+  "ability.exoarmory.stat.WIP3.line.1": "Additional damage: 0{%.1f}",
+
+  "resource.exoarmory.name.aethers_embrace": "Ether",
+  "resource.exoarmory.desc.aethers_embrace.line.1": "Gain charge when you hit an enemy",
+  "resource.exoarmory.desc.aethers_embrace.line.2": "with an arrow shot from this bow.",
+  "resource.exoarmory.stat.aethers_embrace.line.1": "Charge rate: 0{%.1f}/arrow"
 }
