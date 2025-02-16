@@ -1,0 +1,6 @@
+{
+    "parent": "exoarmory:item/dragon_bow",
+    "textures": {
+        "layer0": "exoarmory:item/dragon_bow_pulling_2"
+    }
+}

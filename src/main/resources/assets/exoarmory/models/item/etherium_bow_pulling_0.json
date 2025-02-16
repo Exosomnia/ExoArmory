@@ -1,0 +1,6 @@
+{
+    "parent": "exoarmory:item/etherium_bow",
+    "textures": {
+        "layer0": "exoarmory:item/etherium_bow_pulling_0"
+    }
+}

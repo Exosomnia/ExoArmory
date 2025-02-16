@@ -4,11 +4,13 @@ import com.exosomnia.exoarmory.capabilities.aethersembrace.IAethersEmbraceStorag
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
-import com.exosomnia.exoarmory.effects.BlightedEffect;
-import com.exosomnia.exoarmory.effects.FrostedEffect;
-import com.exosomnia.exoarmory.effects.StellarInfusionEffect;
-import com.exosomnia.exoarmory.effects.VulnerableEffect;
+import com.exosomnia.exoarmory.effects.*;
+import com.exosomnia.exoarmory.enchantment.FortifyingEnchantment;
+import com.exosomnia.exoarmory.enchantment.RallyingEnchantment;
+import com.exosomnia.exoarmory.enchantment.SoulboundEnchantment;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
+import com.exosomnia.exoarmory.items.ReinforcedBowItem;
+import com.exosomnia.exoarmory.items.ReinforcedShieldItem;
 import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
 import com.exosomnia.exoarmory.items.abilities.*;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
@@ -28,23 +30,24 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -53,7 +56,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
+import java.util.UUID;
+
 public class Registry {
+
+    private final ResourceLocation LEGACY_INFERNAL_SHIELD = new ResourceLocation("enigmaticlegacy", "infernal_shield");
+    public List<Item> SHIELDING_ITEMS;
+
+    public final UUID SHIELD_ARMOR_UUID = UUID.fromString("53af3a0a-a46e-42db-8c64-8e888f676d34");
+    public final UUID OFF_HAND_SHIELD_ARMOR_UUID = UUID.fromString("4ced379e-2b80-43fd-b3b1-297175cfdf18");
+    public final UUID PASSIVE_BLOCK_UUID = UUID.fromString("76a473b3-a898-470b-8968-af37fdd52a7d");
+    public final UUID SHIELD_STABILITY_UUID = UUID.fromString("105cb502-61ce-4122-8c5b-bd271a5c85ca");
+    public final UUID SHIELD_ATTACK_UUID = UUID.fromString("8dbb711e-0c9c-4b02-b002-dc1b9303c699");
+    public final UUID OFF_HAND_SHIELD_ATTACK_UUID = UUID.fromString("db3f949d-eaf5-4e92-930b-ca431a064e80");
 
     public final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,
             ExoArmory.MODID);
@@ -72,7 +88,26 @@ public class Registry {
             () -> new BlightedEffect(MobEffectCategory.HARMFUL, 0x36040A) );
     public final RegistryObject<MobEffect> EFFECT_VULNERABLE = MOB_EFFECTS.register("vulnerable",
             () -> new VulnerableEffect(MobEffectCategory.HARMFUL, 0x3D2F54) );
+    public final RegistryObject<MobEffect> EFFECT_EAGLE_EYE = MOB_EFFECTS.register("eagle_eye",
+            () -> new EagleEyeEffect(MobEffectCategory.BENEFICIAL, 0x81AB0F) );
 
+
+    public final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS,
+            ExoArmory.MODID);
+
+    public final RegistryObject<Potion> POTION_EAGLE_EYE = POTIONS.register("eagle_eye",
+            () -> new Potion(new MobEffectInstance(EFFECT_EAGLE_EYE.get(), 3600, 0)));
+    public final RegistryObject<Potion> POTION_EAGLE_EYE_STRONG = POTIONS.register("eagle_eye_strong",
+            () -> new Potion(new MobEffectInstance(EFFECT_EAGLE_EYE.get(), 1800, 1)));
+    public final RegistryObject<Potion> POTION_EAGLE_EYE_EXTENDED = POTIONS.register("eagle_eye_extended",
+            () -> new Potion(new MobEffectInstance(EFFECT_EAGLE_EYE.get(), 9600, 0)));
+
+
+    public final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, ExoArmory.MODID);
+
+    public final RegistryObject<Enchantment> ENCHANTMENT_SOULBOUND = ENCHANTMENTS.register("soulbound", SoulboundEnchantment::new);
+    public final RegistryObject<Enchantment> ENCHANTMENT_FORTIFYING = ENCHANTMENTS.register("fortifying", FortifyingEnchantment::new);
+    public final RegistryObject<Enchantment> ENCHANTMENT_RALLYING = ENCHANTMENTS.register("rallying", RallyingEnchantment::new);
 
     public final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ExoArmory.MODID);
     public final RegistryObject<SoundEvent> SOUND_FIERY_EXPLOSION = SOUNDS.register("fiery_explosion", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "fiery_explosion")));
@@ -98,6 +133,15 @@ public class Registry {
     public final RegistryObject<Item> ITEM_FROSTBITE = ITEMS.register("frostbite", FrostbiteSword::new);
     public final RegistryObject<Item> ITEM_HEROS_TESTAMENT = ITEMS.register("heros_testament", HerosTestamentSword::new);
     public final RegistryObject<Item> ITEM_AETHERS_EMBRACE = ITEMS.register("aethers_embrace", AethersEmbraceBow::new);
+
+    public final RegistryObject<Item> ITEM_COPPER_SHIELD = ITEMS.register("copper_shield", () -> new ReinforcedShieldItem(420, 1.25, 0.05, 1)); //336 Default (1.25 mod)
+    public final RegistryObject<Item> ITEM_IRON_SHIELD = ITEMS.register("iron_shield", () -> new ReinforcedShieldItem(588, 1.5, 0.075, 1));
+    public final RegistryObject<Item> ITEM_GOLD_SHIELD = ITEMS.register("gold_shield", () -> new ReinforcedShieldItem(196, 3.0, 0.05, 0));
+    public final RegistryObject<Item> ITEM_DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new ReinforcedShieldItem(840, 1.75, 0.075, 2));
+    public final RegistryObject<Item> ITEM_NETHERITE_SHIELD = ITEMS.register("netherite_shield", () -> new ReinforcedShieldItem(1176, 2.0, 0.1, 2));
+
+    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
+    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.15, 0.333));
 
     public final RegistryObject<Item> ITEM_TIER_2_TEMPLATE = ITEMS.register("tier_2_smithing_template", () -> new UpgradeTemplateItem(1, new Item.Properties().rarity(Rarity.COMMON)));
     public final RegistryObject<Item> ITEM_TIER_3_TEMPLATE = ITEMS.register("tier_3_smithing_template", () -> new UpgradeTemplateItem(2, new Item.Properties().rarity(Rarity.UNCOMMON)));
@@ -153,6 +197,18 @@ public class Registry {
                     -127.0,
                     2.0));
 
+    public final RegistryObject<Attribute> ATTRIBUTE_SHIELD_STABILITY = ATTRIBUTES.register("shield_stability",
+            () -> new RangedAttribute("attribute.exoarmory.shield_stability",
+                    1.0,
+                    0.0,
+                    72000.0).setSyncable(true));
+
+    public final RegistryObject<Attribute> ATTRIBUTE_PASSIVE_BLOCK = ATTRIBUTES.register("passive_block",
+            () -> new RangedAttribute("attribute.exoarmory.passive_block",
+                    1.0,
+                    1.0,
+                    2.0));
+
     public KeyMapping KEY_ACTIVATE;
 
     public final SolarFlareAbility ABILITY_SOLAR_FLARE = new SolarFlareAbility();
@@ -176,6 +232,7 @@ public class Registry {
 
         MinecraftForge.EVENT_BUS.addListener(this::registerCapabilities);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapabilities);
+        MinecraftForge.EVENT_BUS.addListener(this::attributeItemModifyEvent);
         MinecraftForge.EVENT_BUS.addListener(ShadowsEdgeResource::livingAttackEvent);
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
         MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
@@ -193,6 +250,8 @@ public class Registry {
         ITEMS.register(eventBus);
         CREATIVE_TABS.register(eventBus);
         ATTRIBUTES.register(eventBus);
+        ENCHANTMENTS.register(eventBus);
+        POTIONS.register(eventBus);
     }
 
     public void registerClient() {
@@ -219,11 +278,33 @@ public class Registry {
     }
 
     public void attributeModifyEvent(final EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, ATTRIBUTE_RANGED_STRENGTH.get());
-        event.add(EntityType.SKELETON, ATTRIBUTE_RANGED_STRENGTH.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_SHIELD_STABILITY.get());
         for (EntityType<? extends LivingEntity> entity : event.getTypes()) {
+            event.add(entity, ATTRIBUTE_RANGED_STRENGTH.get());
             event.add(entity, ATTRIBUTE_HEALING_RECEIVED.get());
             event.add(entity, ATTRIBUTE_VULNERABILITY.get());
+            event.add(entity, ATTRIBUTE_PASSIVE_BLOCK.get());
+        }
+    }
+
+    public void attributeItemModifyEvent(final ItemAttributeModifierEvent event) {
+        EquipmentSlot slot = event.getSlotType();
+        if (!slot.equals(EquipmentSlot.OFFHAND) && !slot.equals(EquipmentSlot.MAINHAND)) { return; }
+        ItemStack stack = event.getItemStack();
+        Item item = stack.getItem();
+        if (item.canPerformAction(stack, ToolActions.SHIELD_BLOCK)) {
+            if (event.getOriginalModifiers().isEmpty()) {
+                ResourceLocation location = ForgeRegistries.ITEMS.getKey(item);
+                if (location.equals(LEGACY_INFERNAL_SHIELD)) {
+                    event.addModifier(ATTRIBUTE_SHIELD_STABILITY.get(), new AttributeModifier(SHIELD_STABILITY_UUID, "Default", 2.25, AttributeModifier.Operation.ADDITION));
+                    event.addModifier(ATTRIBUTE_PASSIVE_BLOCK.get(), new AttributeModifier(PASSIVE_BLOCK_UUID, "Default", 0.10, AttributeModifier.Operation.MULTIPLY_BASE));
+                    event.addModifier(Attributes.ARMOR, new AttributeModifier(slot == EquipmentSlot.MAINHAND ? SHIELD_ARMOR_UUID : OFF_HAND_SHIELD_ARMOR_UUID, "Default", 3, AttributeModifier.Operation.ADDITION));
+                } else {
+                    event.addModifier(ATTRIBUTE_SHIELD_STABILITY.get(), new AttributeModifier(SHIELD_STABILITY_UUID, "Default", 1.0, AttributeModifier.Operation.ADDITION));
+                    event.addModifier(ATTRIBUTE_PASSIVE_BLOCK.get(), new AttributeModifier(PASSIVE_BLOCK_UUID, "Default", 0.05, AttributeModifier.Operation.MULTIPLY_BASE));
+                    //event.addModifier(Attributes.ARMOR, new AttributeModifier(slot == EquipmentSlot.MAINHAND ? SHIELD_ARMOR_UUID : OFF_HAND_SHIELD_ARMOR_UUID, "Default", 0.0, AttributeModifier.Operation.ADDITION));
+                }
+            }
         }
     }
 }

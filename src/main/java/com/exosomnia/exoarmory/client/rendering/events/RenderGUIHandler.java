@@ -7,16 +7,20 @@ import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
+import com.exosomnia.exoarmory.utils.AttributeUtils;
 import com.exosomnia.exolib.utils.ColorUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -26,6 +30,7 @@ import java.util.List;
 public class RenderGUIHandler {
 
     private static final ResourceLocation RESOURCE_BAR = new ResourceLocation(ExoArmory.MODID, "textures/gui/resource_bar.png");
+    private static final ResourceLocation SHIELD_STABILITY_ICON = new ResourceLocation(ExoArmory.MODID, "textures/gui/shield_stability.png");
     private static final ResourceLocation ICON_FRAME = new ResourceLocation(ExoArmory.MODID, "textures/gui/icon/icon_frame.png");
     private static final ResourceLocation NINE_SLICE = new ResourceLocation(ExoArmory.MODID, "textures/gui/nineslice_accent1.png");
 
@@ -49,6 +54,23 @@ public class RenderGUIHandler {
         int baseWidth = mc.getWindow().getGuiScaledWidth() / 2; //Represents the x value to draw from, the middle of the screen
 
         RenderSystem.defaultBlendFunc();
+
+        if (player.isUsingItem()) {
+            InteractionHand hand = player.getUsedItemHand();
+            ItemStack usingStack = player.getItemInHand(hand);
+            if (usingStack.canPerformAction(ToolActions.SHIELD_BLOCK)) {
+                int stabilityTicks = (int) (AttributeUtils.getAttributeValueOfItemStack(ExoArmory.REGISTRY.ATTRIBUTE_SHIELD_STABILITY.get(),
+                        hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, usingStack,
+                        player.getAttributeBaseValue(ExoArmory.REGISTRY.ATTRIBUTE_SHIELD_STABILITY.get())) * 20.0);
+                int ticksLeft = stabilityTicks - (usingStack.getUseDuration() - player.getUseItemRemainingTicks());
+                if (ticksLeft >= 0) {
+                    String secondsLeft = String.format("%.1f", (ticksLeft / 20.0));
+                    int width = mc.font.width(secondsLeft);
+                    gui.blit(SHIELD_STABILITY_ICON, baseWidth - 8, baseHeight - 96, 0, 0, 16, 16, 16, 16);
+                    gui.drawString(mc.font, secondsLeft, baseWidth - (width / 2), baseHeight - 93, 0xFFFFFFFF);
+                }
+            }
+        }
 
         float visibility;
         if (item instanceof ResourcedItem resourceItem) {

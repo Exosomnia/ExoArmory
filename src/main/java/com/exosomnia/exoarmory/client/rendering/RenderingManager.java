@@ -23,6 +23,8 @@ public class RenderingManager {
     private double abilityVisibileTime = 0.0;
     private double resourceVisibleTime = 0.0;
 
+    private static int totalTicks = 0;
+
     public void tick() {
         LocalPlayer player = MC.player;
         if (player == null) {
@@ -31,9 +33,11 @@ public class RenderingManager {
             return;
         }
 
+        totalTicks++;
+
         //Resource and ability rendering logic
-        abilityVisibileTime = Math.max(0.0, abilityVisibileTime - MC.getDeltaFrameTime());
-        resourceVisibleTime = Math.max(0.0, resourceVisibleTime - MC.getDeltaFrameTime());
+        abilityVisibileTime = Math.max(0.0, abilityVisibileTime - 1.0);
+        resourceVisibleTime = Math.max(0.0, resourceVisibleTime - 1.0);
         ItemStack currentItem = player.getMainHandItem();
 
         boolean sameItem = currentItem == previousItem;
@@ -81,4 +85,6 @@ public class RenderingManager {
     public double getAbilityVisibility() {
         return Math.min(1.0, abilityVisibileTime / 20.0);
     }
+
+    public int getTotalTicks() { return totalTicks; }
 }

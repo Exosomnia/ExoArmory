@@ -48,8 +48,11 @@ public class RenderLivingHandler {
     public static void livingRender(RenderLivingEvent<LivingEntity, ?> event) {
         MultiBufferSource buffSource = event.getMultiBufferSource();
         if (buffSource instanceof OutlineBufferSource outlineSource) {
-            outlineSource.setColor(245, 198, 69, 255);
-            ((EntityAccessor)event.getEntity()).setClientGlowing(false);
+            EntityAccessor entity = ((EntityAccessor)event.getEntity());
+            if (entity.isClientGlowing()) {
+                outlineSource.setColor(245, 198, 69, 255);
+                entity.setClientGlowing(false);
+            }
         }
     }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:storage_blocks/diamond"
+    },
+    "I": {
+      "tag": "forge:ingots/diamond"
+    },
+    "o": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "IoI",
+    "ICI",
+    " I "
+  ],
+  "result": {
+    "item": "exoarmory:diamond_shield"
+  }
+}

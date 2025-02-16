@@ -13,6 +13,7 @@ public abstract class EntityMixin implements EntityAccessor {
     private boolean clientGlowing = false;
 
     public void setClientGlowing(boolean flag) { clientGlowing = flag; }
+    public boolean isClientGlowing() { return clientGlowing; }
 
     @Inject(method = "isCurrentlyGlowing", at = @At("RETURN"), cancellable = true)
     private void isCurrentlyGlowing(CallbackInfoReturnable<Boolean> ci) {

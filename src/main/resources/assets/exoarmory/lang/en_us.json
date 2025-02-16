@@ -1,15 +1,54 @@
 {
+  "item.modifiers.bothhand": "While in Either Hand:",
+
   "key.exoarmory.activate": "Activate Ability",
   "key.categories.exoarmory": "Exo Armory",
 
   "attribute.exoarmory.ranged_strength": "Ranged Strength",
   "attribute.exoarmory.healing_received": "Healing Received",
   "attribute.exoarmory.vulnerability": "Vulnerability",
+  "attribute.exoarmory.shield_stability": "Shield Stability",
+  "attribute.exoarmory.passive_block": "Passive Block Chance",
 
   "effect.exoarmory.blighted": "Blighted",
   "effect.exoarmory.blighted.description": "Reduces all healing by 20% per level.",
   "effect.exoarmory.vulnerable": "Vulnerable",
   "effect.exoarmory.vulnerable.description": "Increases all damage taken by 10% per level.",
+  "effect.exoarmory.eagle_eye": "Eagle Eye",
+  "effect.exoarmory.eagle_eye.description": "Increases arrow projectile damage by 10% per level.",
+
+  "item.minecraft.potion.effect.eagle_eye": "Potion of Eagle Eye",
+  "item.minecraft.potion.effect.eagle_eye_strong": "Potion of Eagle Eye",
+  "item.minecraft.potion.effect.eagle_eye_extended": "Potion of Eagle Eye",
+
+  "item.minecraft.splash_potion.effect.eagle_eye": "Splash Potion of Eagle Eye",
+  "item.minecraft.splash_potion.effect.eagle_eye_strong": "Splash Potion of Eagle Eye",
+  "item.minecraft.splash_potion.effect.eagle_eye_extended": "Splash Potion of Eagle Eye",
+
+  "item.minecraft.lingering_potion.effect.eagle_eye": "Lingering Potion of Eagle Eye",
+  "item.minecraft.lingering_potion.effect.eagle_eye_strong": "Lingering Potion of Eagle Eye",
+  "item.minecraft.lingering_potion.effect.eagle_eye_extended": "Lingering Potion of Eagle Eye",
+
+  "item.minecraft.tipped_arrow.effect.eagle_eye": "Arrow of Eagle Eye",
+  "item.minecraft.tipped_arrow.effect.eagle_eye_strong": "Arrow of Eagle Eye",
+  "item.minecraft.tipped_arrow.effect.eagle_eye_extended": "Arrow of Eagle Eye",
+
+  "enchantment.exoarmory.soulbound": "Soulbound",
+  "enchantment.exoarmory.soulbound.desc": "Prevents the enchanted item from being lost on death. Items saved between deaths take durability damage if possible, but will not break due to it.",
+  "enchantment.exoarmory.fortifying": "Fortifying",
+  "enchantment.exoarmory.fortifying.desc": "Causes shields to give additional armor when held in main or offhand.",
+  "enchantment.exoarmory.rallying": "Rallying",
+  "enchantment.exoarmory.rallying.desc": "Causes shields to boost attack damage when held in main or offhand.",
+
+  "item.exoarmory.dragon_bow": "Dragon Bow",
+  "item.exoarmory.etherium_bow": "Etherium Bow",
+  "item.exoarmory.reinforced_bow.info.1": "0{%.1f}%% chance to pierce.",
+
+  "item.exoarmory.copper_shield": "Copper Shield",
+  "item.exoarmory.iron_shield": "Iron Shield",
+  "item.exoarmory.gold_shield": "Gold Shield",
+  "item.exoarmory.diamond_shield": "Diamond Shield",
+  "item.exoarmory.netherite_shield": "Netherite Shield",
 
   "item.exoarmory.giga_sword": "GIGA Sword",
   "item.exoarmory.solar_sword": "Solar Sword",

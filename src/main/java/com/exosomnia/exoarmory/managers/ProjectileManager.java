@@ -5,16 +5,21 @@ import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvide
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
+import com.exosomnia.exoarmory.items.ReinforcedBowItem;
 import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -56,7 +61,8 @@ public class ProjectileManager {
     //Adds entity's ranged strength attribute to arrow data
     @SubscribeEvent
     public void projectileJoin(EntityJoinLevelEvent event) {
-        if (!event.getLevel().isClientSide
+        Level level = event.getLevel();
+        if (!level.isClientSide
                 && event.getEntity() instanceof AbstractArrow projectile
                 && projectile.getOwner() instanceof LivingEntity owner) {
             AttributeInstance strength = owner.getAttribute(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get());
@@ -66,12 +72,19 @@ public class ProjectileManager {
             }
 
             ItemStack weapon = owner.getMainHandItem();
-            if (owner instanceof ServerPlayer player && weapon.getItem() instanceof AethersEmbraceBow bow && ExoArmory.ABILITY_MANAGER.isPlayerActive(player)) {
-                projectile.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
-                    projectileData.setItemUUID(bow.getUUID(weapon));
-                    projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.AETHER.getType());
-                    projectileData.setArrowRank(bow.getRank(weapon));
-                });
+            if (owner instanceof ServerPlayer player) {
+                Item item = weapon.getItem();
+                if (item instanceof AethersEmbraceBow bow && ExoArmory.ABILITY_MANAGER.isPlayerActive(player)) {
+                    projectile.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
+                        projectileData.setItemUUID(bow.getUUID(weapon));
+                        projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.AETHER.getType());
+                        projectileData.setArrowRank(bow.getRank(weapon));
+                    });
+                }
+                else if (item instanceof ReinforcedBowItem bow && level.random.nextDouble() < bow.getPierceChance()) {
+                    projectile.setPierceLevel((byte)1);
+                    player.playNotifySound(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 2.0F);
+                }
             }
         }
     }

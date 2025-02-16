@@ -6,14 +6,25 @@ import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.managers.AbilityManager;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
+import com.exosomnia.exolib.recipes.brewing.SimpleBrewingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -23,6 +34,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(ExoArmory.MODID)
@@ -60,6 +74,15 @@ public class ExoArmory
         ACTION_MANAGER = new ActionManager();
         CONDITIONAL_MANAGER = new ConditionalManager();
         ABILITY_MANAGER = new AbilityManager();
+
+        REGISTRY.SHIELDING_ITEMS = ForgeRegistries.ITEMS.getValues().stream().filter(item -> item.canPerformAction(new ItemStack(item), ToolActions.SHIELD_BLOCK)).toList();
+
+        event.enqueueWork(() -> {
+            Potion baseEagleEye = REGISTRY.POTION_EAGLE_EYE.get();
+            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Potions.AWKWARD, Items.SKELETON_SKULL, baseEagleEye));
+            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(baseEagleEye, Items.GLOWSTONE_DUST, REGISTRY.POTION_EAGLE_EYE_STRONG.get()));
+            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(baseEagleEye, Items.REDSTONE, REGISTRY.POTION_EAGLE_EYE_EXTENDED.get()));
+        });
     }
 
     @OnlyIn(Dist.CLIENT)
