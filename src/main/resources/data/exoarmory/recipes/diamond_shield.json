@@ -5,7 +5,7 @@
       "tag": "forge:storage_blocks/diamond"
     },
     "I": {
-      "tag": "forge:ingots/diamond"
+      "tag": "forge:gems/diamond"
     },
     "o": {
       "item": "minecraft:iron_ingot"

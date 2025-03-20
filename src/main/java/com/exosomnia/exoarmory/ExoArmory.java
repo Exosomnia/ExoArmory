@@ -7,23 +7,18 @@ import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.managers.AbilityManager;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exolib.recipes.brewing.SimpleBrewingRecipe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -35,8 +30,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(ExoArmory.MODID)
@@ -89,18 +82,18 @@ public class ExoArmory
     public void setupClient(FMLClientSetupEvent event) {
         RENDERING_MANAGER = new RenderingManager();
 
-        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "using"),
+        ItemProperties.registerGeneric(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "using"),
                 (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F);
-        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "use_time"),
+        ItemProperties.registerGeneric(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "use_time"),
                 (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() ? (float)(itemStack.getUseDuration() - entity.getUseItemRemainingTicks()) : 0.0F);
-        ItemProperties.registerGeneric(new ResourceLocation(ExoArmory.MODID, "rank"),
+        ItemProperties.registerGeneric(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "rank"),
                 (itemStack, level, entity, data) -> {
                     if (itemStack.getItem() instanceof ArmoryItem armoryItem) {
                         return (float)armoryItem.getRank(itemStack);
                     }
                     return 0.0F;
                 });
-        ItemProperties.register(REGISTRY.ITEM_AETHERS_EMBRACE.get(), new ResourceLocation(ExoArmory.MODID, "aether"),
+        ItemProperties.register(REGISTRY.ITEM_AETHERS_EMBRACE.get(), ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "aether"),
                 (itemStack, level, entity, data) -> entity != null && ((AethersEmbraceBow)itemStack.getItem()).isTargeting(itemStack, level) ? 1.0F : 0.0F);
     }
 

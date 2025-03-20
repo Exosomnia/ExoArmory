@@ -26,7 +26,7 @@ public abstract class ArmoryAbility {
     public ArmoryAbility(String name, int rgb) {
         this.name = name;
         this.rgb = rgb;
-        this.icon = new ResourceLocation(ExoArmory.MODID, String.format("textures/gui/icon/%s.png", name));
+        this.icon = ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, String.format("textures/gui/icon/%s.png", name));
 
         this.defaultTooltip = Component.translatable("item.exoarmory.info.ability").withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
                 .append(Component.literal(": ").withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))

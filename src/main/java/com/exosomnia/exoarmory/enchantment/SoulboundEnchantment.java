@@ -20,6 +20,14 @@ public class SoulboundEnchantment extends Enchantment {
         return false;
     }
 
+    public int getMinCost(int level) {
+        return level * 25;
+    }
+
+    public int getMaxCost(int level) {
+        return this.getMinCost(level) + 50;
+    }
+
     @Override
     public boolean canEnchant(ItemStack itemStack) { return itemStack.isEnchantable(); }
 }

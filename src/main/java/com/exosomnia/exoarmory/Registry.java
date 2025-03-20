@@ -61,7 +61,7 @@ import java.util.UUID;
 
 public class Registry {
 
-    private final ResourceLocation LEGACY_INFERNAL_SHIELD = new ResourceLocation("enigmaticlegacy", "infernal_shield");
+    private final ResourceLocation LEGACY_INFERNAL_SHIELD = ResourceLocation.fromNamespaceAndPath("enigmaticlegacy", "infernal_shield");
     public List<Item> SHIELDING_ITEMS;
 
     public final UUID SHIELD_ARMOR_UUID = UUID.fromString("53af3a0a-a46e-42db-8c64-8e888f676d34");
@@ -90,6 +90,8 @@ public class Registry {
             () -> new VulnerableEffect(MobEffectCategory.HARMFUL, 0x3D2F54) );
     public final RegistryObject<MobEffect> EFFECT_EAGLE_EYE = MOB_EFFECTS.register("eagle_eye",
             () -> new EagleEyeEffect(MobEffectCategory.BENEFICIAL, 0x81AB0F) );
+    public final RegistryObject<MobEffect> EFFECT_FIRE_VULNERABILITY = MOB_EFFECTS.register("fire_vulnerability",
+            () -> new EagleEyeEffect(MobEffectCategory.HARMFUL, 0x421506) );
 
 
     public final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS,
@@ -110,13 +112,13 @@ public class Registry {
     public final RegistryObject<Enchantment> ENCHANTMENT_RALLYING = ENCHANTMENTS.register("rallying", RallyingEnchantment::new);
 
     public final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ExoArmory.MODID);
-    public final RegistryObject<SoundEvent> SOUND_FIERY_EXPLOSION = SOUNDS.register("fiery_explosion", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "fiery_explosion")));
-    public final RegistryObject<SoundEvent> SOUND_FIERY_EFFECT = SOUNDS.register("fiery_effect", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "fiery_effect")));
+    public final RegistryObject<SoundEvent> SOUND_FIERY_EXPLOSION = SOUNDS.register("fiery_explosion", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "fiery_explosion")));
+    public final RegistryObject<SoundEvent> SOUND_FIERY_EFFECT = SOUNDS.register("fiery_effect", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "fiery_effect")));
 
-    public final RegistryObject<SoundEvent> SOUND_DARK_AMBIENT_CHARGE = SOUNDS.register("dark_ambient_charge", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "dark_ambient_charge")));
-    public final RegistryObject<SoundEvent> SOUND_MAGIC_CLASH = SOUNDS.register("magic_clash", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "magic_clash")));
-    public final RegistryObject<SoundEvent> SOUND_MAGIC_TELEPORT = SOUNDS.register("magic_teleport", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "magic_teleport")));
-    public final RegistryObject<SoundEvent> SOUND_MAGIC_ICE_CAST = SOUNDS.register("magic_ice_cast", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ExoArmory.MODID, "magic_ice_cast")));
+    public final RegistryObject<SoundEvent> SOUND_DARK_AMBIENT_CHARGE = SOUNDS.register("dark_ambient_charge", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "dark_ambient_charge")));
+    public final RegistryObject<SoundEvent> SOUND_MAGIC_CLASH = SOUNDS.register("magic_clash", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_clash")));
+    public final RegistryObject<SoundEvent> SOUND_MAGIC_TELEPORT = SOUNDS.register("magic_teleport", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_teleport")));
+    public final RegistryObject<SoundEvent> SOUND_MAGIC_ICE_CAST = SOUNDS.register("magic_ice_cast", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_ice_cast")));
 
     public final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
             ExoArmory.MODID);
@@ -141,7 +143,7 @@ public class Registry {
     public final RegistryObject<Item> ITEM_NETHERITE_SHIELD = ITEMS.register("netherite_shield", () -> new ReinforcedShieldItem(1176, 2.0, 0.1, 2));
 
     public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
-    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.15, 0.333));
+    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.15, 0.50));
 
     public final RegistryObject<Item> ITEM_TIER_2_TEMPLATE = ITEMS.register("tier_2_smithing_template", () -> new UpgradeTemplateItem(1, new Item.Properties().rarity(Rarity.COMMON)));
     public final RegistryObject<Item> ITEM_TIER_3_TEMPLATE = ITEMS.register("tier_3_smithing_template", () -> new UpgradeTemplateItem(2, new Item.Properties().rarity(Rarity.UNCOMMON)));
@@ -199,12 +201,24 @@ public class Registry {
 
     public final RegistryObject<Attribute> ATTRIBUTE_SHIELD_STABILITY = ATTRIBUTES.register("shield_stability",
             () -> new RangedAttribute("attribute.exoarmory.shield_stability",
-                    1.0,
+                    0.5,
                     0.0,
                     72000.0).setSyncable(true));
 
     public final RegistryObject<Attribute> ATTRIBUTE_PASSIVE_BLOCK = ATTRIBUTES.register("passive_block",
             () -> new RangedAttribute("attribute.exoarmory.passive_block",
+                    1.0,
+                    1.0,
+                    2.0));
+
+    public final RegistryObject<Attribute> ATTRIBUTE_EXPLOSION_STRENGTH = ATTRIBUTES.register("explosion_strength",
+            () -> new RangedAttribute("attribute.exoarmory.explosion_strength",
+                    1.0,
+                    0.0,
+                    128.0));
+
+    public final RegistryObject<Attribute> ATTRIBUTE_PASSIVE_CRITICAL = ATTRIBUTES.register("passive_critical",
+            () -> new RangedAttribute("attribute.exoarmory.passive_critical",
                     1.0,
                     1.0,
                     2.0));
@@ -273,17 +287,19 @@ public class Registry {
 
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof AbstractArrow) {
-            event.addCapability(new ResourceLocation(ExoArmory.MODID, "armory_arrow_storage"), new ArmoryArrowProvider());
+            event.addCapability(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "armory_arrow_storage"), new ArmoryArrowProvider());
         }
     }
 
     public void attributeModifyEvent(final EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ATTRIBUTE_SHIELD_STABILITY.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_PASSIVE_CRITICAL.get());
         for (EntityType<? extends LivingEntity> entity : event.getTypes()) {
             event.add(entity, ATTRIBUTE_RANGED_STRENGTH.get());
             event.add(entity, ATTRIBUTE_HEALING_RECEIVED.get());
             event.add(entity, ATTRIBUTE_VULNERABILITY.get());
             event.add(entity, ATTRIBUTE_PASSIVE_BLOCK.get());
+            event.add(entity, ATTRIBUTE_EXPLOSION_STRENGTH.get());
         }
     }
 

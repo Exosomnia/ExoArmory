@@ -1,30 +1,37 @@
 package com.exosomnia.exoarmory.handlers;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.Registry;
 import com.exosomnia.exoarmory.utils.AttributeUtils;
 import com.google.common.collect.Multimap;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,6 +42,8 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CombatEventsHandler {
+
+    static final TagKey<DamageType> IS_EXPLOSION_TYPE = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "is_explosion"));
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityHeal(LivingHealEvent event) {
@@ -71,8 +80,25 @@ public class CombatEventsHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onEntityHurt(LivingHurtEvent event) {
+        Entity attacker = event.getSource().getEntity();
+        if (event.getSource().is(IS_EXPLOSION_TYPE) && (attacker instanceof Creeper || attacker instanceof ServerPlayer)) {
+            float modifier = (float)((LivingEntity)attacker).getAttributeValue(ExoArmory.REGISTRY.ATTRIBUTE_EXPLOSION_STRENGTH.get());
+            event.setAmount(event.getAmount() * modifier);
+        }
+
         float modifier = 1.0F - (float)event.getEntity().getAttributeValue(ExoArmory.REGISTRY.ATTRIBUTE_VULNERABILITY.get());
         event.setAmount(event.getAmount() + (event.getAmount() * modifier));
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onPlayerCrit(CriticalHitEvent event) {
+        Player attacker = event.getEntity();
+        if (attacker.level().isClientSide || event.isVanillaCritical()) { return; }
+
+        double chance = (attacker.getAttributeValue(ExoArmory.REGISTRY.ATTRIBUTE_PASSIVE_CRITICAL.get()) - 1.0);
+        if (attacker.getRandom().nextDouble() < chance) {
+            event.setResult(Event.Result.ALLOW);
+        }
     }
 
     @SubscribeEvent
@@ -99,7 +125,9 @@ public class CombatEventsHandler {
         Collection<ItemEntity> drops = event.getDrops();
         if (!drops.isEmpty()) {
             drops.forEach(itemEntity -> {
-                if (itemEntity.getItem().getEnchantmentLevel(ExoArmory.REGISTRY.ENCHANTMENT_SOULBOUND.get()) != 0) {
+                ItemStack dropItem = itemEntity.getItem();
+                if (dropItem.getEnchantmentLevel(ExoArmory.REGISTRY.ENCHANTMENT_SOULBOUND.get()) > 0 &&
+                        dropItem.getEnchantmentLevel(Enchantments.VANISHING_CURSE) < 1) {
                     soulboundItems.add(itemEntity);
                 }
             });

@@ -28,9 +28,17 @@ public class FortifyingEnchantment extends Enchantment {
         return true;
     }
 
-    @Override
-    protected boolean checkCompatibility(Enchantment enchantment) { return !enchantment.equals(ExoArmory.REGISTRY.ENCHANTMENT_RALLYING.get()); }
+    public int getMinCost(int level) {
+        return level * 25;
+    }
+
+    public int getMaxCost(int level) {
+        return this.getMinCost(level) + 50;
+    }
 
     @Override
-    public boolean canEnchant(ItemStack itemStack) { return itemStack.canPerformAction(ToolActions.SHIELD_BLOCK); }
+    protected boolean checkCompatibility(Enchantment enchantment) { return !(enchantment instanceof RallyingEnchantment) && super.checkCompatibility(enchantment); }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack itemStack) { return itemStack.canPerformAction(ToolActions.SHIELD_BLOCK); }
 }

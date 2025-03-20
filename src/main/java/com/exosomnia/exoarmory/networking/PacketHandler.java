@@ -14,7 +14,7 @@ public class PacketHandler {
 
     private static final String PROTOCOL_VERSION = "1";
     private static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ExoArmory.MODID, "main"),
+            ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

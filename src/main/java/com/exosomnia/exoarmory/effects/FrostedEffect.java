@@ -9,6 +9,7 @@ public class FrostedEffect extends MobEffect {
 
     private final static String MOVEMENT_UUID = "522e5e84-ab1c-422c-bb2f-66a34a532d1c";
     private final static String ARMOR_UUID = "ae56f280-2f2e-4b63-9143-ac2a92d47624";
+    private final static String ARMOR_TOUGHNESS_UUID = "098b8ac1-636d-4e5b-8dd1-75f2777c210a";
 
     public FrostedEffect(MobEffectCategory typeIn, int liquidColorIn) {
         super(typeIn, liquidColorIn);
@@ -17,5 +18,7 @@ public class FrostedEffect extends MobEffect {
                 MOVEMENT_UUID, -0.1, AttributeModifier.Operation.MULTIPLY_BASE);
         this.addAttributeModifier(Attributes.ARMOR,
                 ARMOR_UUID, -2.0, AttributeModifier.Operation.ADDITION);
+        this.addAttributeModifier(Attributes.ARMOR_TOUGHNESS,
+                ARMOR_TOUGHNESS_UUID, -1.0, AttributeModifier.Operation.ADDITION);
     }
 }

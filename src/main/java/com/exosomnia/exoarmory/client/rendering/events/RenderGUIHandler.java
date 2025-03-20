@@ -29,10 +29,10 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderGUIHandler {
 
-    private static final ResourceLocation RESOURCE_BAR = new ResourceLocation(ExoArmory.MODID, "textures/gui/resource_bar.png");
-    private static final ResourceLocation SHIELD_STABILITY_ICON = new ResourceLocation(ExoArmory.MODID, "textures/gui/shield_stability.png");
-    private static final ResourceLocation ICON_FRAME = new ResourceLocation(ExoArmory.MODID, "textures/gui/icon/icon_frame.png");
-    private static final ResourceLocation NINE_SLICE = new ResourceLocation(ExoArmory.MODID, "textures/gui/nineslice_accent1.png");
+    private static final ResourceLocation RESOURCE_BAR = ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "textures/gui/resource_bar.png");
+    private static final ResourceLocation SHIELD_STABILITY_ICON = ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "textures/gui/shield_stability.png");
+    private static final ResourceLocation ICON_FRAME = ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "textures/gui/icon/icon_frame.png");
+    private static final ResourceLocation NINE_SLICE = ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "textures/gui/nineslice_accent1.png");
 
     private static final int barWidth = 182; //Width of bar empty and filled textures
 
