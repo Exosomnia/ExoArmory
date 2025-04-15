@@ -1,0 +1,25 @@
+{
+  "biome_injects": {
+    "biomes": [
+      "#minecraft:is_nether"
+    ],
+    "cause": "minecraft:chest"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "exoarmory:shadows_edge"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.01
+        }
+      ]
+    }
+  ]
+}

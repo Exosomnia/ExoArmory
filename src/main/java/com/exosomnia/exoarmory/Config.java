@@ -16,7 +16,7 @@ public class Config
 
     private static final ForgeConfigSpec.BooleanValue SHOW_RESOURCE_AMOUNT = BUILDER
             .comment("Shows/hides the numerical resource amount when displaying the resource bar.")
-            .define("showResourceAmount", false);
+            .define("showResourceAmount", true);
 
     private static final ForgeConfigSpec.BooleanValue ABILITY_ACTIVE_TOGGLE = BUILDER
             .comment("Determines if activating abilities are done via toggle or being held.")

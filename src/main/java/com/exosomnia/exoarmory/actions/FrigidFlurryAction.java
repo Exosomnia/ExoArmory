@@ -45,6 +45,6 @@ public class FrigidFlurryAction extends Action {
         }
 
         count--;
-        manager.scheduleAction(this, 4);
+        manager.scheduleAction(this, 2);
     }
 }

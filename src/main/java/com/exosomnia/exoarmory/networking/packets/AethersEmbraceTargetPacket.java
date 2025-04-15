@@ -51,7 +51,7 @@ public class AethersEmbraceTargetPacket {
                     itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).ifPresent(data -> {
                         data.setTarget(packet.targetUUID);
                         data.setExpire(packet.expirationTime);
-                        player.playSound(ExoArmory.REGISTRY.SOUND_MAGIC_CLASH.get(), 0.34F, 1.75F);
+                        if (packet.expirationTime > 0) player.playSound(ExoArmory.REGISTRY.SOUND_MAGIC_CLASH.get(), 0.34F, 1.75F);
                     });
                 }
             }

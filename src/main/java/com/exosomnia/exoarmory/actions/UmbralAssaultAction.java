@@ -84,6 +84,6 @@ public class UmbralAssaultAction extends Action {
         else { target.hurt(owner.damageSources().mobAttack(owner), (float)damage); }
 
         --count;
-        manager.scheduleAction(this, 8);
+        manager.scheduleAction(this, 4);
     }
 }

@@ -1,22 +1,29 @@
 package com.exosomnia.exoarmory.items.armory.bows;
 
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.accessors.EntityAccessor;
 import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvider;
 import com.exosomnia.exoarmory.capabilities.aethersembrace.IAethersEmbraceStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
+import com.exosomnia.exoarmory.items.ActivatableItem;
 import com.exosomnia.exoarmory.items.abilities.AbilityItem;
+import com.exosomnia.exoarmory.items.abilities.AetherBarrageAbility;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.AethersEmbraceResource;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.resource.FrostbiteResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
+import com.exosomnia.exoarmory.networking.PacketHandler;
+import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -37,15 +44,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
+public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, ActivatableItem {
 
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
@@ -71,7 +80,12 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
 
     public AethersEmbraceBow() { super(); }
 
-    public List<ArmoryAbility> getAbilities(ItemStack itemStack) { return List.of(); }
+    public List<ArmoryAbility> getAbilities(ItemStack itemStack) {
+        return switch (getRank(itemStack)) {
+            case 0, 1 -> List.of(ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE);
+            default -> List.of(ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE, ExoArmory.REGISTRY.ABILITY_SPECTRAL_PIERCE);
+        };
+    }
     public ArmoryResource getResource() { return RESOURCE; }
 
     public boolean isTargeting(ItemStack itemStack, Level level) {
@@ -80,10 +94,58 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
         return aetherStorage.getExpire() > level.getGameTime();
     }
 
-
+    @Override
+    public ResourceLocation getActivateIcon() {
+        return iconResourcePath("bow");
+    }
 
     @Override
-    public void addToHover(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, ComponentUtils.DetailLevel detail) {}
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        boolean serverLevel = !level.isClientSide;
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (isTargeting(itemStack, level)) {
+            IAethersEmbraceStorage aetherStorage = itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get();
+            long currentTime = level.getGameTime();
+            Entity target = serverLevel ? ((ServerLevel) level).getEntity(aetherStorage.getTarget()) : getClientEntity((ClientLevel) level, aetherStorage.getTarget());
+            if (target == null || !target.isAlive()) {
+                if (serverLevel) {
+                    UUID uuid = getUUID(itemStack);
+                    aetherStorage.setExpire(currentTime);
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        PacketHandler.sendToPlayer(new AethersEmbraceTargetPacket(uuid, player.getInventory().selected,
+                                aetherStorage.getTarget(), 0), serverPlayer);
+                    }
+                } else {
+                    aetherStorage.setExpire(currentTime);
+                }
+            }
+        }
+        return super.use(level,player,hand);
+    }
+
+    public Entity getClientEntity(ClientLevel level, UUID target) {
+        for (Entity entity : level.entitiesForRendering()) {
+            if (entity.getUUID().equals(target)) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addToHover(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, ComponentUtils.DetailLevel detail) {
+        components.add(Component.literal(""));
+
+        //Ability Info
+        for (ArmoryAbility ability: getAbilities(itemStack)) {
+            components.addAll(ability.getTooltip(detail, rank));
+        }
+
+        components.add(Component.literal(""));
+
+        //Resource Info
+        components.addAll(RESOURCE.getTooltip(detail, rank, itemStack));
+    }
 
     @Override
     public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
@@ -99,14 +161,15 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
     @Override
     public int getUseDuration(ItemStack itemStack) {
         AtomicInteger duration = new AtomicInteger(72000);
+        int rank = getRank(itemStack);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             if (isTargeting(itemStack, Minecraft.getInstance().level)) {
-                duration.set(6);
+                duration.set((int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, rank));
             }
         });
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             if (isTargeting(itemStack, ServerLifecycleHooks.getCurrentServer().getLevel(Level.OVERWORLD))) {
-                duration.set(6);
+                duration.set((int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, rank));
             }
         });
         return duration.get();
@@ -114,9 +177,8 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
 
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack itemStack, int ticksLeft) {
-        if (isTargeting(itemStack, level) && ticksLeft > 6) {
+        if (isTargeting(itemStack, level) && ticksLeft > (int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, getRank(itemStack))) {
             entity.stopUsingItem();
-            //player.playSound(SoundEvents.ARROW_HIT_PLAYER, 0.67F, 1.25F);
         }
     }
 
@@ -133,6 +195,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
             Entity target = serverLevel.getEntity(aetherStorage.getTarget());
             if (target == null) return itemStack;
 
+            int rank = getRank(itemStack);
             double pitch = Math.toRadians(ThreadLocalRandom.current().nextDouble(150.0) + 15.0);
             double yaw = Math.toRadians(ThreadLocalRandom.current().nextDouble(360.0));
             double radius = 6;
@@ -150,9 +213,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem {
             skyArrow.setDeltaMovement(arrowPosData.subtract(target.position()).add(0, -1, 0).normalize().multiply(-1.75, -1.75, -1.75));
 
             skyArrow.setOwner(player);
-            skyArrow.setBaseDamage(1.5);
-            //skyArrow.setCritArrow(true);
-            //skyArrow.setSecondsOnFire(fire ? 100 : 0);
+            skyArrow.setBaseDamage((int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.DAMAGE, rank));
             skyArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 
             serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, .8f, 1.5f);

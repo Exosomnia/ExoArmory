@@ -3,6 +3,7 @@ package com.exosomnia.exoarmory.client.rendering.events;
 import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.client.rendering.RenderingManager;
+import com.exosomnia.exoarmory.items.ActivatableItem;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
 import com.exosomnia.exoarmory.items.abilities.AbilityItem;
@@ -66,8 +67,9 @@ public class RenderGUIHandler {
                 if (ticksLeft >= 0) {
                     String secondsLeft = String.format("%.1f", (ticksLeft / 20.0));
                     int width = mc.font.width(secondsLeft);
-                    gui.blit(SHIELD_STABILITY_ICON, baseWidth - 8, baseHeight - 96, 0, 0, 16, 16, 16, 16);
-                    gui.drawString(mc.font, secondsLeft, baseWidth - (width / 2), baseHeight - 93, 0xFFFFFFFF);
+                    int drawHeight = mc.getWindow().getGuiScaledHeight() / 2;
+                    gui.blit(SHIELD_STABILITY_ICON, baseWidth - 9, drawHeight + 8, 0, 0, 18, 18, 18, 18);
+                    gui.drawString(mc.font, secondsLeft, baseWidth - (width / 2), drawHeight + 12, 0xFFFFFFFF);
                 }
             }
         }
@@ -90,6 +92,9 @@ public class RenderGUIHandler {
                 gui.blit(RESOURCE_BAR, baseWidth - barWidth / 2, baseHeight - 5, 0, 0, filledWidth, 5, barWidth, 10);
 
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, visibility);
+                if (item instanceof ActivatableItem activeItem && ExoArmory.ABILITY_MANAGER.isPlayerActive(player)) {
+                    gui.blit(activeItem.getActivateIcon(), baseWidth - 8, baseHeight, 0, 0, 16, 16, 16, 16);
+                }
                 if (Config.showResourceAmount) {
                     String valueDisplay = String.format("%1$d/%2$d", (int)resourceValue, (int)resourceMax);
                     int nameWidth = mc.font.width(valueDisplay);

@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+      {
+        "item": "exoarmory:tier_2_smithing_template"
+      },
+      {
+        "item": "exoarmory:tier_3_smithing_template"
+      },
+      {
+        "item": "exoarmory:tier_4_smithing_template"
+      }
+    ],
+    "result": {
+      "item": "exoarmory:tier_5_smithing_template"
+    }
+  }

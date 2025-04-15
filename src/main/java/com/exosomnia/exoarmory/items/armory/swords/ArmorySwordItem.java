@@ -18,8 +18,11 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class ArmorySwordItem extends SwordItem implements ArmoryItem {
+
+    protected static final UUID BASE_CRITICAL_DAMAGE_UUID = UUID.fromString("edfb14a9-6890-43b4-bbe7-71e705b8a661");
 
     private static final Item.Properties PROPERTIES = new Item.Properties()
             .durability(782)

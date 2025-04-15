@@ -6,9 +6,11 @@ import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
 import com.exosomnia.exoarmory.effects.*;
 import com.exosomnia.exoarmory.enchantment.FortifyingEnchantment;
+import com.exosomnia.exoarmory.enchantment.LuckyProtectionEnchantment;
 import com.exosomnia.exoarmory.enchantment.RallyingEnchantment;
 import com.exosomnia.exoarmory.enchantment.SoulboundEnchantment;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
+import com.exosomnia.exoarmory.items.abilities.HerosCourageAbility;
 import com.exosomnia.exoarmory.items.ReinforcedBowItem;
 import com.exosomnia.exoarmory.items.ReinforcedShieldItem;
 import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
@@ -91,7 +93,11 @@ public class Registry {
     public final RegistryObject<MobEffect> EFFECT_EAGLE_EYE = MOB_EFFECTS.register("eagle_eye",
             () -> new EagleEyeEffect(MobEffectCategory.BENEFICIAL, 0x81AB0F) );
     public final RegistryObject<MobEffect> EFFECT_FIRE_VULNERABILITY = MOB_EFFECTS.register("fire_vulnerability",
-            () -> new EagleEyeEffect(MobEffectCategory.HARMFUL, 0x421506) );
+            () -> new FireVulnerabilityEffect(MobEffectCategory.HARMFUL, 0x421506) );
+    public final RegistryObject<MobEffect> EFFECT_PRECISE_STRIKES = MOB_EFFECTS.register("precise_strikes",
+            () -> new PreciseStrikesEffect(MobEffectCategory.BENEFICIAL, 0x3AA66E) );
+    public final RegistryObject<MobEffect> EFFECT_COURAGE = MOB_EFFECTS.register("courage",
+            () -> new CourageEffect(MobEffectCategory.BENEFICIAL, 0xD43F51) );
 
 
     public final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS,
@@ -110,6 +116,7 @@ public class Registry {
     public final RegistryObject<Enchantment> ENCHANTMENT_SOULBOUND = ENCHANTMENTS.register("soulbound", SoulboundEnchantment::new);
     public final RegistryObject<Enchantment> ENCHANTMENT_FORTIFYING = ENCHANTMENTS.register("fortifying", FortifyingEnchantment::new);
     public final RegistryObject<Enchantment> ENCHANTMENT_RALLYING = ENCHANTMENTS.register("rallying", RallyingEnchantment::new);
+    public final RegistryObject<Enchantment> ENCHANTMENT_LUCKY_PROTECTION = ENCHANTMENTS.register("lucky_protection", LuckyProtectionEnchantment::new);
 
     public final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ExoArmory.MODID);
     public final RegistryObject<SoundEvent> SOUND_FIERY_EXPLOSION = SOUNDS.register("fiery_explosion", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "fiery_explosion")));
@@ -145,6 +152,7 @@ public class Registry {
     public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
     public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.15, 0.50));
 
+    //public final RegistryObject<Item> ITEM_BLANK_TEMPLATE = ITEMS.register("blank_template", () -> new Item(new Item.Properties()));
     public final RegistryObject<Item> ITEM_TIER_2_TEMPLATE = ITEMS.register("tier_2_smithing_template", () -> new UpgradeTemplateItem(1, new Item.Properties().rarity(Rarity.COMMON)));
     public final RegistryObject<Item> ITEM_TIER_3_TEMPLATE = ITEMS.register("tier_3_smithing_template", () -> new UpgradeTemplateItem(2, new Item.Properties().rarity(Rarity.UNCOMMON)));
     public final RegistryObject<Item> ITEM_TIER_4_TEMPLATE = ITEMS.register("tier_4_smithing_template", () -> new UpgradeTemplateItem(3, new Item.Properties().rarity(Rarity.RARE)));
@@ -223,6 +231,24 @@ public class Registry {
                     1.0,
                     2.0));
 
+    public final RegistryObject<Attribute> ATTRIBUTE_ARROW_RECOVERY = ATTRIBUTES.register("arrow_recovery",
+            () -> new RangedAttribute("attribute.exoarmory.arrow_recovery",
+                    1.0,
+                    1.0,
+                    2.0));
+
+    public final RegistryObject<Attribute> ATTRIBUTE_LOOTING = ATTRIBUTES.register("looting",
+            () -> new RangedAttribute("attribute.exoarmory.looting",
+                    0.0,
+                    0.0,
+                    255.0));
+
+    public final RegistryObject<Attribute> ATTRIBUTE_CRITICAL_DAMAGE = ATTRIBUTES.register("critical_damage",
+            () -> new RangedAttribute("attribute.exoarmory.critical_damage",
+                    0.5,
+                    0.0,
+                    255.0));
+
     public KeyMapping KEY_ACTIVATE;
 
     public final SolarFlareAbility ABILITY_SOLAR_FLARE = new SolarFlareAbility();
@@ -235,7 +261,12 @@ public class Registry {
     public final FrigidFlurryAbility ABILITY_FRIGID_FLURRY = new FrigidFlurryAbility();
     public final ColdSnapAbility ABILITY_COLD_SNAP = new ColdSnapAbility();
 
-    //
+    public final AetherBarrageAbility ABILITY_AETHER_BARRAGE = new AetherBarrageAbility();
+    public final SpectralPierceAbility ABILITY_SPECTRAL_PIERCE = new SpectralPierceAbility();
+
+    public final HerosCourageAbility ABILITY_HEROS_COURAGE = new HerosCourageAbility();
+    public final HerosFortitudeAbility ABILITY_HEROS_FORTITUDE = new HerosFortitudeAbility();
+    public final HerosWillAbility ABILITY_HEROS_WILL = new HerosWillAbility();
 
     public void registerCommon() {
         PacketHandler.register();   //Register our packets
@@ -254,6 +285,8 @@ public class Registry {
         MinecraftForge.EVENT_BUS.register(ABILITY_SUNFIRE_SURGE);
         MinecraftForge.EVENT_BUS.register(ABILITY_SHADOW_STRIKE);
         MinecraftForge.EVENT_BUS.register(ABILITY_COLD_SNAP);
+        MinecraftForge.EVENT_BUS.register(ABILITY_HEROS_FORTITUDE);
+        MinecraftForge.EVENT_BUS.register(ABILITY_HEROS_COURAGE);
     }
 
     public void registerObjects(IEventBus eventBus) {
@@ -294,6 +327,9 @@ public class Registry {
     public void attributeModifyEvent(final EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, ATTRIBUTE_SHIELD_STABILITY.get());
         event.add(EntityType.PLAYER, ATTRIBUTE_PASSIVE_CRITICAL.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_ARROW_RECOVERY.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_LOOTING.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_CRITICAL_DAMAGE.get());
         for (EntityType<? extends LivingEntity> entity : event.getTypes()) {
             event.add(entity, ATTRIBUTE_RANGED_STRENGTH.get());
             event.add(entity, ATTRIBUTE_HEALING_RECEIVED.get());

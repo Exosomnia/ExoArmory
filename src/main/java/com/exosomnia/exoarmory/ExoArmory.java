@@ -6,7 +6,7 @@ import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.managers.AbilityManager;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
-import com.exosomnia.exolib.recipes.brewing.SimpleBrewingRecipe;
+import com.exosomnia.exolib.recipes.brewing.BrewingRecipeHelper;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -72,9 +71,9 @@ public class ExoArmory
 
         event.enqueueWork(() -> {
             Potion baseEagleEye = REGISTRY.POTION_EAGLE_EYE.get();
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Potions.AWKWARD, Items.SKELETON_SKULL, baseEagleEye));
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(baseEagleEye, Items.GLOWSTONE_DUST, REGISTRY.POTION_EAGLE_EYE_STRONG.get()));
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(baseEagleEye, Items.REDSTONE, REGISTRY.POTION_EAGLE_EYE_EXTENDED.get()));
+            BrewingRecipeHelper.addSimplePotionRecipe(Potions.AWKWARD, Items.SKELETON_SKULL, baseEagleEye);
+            BrewingRecipeHelper.addSimplePotionRecipe(baseEagleEye, Items.GLOWSTONE_DUST, REGISTRY.POTION_EAGLE_EYE_STRONG.get());
+            BrewingRecipeHelper.addSimplePotionRecipe(baseEagleEye, Items.REDSTONE, REGISTRY.POTION_EAGLE_EYE_EXTENDED.get());
         });
     }
 
