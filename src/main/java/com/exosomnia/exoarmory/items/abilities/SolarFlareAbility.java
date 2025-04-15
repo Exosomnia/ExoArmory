@@ -82,7 +82,7 @@ public class SolarFlareAbility extends ArmoryAbility {
     public void createSolarFlare(Vec3 position, ServerLevel level, int rank, @Nullable LivingEntity owner, @Nullable LivingEntity defender) {
         double radius = getStatForRank(Stats.RADIUS, rank);
         int burnTime = (int)getStatForRank(Stats.BURN_TIME, rank);
-        float damage = (float)getStatForRank(Stats.RADIUS, rank);
+        float damage = (float)getStatForRank(Stats.DAMAGE, rank);
         DamageSource source = owner == null ? level.damageSources().explosion(null, null) :
                 owner.damageSources().explosion(owner, owner);
 
@@ -96,8 +96,8 @@ public class SolarFlareAbility extends ArmoryAbility {
         for (LivingEntity entity : nearbyEntities) {
             Vec3 entityPos = new Vec3(entity.position().toVector3f());
             if (entityPos.distanceTo(position) <= radius) {
-                entity.setSecondsOnFire(burnTime);
                 entity.hurt(source, damage);
+                entity.setSecondsOnFire(burnTime);
                 entityPos = entityPos.subtract(position).normalize().multiply(0.67, 0.33, 0.67);
                 entity.push(entityPos.x, entityPos.y + 0.33, entityPos.z);
             }
