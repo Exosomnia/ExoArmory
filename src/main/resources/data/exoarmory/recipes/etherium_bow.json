@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "item": "minecraft:end_rod"
+    },
+    "D": {
+      "item": "minecraft:dragon_head"
+    },
+    "B": {
+      "item": "exoarmory:dragon_bow"
+    },
+    "S": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "pattern": [
+    " SE",
+    "DBE",
+    " SE"
+  ],
+  "result": {
+    "item": "exoarmory:etherium_bow"
+  }
+}

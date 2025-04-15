@@ -1,0 +1,25 @@
+{
+  "structure_injects": {
+    "structures": [
+      "minecraft:end_city"
+    ],
+    "cause": "minecraft:chest"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "exoarmory:dragon_bow"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.0333
+        }
+      ]
+    }
+  ]
+}
