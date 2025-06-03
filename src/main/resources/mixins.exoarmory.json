@@ -9,7 +9,8 @@
     "AbstractArrowAccessor",
     "AbstractArrowMixin",
     "LivingEntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "ServerPlayer$1Mixin"
   ],
   "client": [
     "EntityMixin"

@@ -28,7 +28,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -95,6 +97,25 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ArmoryResourceProvider();
     }
+
+    //TODO: DEBUGGING
+    @Nullable
+    public CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag shareTag = stack.getTag();
+        shareTag.putDouble("ArmoryResource", getResource().getResource(stack));
+        return shareTag;
+    }
+
+    //TODO: DEBUGGING
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            if (nbt.contains("ArmoryData") && nbt.contains("ArmoryResource")) {
+                ExoArmory.RESOURCE_MANAGER.setResource(((CompoundTag)nbt.get("ArmoryData")).getUUID("UUID"), nbt.getDouble("ArmoryResource"));
+                nbt.remove("ArmoryResource");
+            }
+        });
+        stack.setTag(nbt);
+    }
     //endregion
 
     //region Item Overrides
@@ -104,7 +125,7 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
 
         if (level.getGameTime() % 10 == 0 && ExoArmory.CONDITIONAL_MANAGER.getPlayerCondition((Player)entity, ConditionalManager.Condition.SOLAR_SWORD)) {
             RESOURCE.addResource(itemStack, getResource().getStatForRank(SolarSwordResource.Stats.CHARGE, getRank(itemStack)));
-            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), slotIndex, RESOURCE.getResource(itemStack)),
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), RESOURCE.getResource(itemStack)),
                     (ServerPlayer)entity);
         }
     }

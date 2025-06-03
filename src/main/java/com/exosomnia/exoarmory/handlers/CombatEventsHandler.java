@@ -1,10 +1,13 @@
 package com.exosomnia.exoarmory.handlers;
 
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.Registry;
 import com.exosomnia.exoarmory.utils.AttributeUtils;
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -44,9 +47,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CombatEventsHandler {
@@ -147,7 +148,7 @@ public class CombatEventsHandler {
         event.setBlockedDamage(newDamage);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerDeathDrops(LivingDropsEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) { return; }
 
@@ -166,7 +167,7 @@ public class CombatEventsHandler {
             soulboundItems.forEach(itemEntity -> {
                 ItemStack itemStack = itemEntity.getItem();
                 int maxDamage = itemStack.getMaxDamage() - 1;
-                itemStack.setDamageValue(Math.min(maxDamage, itemStack.getDamageValue() + (maxDamage / 2)));
+                itemStack.setDamageValue(Math.min(maxDamage, itemStack.getDamageValue() + (maxDamage / 3)));
                 player.getInventory().add(itemEntity.getItem());
             });
         }
@@ -174,12 +175,14 @@ public class CombatEventsHandler {
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player original = event.getOriginal();
-        Player newPlayer = event.getEntity();
-        Inventory inventory = newPlayer.getInventory();
-        for (ItemStack itemStack : original.getInventory().items) {
-            if (itemStack.isEmpty()) break;
-            inventory.add(itemStack);
+        if (event.isWasDeath()) {
+            Player original = event.getOriginal();
+            Player newPlayer = event.getEntity();
+            Inventory inventory = newPlayer.getInventory();
+            for (ItemStack itemStack : original.getInventory().items) {
+                if (itemStack.isEmpty()) break;
+                inventory.add(itemStack);
+            }
         }
     }
 
@@ -216,6 +219,28 @@ public class CombatEventsHandler {
                                 event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(slot.equals(EquipmentSlot.MAINHAND) ? ExoArmory.REGISTRY.SHIELD_ATTACK_UUID : ExoArmory.REGISTRY.OFF_HAND_SHIELD_ATTACK_UUID,
                                         "Enchant Bonus", ((rallyingLvl + 1) * .025), AttributeModifier.Operation.MULTIPLY_TOTAL));
                             });
+            originalMods.get(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get()).stream().filter(attributeModifier -> attributeModifier.getOperation().equals(AttributeModifier.Operation.MULTIPLY_TOTAL)).findFirst()
+                    .ifPresentOrElse(mod -> {
+                                event.removeModifier(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get(), mod);
+                                event.addModifier(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get(), new AttributeModifier(mod.getId(),
+                                        mod.getName(), mod.getAmount() + ((rallyingLvl + 1) * .025), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                            },
+                            () -> {
+                                event.addModifier(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get(), new AttributeModifier(slot.equals(EquipmentSlot.MAINHAND) ? ExoArmory.REGISTRY.SHIELD_ATTACK_UUID : ExoArmory.REGISTRY.OFF_HAND_SHIELD_ATTACK_UUID,
+                                        "Enchant Bonus", ((rallyingLvl + 1) * .025), AttributeModifier.Operation.MULTIPLY_BASE));
+                            });
+            if (ExoArmory.REGISTRY.ATTRIBUTE_SPELL_POWER != null) {
+                originalMods.get(ExoArmory.REGISTRY.ATTRIBUTE_SPELL_POWER).stream().filter(attributeModifier -> attributeModifier.getOperation().equals(AttributeModifier.Operation.MULTIPLY_TOTAL)).findFirst()
+                        .ifPresentOrElse(mod -> {
+                                    event.removeModifier(ExoArmory.REGISTRY.ATTRIBUTE_SPELL_POWER, mod);
+                                    event.addModifier(ExoArmory.REGISTRY.ATTRIBUTE_SPELL_POWER, new AttributeModifier(mod.getId(),
+                                            mod.getName(), mod.getAmount() + ((rallyingLvl + 1) * .05), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                                },
+                                () -> {
+                                    event.addModifier(ExoArmory.REGISTRY.ATTRIBUTE_SPELL_POWER, new AttributeModifier(slot.equals(EquipmentSlot.MAINHAND) ? ExoArmory.REGISTRY.SHIELD_ATTACK_UUID : ExoArmory.REGISTRY.OFF_HAND_SHIELD_ATTACK_UUID,
+                                            "Enchant Bonus", ((rallyingLvl + 1) * .025), AttributeModifier.Operation.MULTIPLY_TOTAL));
+                                });
+            }
         }
     }
 
@@ -227,28 +252,46 @@ public class CombatEventsHandler {
         event.setLootingLevel((int)(event.getLootingLevel() + player.getAttributeValue(ExoArmory.REGISTRY.ATTRIBUTE_LOOTING.get())));
     }
 
+
     @SubscribeEvent
     public static void playerTickEvent(TickEvent.LevelTickEvent event) {
         if (event.side.isClient() || event.phase.equals(TickEvent.Phase.END)) return;
 
         ServerLevel level = (ServerLevel)event.level;
-        if (level.getGameTime() % 10 != 0) return;
+        if (level.getGameTime() % 20 != 0) return;
 
         for (ServerPlayer player : level.players()) {
+            HashMap<MobEffect, Integer> combinedEffects = new HashMap<>();
             for(ItemStack armor : player.getArmorSlots()) {
                 if (armor.isEmpty() || !armor.hasTag()) continue;
 
                 CompoundTag tagArmor = armor.getTag();
-                if (!tagArmor.contains("PersistentEffect")) continue;
+                if (!tagArmor.contains("PersistentEffects")) continue;
 
-                Tag tagEffect = tagArmor.get("PersistentEffect");
-                if (!(tagEffect instanceof CompoundTag compoundEffect) || !compoundEffect.contains("Effect")) continue;
+                Tag tagEffects = tagArmor.get("PersistentEffects");
+                if (!(tagEffects instanceof ListTag listEffects) || listEffects.isEmpty()) continue;
 
-                MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.bySeparator(compoundEffect.getString("Effect"), ':'));
-                if (effect == null) continue;
+                int size = listEffects.size();
+                for (int i = 0; i < size; i++) {
+                    Tag tag = listEffects.get(i);
+                    if (!(tag instanceof CompoundTag compoundEffect)) continue;
 
-                int amplifier = compoundEffect.getInt("Amplifier");
-                player.addEffect(new MobEffectInstance(effect, 20, amplifier, true, false, true));
+                    MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.bySeparator(compoundEffect.getString("Effect"), ':'));
+                    if (effect == null) continue;
+
+                    int amplifier = compoundEffect.getInt("Amplifier");
+
+                    Integer record = combinedEffects.get(effect);
+                    if (record == null) {
+                        combinedEffects.put(effect, amplifier);
+                        continue;
+                    }
+                    combinedEffects.put(effect, record + (amplifier + 1));
+                }
+            }
+
+            for (Map.Entry<MobEffect, Integer> effectRecord : combinedEffects.entrySet()) {
+                player.addEffect(new MobEffectInstance(effectRecord.getKey(), 40, effectRecord.getValue(), true, false, true));
             }
         }
     }

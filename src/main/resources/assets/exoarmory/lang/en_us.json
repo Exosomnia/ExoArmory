@@ -14,13 +14,14 @@
   "attribute.exoarmory.arrow_recovery": "Arrow Recovery",
   "attribute.exoarmory.looting": "Looting",
   "attribute.exoarmory.critical_damage": "Critical Damage",
+  "attribute.exoarmory.arrow_pierce": "Arrow Pierce Chance",
 
   "effect.exoarmory.blighted": "Blighted",
   "effect.exoarmory.blighted.description": "Reduces all healing by 20% per level.",
   "effect.exoarmory.vulnerable": "Vulnerable",
   "effect.exoarmory.vulnerable.description": "Increases all damage taken by 10% per level.",
   "effect.exoarmory.eagle_eye": "Eagle Eye",
-  "effect.exoarmory.eagle_eye.description": "Increases arrow projectile damage by 10% per level.",
+  "effect.exoarmory.eagle_eye.description": "Increases arrow projectile damage by 12.5% per level.",
   "effect.exoarmory.precise_strikes": "Precise Strikes",
   "effect.exoarmory.precise_strikes.description": "Increases passive critical chance by 10% + an additional 5% per level above 1.",
   "effect.exoarmory.courage": "Courage",
@@ -31,7 +32,7 @@
   "effect.exoarmory.fire_vulnerability": "Fire Weakness",
   "effect.exoarmory.fire_vulnerability.description": "Doubles all taken fire damage.",
   "effect.exoarmory.frosted": "Frosted",
-  "effect.exoarmory.frosted.description": "Reduces armor by 2, and armor toughness by 1 per level and slightly reduces movement speed.",
+  "effect.exoarmory.frosted.description": "Reduces armor and armor toughness by 20% and movement speed by 10% per level.",
 
   "item.minecraft.potion.effect.eagle_eye": "Potion of Eagle Eye",
   "item.minecraft.potion.effect.eagle_eye_strong": "Potion of Eagle Eye",
@@ -58,9 +59,11 @@
   "enchantment.exoarmory.lucky_protection": "Lucky Protection",
   "enchantment.exoarmory.lucky_protection.desc": "Damage taken is reduced by a random percentage determined by your luck. Min Reduction: 10%, Max Reduction: 10% + (Luck * 5%)",
 
+  "item.exoarmory.netherite_anchor": "Netherite Anchor",
+
+  "item.exoarmory.netherite_bow": "Netherite Bow",
   "item.exoarmory.dragon_bow": "Dragon Bow",
   "item.exoarmory.etherium_bow": "Etherium Bow",
-  "item.exoarmory.reinforced_bow.info.1": "0{%.1f%%} chance to pierce",
 
   "item.exoarmory.copper_shield": "Copper Shield",
   "item.exoarmory.iron_shield": "Iron Shield",
@@ -179,7 +182,7 @@
   "ability.exoarmory.desc.frigid_flurry.line.6": "of projectiles that also deal damage.",
   "ability.exoarmory.stat.frigid_flurry.line.1": "Cooldown: 0{%d} seconds",
   "ability.exoarmory.stat.frigid_flurry.line.2": "Frosted Duration: 0{%d} seconds",
-  "ability.exoarmory.stat.frigid_flurry.line.3": "Armor Reduction: 0{%d}",
+  "ability.exoarmory.stat.frigid_flurry.line.3": "Armor Reduction: 0{%d%%}",
   "ability.exoarmory.stat.frigid_flurry.line.4": "Empowered Flurry:",
   "ability.exoarmory.stat.frigid_flurry.line.5": "Permafrost cost: 0{%.1f}",
   "ability.exoarmory.stat.frigid_flurry.line.6": "Projectiles: 0{%d}",
@@ -200,9 +203,9 @@
   "_comment": "+==================+",
 
   "ability.exoarmory.name.heros_courage": "Hero's Courage",
-  "ability.exoarmory.desc.heros_courage.line.1": "When surrounded by monsters, gain 0{Courage}.",
-  "ability.exoarmory.desc.heros_courage.line.2": "0{Courage} increases your 1{Damage}, 1{Attack Speed},",
-  "ability.exoarmory.desc.heros_courage.line.3": "0{Movement Speed}, and 0{Healing Received}.",
+  "ability.exoarmory.desc.heros_courage.line.1": "Gain 0{Courage} when surrounded by monsters.",
+  "ability.exoarmory.desc.heros_courage.line.2": "0{Courage} increases 1{Damage}, 1{Attack Speed},",
+  "ability.exoarmory.desc.heros_courage.line.3": "and 0{Damage Taken}.",
   "ability.exoarmory.stat.heros_courage.line.1": "Monster threshold: 0{%d} entities",
   "ability.exoarmory.stat.heros_courage.line.2": "Area range: 0{%.1f} blocks",
   "ability.exoarmory.stat.heros_courage.line.3": "Bonus stats: +0{%.1f}%%",
@@ -215,8 +218,10 @@
   "ability.exoarmory.stat.heros_fortitude.line.2": "Absorption amount: 0{%d} health",
 
   "ability.exoarmory.name.heros_will": "Hero's Will",
-  "ability.exoarmory.desc.heros_will.line.1": "Increases critical strike damage.",
+  "ability.exoarmory.desc.heros_will.line.1": "Increases critical strike damage,",
+  "ability.exoarmory.desc.heros_will.line.2": "and healing received.",
   "ability.exoarmory.stat.heros_will.line.1": "Critical damage bonus: +0{%.1f%%}",
+  "ability.exoarmory.stat.heros_will.line.2": "Healing received bonus: +0{%.1f%%}",
 
   "_comment": "+==================+",
   "_comment": "| AETHER'S EMBRACE |",

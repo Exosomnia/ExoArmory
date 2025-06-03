@@ -1,7 +1,11 @@
 package com.exosomnia.exoarmory;
 
 import com.exosomnia.exoarmory.actions.ActionManager;
+import com.exosomnia.exoarmory.client.ClientArmoryResourceManager;
 import com.exosomnia.exoarmory.client.rendering.RenderingManager;
+import com.exosomnia.exoarmory.dist.ClientDistHelper;
+import com.exosomnia.exoarmory.dist.DistHelper;
+import com.exosomnia.exoarmory.dist.ServerDistHelper;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.managers.AbilityManager;
@@ -27,6 +31,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -37,9 +42,12 @@ public class ExoArmory
     // Define mod id in a common place for everything to reference
     public static final String MODID = "exoarmory";
     public static final Registry REGISTRY = new Registry();
+    public static DistHelper DIST_HELPER;
 
     @OnlyIn(Dist.CLIENT)
     public static RenderingManager RENDERING_MANAGER;
+    @OnlyIn(Dist.CLIENT)
+    public static ClientArmoryResourceManager RESOURCE_MANAGER;
 
     public static ActionManager ACTION_MANAGER;
     public static ConditionalManager CONDITIONAL_MANAGER;
@@ -53,6 +61,8 @@ public class ExoArmory
 
         REGISTRY.registerCommon();
         REGISTRY.registerObjects(modBus);
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> modBus.addListener(this::setupServer) );
+
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> REGISTRY::registerClient);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::setupClient) );
@@ -63,6 +73,8 @@ public class ExoArmory
     }
 
     public void setupCommon(FMLCommonSetupEvent event) {
+        REGISTRY.populateAfterRegistration();
+
         ACTION_MANAGER = new ActionManager();
         CONDITIONAL_MANAGER = new ConditionalManager();
         ABILITY_MANAGER = new AbilityManager();
@@ -77,9 +89,16 @@ public class ExoArmory
         });
     }
 
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    public void setupServer(FMLDedicatedServerSetupEvent event) {
+        DIST_HELPER = new ServerDistHelper();
+    }
+
     @OnlyIn(Dist.CLIENT)
     public void setupClient(FMLClientSetupEvent event) {
+        DIST_HELPER = new ClientDistHelper();
         RENDERING_MANAGER = new RenderingManager();
+        RESOURCE_MANAGER = new ClientArmoryResourceManager();
 
         ItemProperties.registerGeneric(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "using"),
                 (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F);

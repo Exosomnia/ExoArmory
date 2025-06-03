@@ -1,0 +1,6 @@
+{
+    "parent": "exoarmory:item/netherite_bow",
+    "textures": {
+        "layer0": "exoarmory:item/netherite_bow_pulling_1"
+    }
+}

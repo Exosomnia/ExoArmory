@@ -5,6 +5,7 @@ import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.armory.swords.FrostbiteSword;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
+import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacketOld;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
@@ -61,8 +62,9 @@ public class FrostbiteResource extends ArmoryResource {
                 if (defender.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get())) {
                     attacker.getCooldowns().removeCooldown(weapon);
                     resource.addResource(itemStack, resource.getStatForRank(Stats.CHARGE, rank));
-                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(weapon.getUUID(itemStack),
-                            attacker.getInventory().selected, resource.getResource(itemStack)), attacker);
+                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(weapon.getUUID(itemStack), resource.getResource(itemStack)), attacker);
+                    //TODO: DEBUGGING
+                    PacketHandler.sendToPlayer(new ArmoryResourcePacketOld(weapon.getUUID(itemStack), attacker.getInventory().selected, resource.getResource(itemStack)), attacker);
                 }
             }
         }

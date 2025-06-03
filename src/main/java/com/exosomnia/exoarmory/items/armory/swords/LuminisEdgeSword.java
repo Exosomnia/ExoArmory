@@ -1,5 +1,6 @@
 package com.exosomnia.exoarmory.items.armory.swords;
 
+import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
@@ -10,9 +11,12 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
@@ -85,4 +89,19 @@ public class LuminisEdgeSword extends ArmorySwordItem implements ResourcedItem {
         return new ArmoryResourceProvider();
     }
     //endregion
+
+    @Override
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity defender, LivingEntity attacker) {
+        super.hurtEnemy(itemStack, defender, attacker);
+
+        if (!(attacker instanceof Player player)) return true;
+
+        ItemStack offhandItem = player.getOffhandItem();
+        if (offhandItem.is(ExoArmory.REGISTRY.ITEM_SHADOWS_EDGE.get())) {
+            player.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
+            player.setItemSlot(EquipmentSlot.MAINHAND, offhandItem);
+        }
+
+        return true;
+    }
 }

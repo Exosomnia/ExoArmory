@@ -23,27 +23,31 @@ public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem 
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 7.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 7.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .build();
         RANK_ATTRIBUTES[1] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 8.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 8.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .build();
         RANK_ATTRIBUTES[2] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .build();
         RANK_ATTRIBUTES[3] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 10.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 10.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_CRITICAL_DAMAGE.get(), new AttributeModifier(BASE_CRITICAL_DAMAGE_UUID, "Default",
                         ExoArmory.REGISTRY.ABILITY_HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 3), AttributeModifier.Operation.MULTIPLY_BASE))
+                .put(ExoArmory.REGISTRY.ATTRIBUTE_HEALING_RECEIVED.get(), new AttributeModifier(BASE_HEALING_RECEIVED_UUID, "Default",
+                        ExoArmory.REGISTRY.ABILITY_HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 3), AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
         RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 11.0, AttributeModifier.Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 11.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_CRITICAL_DAMAGE.get(), new AttributeModifier(BASE_CRITICAL_DAMAGE_UUID, "Default",
+                        ExoArmory.REGISTRY.ABILITY_HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 4), AttributeModifier.Operation.MULTIPLY_BASE))
+                .put(ExoArmory.REGISTRY.ATTRIBUTE_HEALING_RECEIVED.get(), new AttributeModifier(BASE_HEALING_RECEIVED_UUID, "Default",
                         ExoArmory.REGISTRY.ABILITY_HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 4), AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
     }

@@ -1,26 +1,20 @@
 package com.exosomnia.exoarmory.items.armory.bows;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.accessors.EntityAccessor;
 import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvider;
 import com.exosomnia.exoarmory.capabilities.aethersembrace.IAethersEmbraceStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
 import com.exosomnia.exoarmory.items.ActivatableItem;
-import com.exosomnia.exoarmory.items.abilities.AbilityItem;
 import com.exosomnia.exoarmory.items.abilities.AetherBarrageAbility;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.resource.AethersEmbraceResource;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
-import com.exosomnia.exoarmory.items.resource.FrostbiteResource;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -42,17 +36,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, ActivatableItem {
 
@@ -89,8 +78,11 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
     public ArmoryResource getResource() { return RESOURCE; }
 
     public boolean isTargeting(ItemStack itemStack, Level level) {
+        if (level == null) return false;
+
         IAethersEmbraceStorage aetherStorage = itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().orElse(null);
         if (aetherStorage == null) return false;
+
         return aetherStorage.getExpire() > level.getGameTime();
     }
 
@@ -106,7 +98,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
         if (isTargeting(itemStack, level)) {
             IAethersEmbraceStorage aetherStorage = itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get();
             long currentTime = level.getGameTime();
-            Entity target = serverLevel ? ((ServerLevel) level).getEntity(aetherStorage.getTarget()) : getClientEntity((ClientLevel) level, aetherStorage.getTarget());
+            Entity target = serverLevel ? ((ServerLevel) level).getEntity(aetherStorage.getTarget()) : ExoArmory.DIST_HELPER.getEntity(aetherStorage.getTarget());
             if (target == null || !target.isAlive()) {
                 if (serverLevel) {
                     UUID uuid = getUUID(itemStack);
@@ -121,15 +113,6 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
             }
         }
         return super.use(level,player,hand);
-    }
-
-    public Entity getClientEntity(ClientLevel level, UUID target) {
-        for (Entity entity : level.entitiesForRendering()) {
-            if (entity.getUUID().equals(target)) {
-                return entity;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -160,19 +143,11 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
     //region Item Overrides
     @Override
     public int getUseDuration(ItemStack itemStack) {
-        AtomicInteger duration = new AtomicInteger(72000);
         int rank = getRank(itemStack);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            if (isTargeting(itemStack, Minecraft.getInstance().level)) {
-                duration.set((int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, rank));
-            }
-        });
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
-            if (isTargeting(itemStack, ServerLifecycleHooks.getCurrentServer().getLevel(Level.OVERWORLD))) {
-                duration.set((int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, rank));
-            }
-        });
-        return duration.get();
+        if (isTargeting(itemStack, ExoArmory.DIST_HELPER.getDefaultLevel())) {
+            return (int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.INTERVAL, rank);
+        }
+        return 72000;
     }
 
     @Override

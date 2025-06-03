@@ -30,9 +30,9 @@ public class HerosCourageAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildRanks() {
-        RANK_STATS.put(Stats.THRESHOLD, new double[]{7.0, 7.0, 6.0, 6.0, 5.0});
-        RANK_STATS.put(Stats.RANGE, new double[]{7.0, 7.0, 7.5, 7.5, 8.0});
-        RANK_STATS.put(Stats.BONUS, new double[]{0.0, 0.0, 1.0, 1.0, 2.0});
+        RANK_STATS.put(Stats.THRESHOLD, new double[]{5.0, 5.0, 4.0, 4.0, 3.0});
+        RANK_STATS.put(Stats.RANGE, new double[]{6.5, 6.5, 7.0, 7.0, 7.5});
+        RANK_STATS.put(Stats.BONUS, new double[]{0.0, 0.0, 1.0, 1.0, 1.0});
     }
 
     @Override
@@ -53,7 +53,7 @@ public class HerosCourageAbility extends ArmoryAbility {
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.heros_courage.line.2", getStatForRank(Stats.RANGE, rank)),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
-                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.heros_courage.line.2", ((int)getStatForRank(Stats.BONUS, rank) + 1) * 2.5),
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.heros_courage.line.3", ((int)getStatForRank(Stats.BONUS, rank) + 1) * 2.5),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }

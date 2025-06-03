@@ -1,4 +1,4 @@
-package com.exosomnia.exoarmory.networking.events.client;
+package com.exosomnia.exoarmory.client;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -6,16 +6,24 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ClientNetworkEventHandler {
+import java.util.HashMap;
+import java.util.UUID;
 
-    @SubscribeEvent
-    public static void playerLogInClient(ClientPlayerNetworkEvent.LoggingIn event) {
-        ExoArmory.ABILITY_MANAGER.addPlayer(event.getPlayer());
+@Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class ClientArmoryResourceManager {
+
+    public static HashMap<UUID, Double> resourceMap = new HashMap<>();
+
+    public void setResource(UUID uuid, double amount) {
+        resourceMap.put(uuid, amount);
+    }
+
+    public double getResource(UUID uuid) {
+        return resourceMap.getOrDefault(uuid, 0.0);
     }
 
     @SubscribeEvent
     public static void playerLogOutClient(ClientPlayerNetworkEvent.LoggingOut event) {
-        ExoArmory.ABILITY_MANAGER.clear();
+        resourceMap.clear();
     }
 }

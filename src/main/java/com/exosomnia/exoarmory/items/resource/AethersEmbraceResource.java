@@ -85,12 +85,12 @@ public class AethersEmbraceResource extends ArmoryResource {
             boolean doubled = arrow.isCritArrow();
             AethersEmbraceBow mainHandBow = checkIfItemValid(player.getMainHandItem(), itemUUID);
             if (mainHandBow != null) {
-                addResourceAndUpdate(player.getMainHandItem(), mainHandBow, player, player.getInventory().selected, doubled);
+                addResourceAndUpdate(player.getMainHandItem(), mainHandBow, player, doubled);
             }
             else {
                 AethersEmbraceBow offHandBow = checkIfItemValid(player.getOffhandItem(), itemUUID);
                 if (offHandBow != null) {
-                    addResourceAndUpdate(player.getOffhandItem(), offHandBow, player, Inventory.SLOT_OFFHAND, doubled);
+                    addResourceAndUpdate(player.getOffhandItem(), offHandBow, player, doubled);
                 }
             }
         });
@@ -103,11 +103,10 @@ public class AethersEmbraceResource extends ArmoryResource {
         return null;
     }
 
-    private static void addResourceAndUpdate(ItemStack itemStack, AethersEmbraceBow bow, ServerPlayer player, int slot, boolean doubled) {
+    private static void addResourceAndUpdate(ItemStack itemStack, AethersEmbraceBow bow, ServerPlayer player, boolean doubled) {
         int rank = bow.getRank(itemStack);
         ArmoryResource resource = bow.getResource();
         resource.addResource(itemStack, doubled ? resource.getStatForRank(Stats.CHARGE, rank) * 2.0 : resource.getStatForRank(Stats.CHARGE, rank));
-        PacketHandler.sendToPlayer(new ArmoryResourcePacket(bow.getUUID(itemStack),
-                slot, resource.getResource(itemStack)), player);
+        PacketHandler.sendToPlayer(new ArmoryResourcePacket(bow.getUUID(itemStack), resource.getResource(itemStack)), player);
     }
 }

@@ -1,7 +1,5 @@
 package com.exosomnia.exoarmory.networking.packets;
 
-import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.items.armory.ArmoryItem;
 import com.exosomnia.exoarmory.items.resource.ResourcedItem;
 import net.minecraft.client.Minecraft;
@@ -13,32 +11,39 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ArmoryResourcePacket {
+//TODO: DEBUGGING
+public class ArmoryResourcePacketOld {
 
     private UUID uuid;
+    private int slot;
     private double charge;
 
-    public ArmoryResourcePacket(UUID uuid, double charge) {
+    public ArmoryResourcePacketOld(UUID uuid, int slot, double charge) {
         this.uuid = uuid;
+        this.slot = slot;
         this.charge = charge;
     }
 
-    public ArmoryResourcePacket(FriendlyByteBuf buffer) {
+    public ArmoryResourcePacketOld(FriendlyByteBuf buffer) {
         uuid = buffer.readUUID();
+        slot = buffer.readInt();
         charge = buffer.readDouble();
     }
 
-    public static void encode(ArmoryResourcePacket packet, FriendlyByteBuf buffer) {
+    public static void encode(ArmoryResourcePacketOld packet, FriendlyByteBuf buffer) {
         buffer.writeUUID(packet.uuid);
+        buffer.writeInt(packet.slot);
         buffer.writeDouble(packet.charge);
     }
 
-    public static void handle(ArmoryResourcePacket packet, Supplier<NetworkEvent.Context> context) {
+    public static void handle(ArmoryResourcePacketOld packet, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             NetworkDirection packetDirection = context.get().getDirection();
             if (packetDirection.equals(NetworkDirection.PLAY_TO_CLIENT)) {
-                //TODO: DEBUGGING
-                //ExoArmory.RESOURCE_MANAGER.setResource(packet.uuid, packet.charge);
+                ItemStack item = Minecraft.getInstance().player.getInventory().getItem(packet.slot);
+                if ((item.getItem() instanceof ArmoryItem armoryItem) && (armoryItem instanceof ResourcedItem resourced) && (armoryItem.getUUID(item).equals(packet.uuid))){
+                    resourced.getResource().getResourceStorage(item).setCharge(packet.charge);
+                }
             }
         });
         context.get().setPacketHandled(true);

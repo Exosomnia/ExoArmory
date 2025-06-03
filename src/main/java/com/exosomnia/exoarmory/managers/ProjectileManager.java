@@ -80,6 +80,7 @@ public class ProjectileManager {
                 && event.getEntity() instanceof AbstractArrow projectile
                 && projectile.getOwner() instanceof LivingEntity owner) {
             AttributeInstance strength = owner.getAttribute(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get());
+            AttributeInstance pierce = owner.getAttribute(ExoArmory.REGISTRY.ATTRIBUTE_ARROW_PIERCE.get());
             projectile.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
                 if (strength != null) {
                     projectileData.setStrength(strength.getValue());
@@ -106,15 +107,16 @@ public class ProjectileManager {
                                     resource.removeResource(weapon, cost);
                                     projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.AETHER.getType());
                                     projectileData.setArrowRank(aetherBow.getRank(weapon));
-                                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(aetherBow.getUUID(weapon),
-                                            player.getUsedItemHand().equals(InteractionHand.MAIN_HAND) ? player.getInventory().selected : Inventory.SLOT_OFFHAND,
-                                            resource.getResource(weapon)), player);
+                                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(aetherBow.getUUID(weapon), resource.getResource(weapon)), player);
                                 }
                             }
                         }
                     }
-                    else if (item instanceof ReinforcedBowItem bow && level.random.nextDouble() < bow.getPierceChance()) {
-                        projectile.setPierceLevel((byte) 1);
+                    double pierceValue = pierce.getValue();
+                    int guaranteedPierce = (int)(pierceValue - 1.0);
+                    guaranteedPierce += (level.random.nextDouble() < pierceValue % 1.0) ? 1 : 0;
+                    if (guaranteedPierce > 0) {
+                        projectile.setPierceLevel((byte) guaranteedPierce);
                         player.playNotifySound(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 2.0F);
                     }
                 }

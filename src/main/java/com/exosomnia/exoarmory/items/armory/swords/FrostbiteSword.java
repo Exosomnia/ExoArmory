@@ -4,6 +4,7 @@ import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.FrigidFlurryAction;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
+import com.exosomnia.exoarmory.items.ActivatableItem;
 import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
 import com.exosomnia.exoarmory.items.abilities.FrigidFlurryAbility;
 import com.exosomnia.exoarmory.items.resource.ArmoryResource;
@@ -17,6 +18,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem {
+public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, ActivatableItem {
 
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
@@ -76,6 +78,10 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem {
         };
     }
     public ArmoryResource getResource() { return RESOURCE; }
+    @Override
+    public ResourceLocation getActivateIcon() {
+        return iconResourcePath("sword");
+    }
 
     public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
 
@@ -96,7 +102,18 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem {
     //region IForgeItem Overrides
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new ArmoryResourceProvider();
+        ArmoryResourceProvider resourceProvider = new ArmoryResourceProvider();
+        if (nbt == null) return resourceProvider;
+        resourceProvider.deserializeNBT(nbt);
+        return resourceProvider;
+    }
+
+    //TODO: DEBUGGING
+    @Nullable
+    public CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag shareTag = stack.getTag();
+        shareTag.putDouble("ArmoryResource", getResource().getResource(stack));
+        return shareTag;
     }
     //endregion
 
@@ -112,7 +129,7 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (Screen.hasAltDown() && RESOURCE.getResource(itemStack) >=
+        if (ExoArmory.ABILITY_MANAGER.isPlayerActive(player) && RESOURCE.getResource(itemStack) >=
                 ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COST, getRank(itemStack))) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(itemStack);
@@ -129,19 +146,23 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem {
         player.getCooldowns().addCooldown(this, (int)ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COOLDOWN,
                 getRank(itemStack)) * 20);
 
+        if (player instanceof ServerPlayer serverPlayer) {
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), RESOURCE.getResource(itemStack)), serverPlayer);
+        }
+
         return InteractionResultHolder.consume(itemStack);
     }
 
     @Override
     public void releaseUsing(ItemStack itemStack, Level level, LivingEntity entity, int ticksLeft) {
-        if (!level.isClientSide && entity instanceof ServerPlayer player && ticksLeft <= 71980) {
+        if (entity instanceof ServerPlayer player && ticksLeft <= 71980 && RESOURCE.getResource(itemStack) >=
+                ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COST, getRank(itemStack))) {
             ExoArmory.ACTION_MANAGER.scheduleAction(new FrigidFlurryAction(ExoArmory.ACTION_MANAGER, entity, 40, ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.DAMAGE, getRank(itemStack))), 1);
             player.getCooldowns().addCooldown(this, (int)ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COOLDOWN,
                     getRank(itemStack)) * 20);
 
             RESOURCE.removeResource(itemStack, ExoArmory.REGISTRY.ABILITY_FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COST, getRank(itemStack)));
-            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack),
-                    player.getInventory().selected, RESOURCE.getResource(itemStack)), player);
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), RESOURCE.getResource(itemStack)), player);
         }
     }
     //endregion

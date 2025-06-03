@@ -1,5 +1,6 @@
 package com.exosomnia.exoarmory.items.resource;
 
+import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.capabilities.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
 import com.exosomnia.exolib.utils.ComponentUtils;
@@ -44,9 +45,10 @@ public abstract class ArmoryResource {
 
     public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) { return List.of(getDefaultTooltip(itemStack)); }
     protected MutableComponent getDefaultTooltip(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof ResourcedItem resourcedItem)) { return null; }
         return Component.translatable(String.format(NAME_TRANSLATION_FORMAT, id)).withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
             .append(Component.literal(": ").withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
-            .append(Component.literal(String.valueOf((int)getResource(itemStack))).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)))
+            .append(Component.literal(String.valueOf((int)ExoArmory.RESOURCE_MANAGER.getResource(resourcedItem.getUUID(itemStack)))).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)))
             .append(Component.literal("/").withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.GRAY)))
             .append(Component.literal(String.valueOf((int)max)).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)));
     }

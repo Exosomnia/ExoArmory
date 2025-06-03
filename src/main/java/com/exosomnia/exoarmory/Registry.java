@@ -10,6 +10,7 @@ import com.exosomnia.exoarmory.enchantment.LuckyProtectionEnchantment;
 import com.exosomnia.exoarmory.enchantment.RallyingEnchantment;
 import com.exosomnia.exoarmory.enchantment.SoulboundEnchantment;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
+import com.exosomnia.exoarmory.items.NetheriteAnchorItem;
 import com.exosomnia.exoarmory.items.abilities.HerosCourageAbility;
 import com.exosomnia.exoarmory.items.ReinforcedBowItem;
 import com.exosomnia.exoarmory.items.ReinforcedShieldItem;
@@ -52,6 +53,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -143,14 +145,17 @@ public class Registry {
     public final RegistryObject<Item> ITEM_HEROS_TESTAMENT = ITEMS.register("heros_testament", HerosTestamentSword::new);
     public final RegistryObject<Item> ITEM_AETHERS_EMBRACE = ITEMS.register("aethers_embrace", AethersEmbraceBow::new);
 
-    public final RegistryObject<Item> ITEM_COPPER_SHIELD = ITEMS.register("copper_shield", () -> new ReinforcedShieldItem(420, 1.25, 0.05, 1)); //336 Default (1.25 mod)
-    public final RegistryObject<Item> ITEM_IRON_SHIELD = ITEMS.register("iron_shield", () -> new ReinforcedShieldItem(588, 1.5, 0.075, 1));
-    public final RegistryObject<Item> ITEM_GOLD_SHIELD = ITEMS.register("gold_shield", () -> new ReinforcedShieldItem(196, 3.0, 0.05, 0));
-    public final RegistryObject<Item> ITEM_DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new ReinforcedShieldItem(840, 1.75, 0.075, 2));
-    public final RegistryObject<Item> ITEM_NETHERITE_SHIELD = ITEMS.register("netherite_shield", () -> new ReinforcedShieldItem(1176, 2.0, 0.1, 2));
+    public final RegistryObject<Item> ITEM_COPPER_SHIELD = ITEMS.register("copper_shield", () -> new ReinforcedShieldItem(420, 1.25, 0.05, 1, Items.COPPER_INGOT)); //336 Default (1.25 mod)
+    public final RegistryObject<Item> ITEM_IRON_SHIELD = ITEMS.register("iron_shield", () -> new ReinforcedShieldItem(588, 1.5, 0.075, 1, Items.IRON_INGOT));
+    public final RegistryObject<Item> ITEM_GOLD_SHIELD = ITEMS.register("gold_shield", () -> new ReinforcedShieldItem(196, 3.0, 0.05, 0, Items.GOLD_INGOT));
+    public final RegistryObject<Item> ITEM_DIAMOND_SHIELD = ITEMS.register("diamond_shield", () -> new ReinforcedShieldItem(840, 1.75, 0.075, 2, Items.DIAMOND));
+    public final RegistryObject<Item> ITEM_NETHERITE_SHIELD = ITEMS.register("netherite_shield", () -> new ReinforcedShieldItem(1176, 2.0, 0.1, 2, Items.DIAMOND));
 
-    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
-    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.15, 0.50));
+    public final RegistryObject<Item> ITEM_NETHERITE_ANCHOR = ITEMS.register("netherite_anchor", NetheriteAnchorItem::new);
+
+    public final RegistryObject<Item> ITEM_NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.05, 0.0));
+    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.1, 0.20));
+    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1612), 0.15, 0.50));
 
     //public final RegistryObject<Item> ITEM_BLANK_TEMPLATE = ITEMS.register("blank_template", () -> new Item(new Item.Properties()));
     public final RegistryObject<Item> ITEM_TIER_2_TEMPLATE = ITEMS.register("tier_2_smithing_template", () -> new UpgradeTemplateItem(1, new Item.Properties().rarity(Rarity.COMMON)));
@@ -237,6 +242,12 @@ public class Registry {
                     1.0,
                     2.0));
 
+    public final RegistryObject<Attribute> ATTRIBUTE_ARROW_PIERCE = ATTRIBUTES.register("arrow_pierce",
+            () -> new RangedAttribute("attribute.exoarmory.arrow_pierce",
+                    1.0,
+                    1.0,
+                    127.0));
+
     public final RegistryObject<Attribute> ATTRIBUTE_LOOTING = ATTRIBUTES.register("looting",
             () -> new RangedAttribute("attribute.exoarmory.looting",
                     0.0,
@@ -248,6 +259,9 @@ public class Registry {
                     0.5,
                     0.0,
                     255.0));
+
+    //Integrations
+    public Attribute ATTRIBUTE_SPELL_POWER = null;
 
     public KeyMapping KEY_ACTIVATE;
 
@@ -328,6 +342,7 @@ public class Registry {
         event.add(EntityType.PLAYER, ATTRIBUTE_SHIELD_STABILITY.get());
         event.add(EntityType.PLAYER, ATTRIBUTE_PASSIVE_CRITICAL.get());
         event.add(EntityType.PLAYER, ATTRIBUTE_ARROW_RECOVERY.get());
+        event.add(EntityType.PLAYER, ATTRIBUTE_ARROW_PIERCE.get());
         event.add(EntityType.PLAYER, ATTRIBUTE_LOOTING.get());
         event.add(EntityType.PLAYER, ATTRIBUTE_CRITICAL_DAMAGE.get());
         for (EntityType<? extends LivingEntity> entity : event.getTypes()) {
@@ -357,6 +372,12 @@ public class Registry {
                     //event.addModifier(Attributes.ARMOR, new AttributeModifier(slot == EquipmentSlot.MAINHAND ? SHIELD_ARMOR_UUID : OFF_HAND_SHIELD_ARMOR_UUID, "Default", 0.0, AttributeModifier.Operation.ADDITION));
                 }
             }
+        }
+    }
+
+    public void populateAfterRegistration() {
+        if (ModList.get().isLoaded("irons_spellbooks")) {
+            ATTRIBUTE_SPELL_POWER = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.bySeparator("irons_spellbooks:spell_power", ':'));
         }
     }
 }

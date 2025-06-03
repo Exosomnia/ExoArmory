@@ -31,7 +31,7 @@ public class HerosFortitudeAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildRanks() {
-        RANK_STATS.put(Stats.CHANCE, new double[]{0.0, 0.1, 0.15, 0.15, 0.2});
+        RANK_STATS.put(Stats.CHANCE, new double[]{0.0, 0.15, 0.5, 0.5, 0.25});
         RANK_STATS.put(Stats.AMOUNT, new double[]{0.0, 0.0, 0.0, 0.0, 0.0});
     }
 

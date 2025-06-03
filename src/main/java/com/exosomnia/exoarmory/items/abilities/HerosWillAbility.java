@@ -29,9 +29,12 @@ public class HerosWillAbility extends ArmoryAbility {
         switch (detail) {
             case DESCRIPTION:
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.heros_will.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.heros_will.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.heros_will.line.1", getStatForRank(Stats.BONUS, rank) * 100.0),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.heros_will.line.2", getStatForRank(Stats.BONUS, rank) * 100.0),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }

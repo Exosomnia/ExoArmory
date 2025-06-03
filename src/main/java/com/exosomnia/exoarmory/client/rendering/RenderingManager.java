@@ -45,11 +45,10 @@ public class RenderingManager {
 
         if (!sameItem && !sameUUID && (currentItem.getItem() instanceof AbilityItem)) { resetAbilityVisible(); }
         if (currentItem.getItem() instanceof ResourcedItem currentResourceItem) {
-            ArmoryResource resource = currentResourceItem.getResource();
-            if ( (!sameItem && !sameUUID) || (sameUUID && resource.getResource(currentItem) != previousResource) || ExoArmory.ABILITY_MANAGER.isPlayerActive(player) ) {
+            if ( (!sameItem && !sameUUID) || (sameUUID && ExoArmory.RESOURCE_MANAGER.getResource(currentResourceItem.getUUID(currentItem)) != previousResource) || ExoArmory.REGISTRY.KEY_ACTIVATE.isDown() ) {
                 resetResourceVisible();
             }
-            previousResource = resource.getResource(currentItem);
+            previousResource = ExoArmory.RESOURCE_MANAGER.getResource(currentResourceItem.getUUID(currentItem));
         }
         previousItem = currentItem;
     }

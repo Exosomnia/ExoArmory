@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 public class SoulboundEnchantment extends Enchantment {
     public SoulboundEnchantment() {
@@ -29,5 +30,10 @@ public class SoulboundEnchantment extends Enchantment {
     }
 
     @Override
-    public boolean canEnchant(ItemStack itemStack) { return itemStack.isEnchantable(); }
+    public boolean canEnchant(ItemStack itemStack) { return itemStack.getItem().isEnchantable(itemStack); }
+
+    @Override
+    protected boolean checkCompatibility(Enchantment enchantment) {
+        return this != enchantment && !enchantment.equals(Enchantments.VANISHING_CURSE);
+    }
 }

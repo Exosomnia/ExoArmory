@@ -23,6 +23,7 @@ import java.util.UUID;
 public abstract class ArmorySwordItem extends SwordItem implements ArmoryItem {
 
     protected static final UUID BASE_CRITICAL_DAMAGE_UUID = UUID.fromString("edfb14a9-6890-43b4-bbe7-71e705b8a661");
+    protected static final UUID BASE_HEALING_RECEIVED_UUID = UUID.fromString("c4b6ae00-7d2a-475c-8ea9-9f78fe143f06");
 
     private static final Item.Properties PROPERTIES = new Item.Properties()
             .durability(782)

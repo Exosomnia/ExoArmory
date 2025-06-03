@@ -19,7 +19,6 @@ import com.exosomnia.exolib.utils.ColorUtils;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -149,7 +148,7 @@ public class ShadowsEdgeSword extends ArmorySwordItem implements ResourcedItem {
             if (entity instanceof LocalPlayer player) {
                 float[] colors = ColorUtils.intToFloats(0x705685);
                 new ParticleShapeDome(new RGBSParticleOptions(ExoLib.REGISTRY.TWINKLE_PARTICLE.get(), colors[0], colors[1], colors[2], 0.15F), player.position(),
-                        new ParticleShapeOptions.Dome(5.0F, 320)).playOnClient((ClientLevel) level);
+                        new ParticleShapeOptions.Dome(5.0F, 320)).playOnClient(Minecraft.getInstance().level);
             }
         }
     }
@@ -173,8 +172,7 @@ public class ShadowsEdgeSword extends ArmorySwordItem implements ResourcedItem {
             int rank = getRank(itemStack);
             RESOURCE.removeResource(itemStack, ExoArmory.REGISTRY.ABILITY_UMBRAL_ASSAULT.getStatForRank(
                     UmbralAssaultAbility.Stats.COST, rank));
-            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack),
-                    player.getInventory().selected, RESOURCE.getResource(itemStack)), player);
+            PacketHandler.sendToPlayer(new ArmoryResourcePacket(getUUID(itemStack), RESOURCE.getResource(itemStack)), player);
         }
         return itemStack;
     }

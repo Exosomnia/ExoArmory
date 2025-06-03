@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
@@ -117,7 +118,7 @@ public class SolarFlareAbility extends ArmoryAbility {
     public void onEntityCrit(CriticalHitEvent event) {
         Player player = event.getEntity();
         if (!(player.level() instanceof ServerLevel level)
-                || !event.isVanillaCritical()
+                || (!event.isVanillaCritical() && !event.getResult().equals(Event.Result.ALLOW))
                 || !(event.getTarget() instanceof LivingEntity defender)) return;
 
         ServerPlayer attacker = (ServerPlayer)player;
@@ -132,7 +133,7 @@ public class SolarFlareAbility extends ArmoryAbility {
             if (resource.getResource(attackerItem) >= getStatForRank(Stats.COST, rank)) {
                 createSolarFlare(defender.position(), level, rank, attacker, defender);
                 resource.removeResource(attackerItem, getStatForRank(Stats.COST, rank));
-                PacketHandler.sendToPlayer(new ArmoryResourcePacket(solarSword.getUUID(attackerItem), attacker.getInventory().selected, resource.getResource(attackerItem)),
+                PacketHandler.sendToPlayer(new ArmoryResourcePacket(solarSword.getUUID(attackerItem), resource.getResource(attackerItem)),
                         attacker);
             }
         }

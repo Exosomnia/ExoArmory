@@ -80,7 +80,9 @@ public class RenderGUIHandler {
             if (visibility > 0) {
                 RenderSystem.enableBlend();
                 ArmoryResource resource = resourceItem.getResource();
-                double resourceValue = resource.getResource(itemStack);
+                //TODO: DEBUGGING
+                double resourceValue = ExoArmory.RESOURCE_MANAGER.getResource(resourceItem.getUUID(itemStack));
+                //double resourceValue = resourceItem.getResource().getResourceStorage(itemStack).getCharge();
                 double resourceMax = resource.getResourceMax();
                 double chargeAmount = resourceValue / resourceMax;
 

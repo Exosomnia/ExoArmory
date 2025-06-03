@@ -56,8 +56,7 @@ public class ShadowsEdgeResource extends ArmoryResource {
                 int rank = weapon.getRank(itemStack);
                 ArmoryResource resource = weapon.getResource();
                 resource.addResource(itemStack, resource.getStatForRank(Stats.CHARGE, rank));
-                PacketHandler.sendToPlayer(new ArmoryResourcePacket(weapon.getUUID(itemStack),
-                        attacker.getInventory().selected, resource.getResource(itemStack)), attacker);
+                PacketHandler.sendToPlayer(new ArmoryResourcePacket(weapon.getUUID(itemStack), resource.getResource(itemStack)), attacker);
             }
         }
     }

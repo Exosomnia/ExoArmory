@@ -4,6 +4,7 @@ import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.Registry;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,12 +18,14 @@ public class ReinforcedShieldItem extends ShieldItem {
     private final double shieldStability;
     private final double passiveBlock;
     private final double armor;
+    private final Item repairItem;
 
-    public ReinforcedShieldItem(int durability, double shieldStability, double passiveBlock, int armor) {
+    public ReinforcedShieldItem(int durability, double shieldStability, double passiveBlock, int armor, Item repairItem) {
         super(new Item.Properties().durability(durability));
         this.shieldStability = shieldStability;
         this.passiveBlock = passiveBlock;
         this.armor = armor;
+        this.repairItem = repairItem;
     }
 
     @Override
@@ -37,5 +40,10 @@ public class ReinforcedShieldItem extends ShieldItem {
                     Attributes.ARMOR, new AttributeModifier(registry.OFF_HAND_SHIELD_ARMOR_UUID, "Default", armor, AttributeModifier.Operation.ADDITION));
             default -> ImmutableMultimap.of();
         };
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack itemStack, ItemStack repairStack) {
+        return repairStack.is(repairItem) || super.isValidRepairItem(itemStack, repairStack);
     }
 }
