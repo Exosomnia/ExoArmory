@@ -1,9 +1,9 @@
 package com.exosomnia.exoarmory.client.rendering.events;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.accessors.EntityAccessor;
-import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvider;
-import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
+import com.exosomnia.exoarmory.mixin.interfaces.EntityAccessor;
+import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceProvider;
+import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;

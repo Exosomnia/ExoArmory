@@ -1,30 +1,25 @@
 package com.exosomnia.exoarmory.managers;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.Registry;
-import com.exosomnia.exoarmory.capabilities.aethersembrace.AethersEmbraceProvider;
+import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
-import com.exosomnia.exoarmory.items.ReinforcedBowItem;
-import com.exosomnia.exoarmory.items.abilities.AetherBarrageAbility;
-import com.exosomnia.exoarmory.items.abilities.ColdSnapAbility;
-import com.exosomnia.exoarmory.items.abilities.SpectralPierceAbility;
-import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
-import com.exosomnia.exoarmory.items.armory.bows.ArmoryBowItem;
-import com.exosomnia.exoarmory.items.resource.ArmoryResource;
-import com.exosomnia.exoarmory.mixins.AbstractArrowAccessor;
+import com.exosomnia.exoarmory.item.ability.Abilities;
+import com.exosomnia.exoarmory.item.ability.AetherBarrageAbility;
+import com.exosomnia.exoarmory.item.ability.SpectralPierceAbility;
+import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
+import com.exosomnia.exoarmory.item.armory.bows.ArmoryBowItem;
+import com.exosomnia.exoarmory.item.resource.ArmoryResource;
+import com.exosomnia.exoarmory.mixin.mixins.AbstractArrowAccessor;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
-import com.exosomnia.exoarmory.networking.packets.ArmoryResourcePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -61,7 +56,7 @@ public class ProjectileManager {
 
                         wielding.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).ifPresent(aetherData -> {
                             aetherData.setTarget(defender.getUUID());
-                            aetherData.setExpire(attacker.level().getGameTime() + (int)ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.DURATION, projectileData.getArrowRank()));
+                            aetherData.setExpire(attacker.level().getGameTime() + (int) Abilities.AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.DURATION, projectileData.getArrowRank()));
                             PacketHandler.sendToPlayer(new AethersEmbraceTargetPacket(itemUUID, attacker.getInventory().selected,
                                     aetherData.getTarget(), aetherData.getExpire()), attacker);
                             projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.NORMAL.getType());
@@ -94,20 +89,19 @@ public class ProjectileManager {
                         if (item instanceof AethersEmbraceBow aetherBow) {
                             int rank = aetherBow.getRank(weapon);
                             //Check for Spectral Pierce ability
-                            SpectralPierceAbility ability = aetherBow.getAbility(ExoArmory.REGISTRY.ABILITY_SPECTRAL_PIERCE, weapon, rank);
-                            if (projectile instanceof SpectralArrow && ability != null) {
+                            SpectralPierceAbility ability = Abilities.SPECTRAL_PIERCE;
+                            if (projectile instanceof SpectralArrow && aetherBow.getAbilities(weapon, owner).contains(Abilities.SPECTRAL_PIERCE)) {
                                 projectile.setPierceLevel((byte)ability.getStatForRank(SpectralPierceAbility.Stats.LEVEL, rank));
                             }
                             //Check for Aether Barrage ability
                             if (ExoArmory.ABILITY_MANAGER.isPlayerActive(player)) {
 
                                 ArmoryResource resource = aetherBow.getResource();
-                                double cost = ExoArmory.REGISTRY.ABILITY_AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.COST, rank);
+                                double cost = Abilities.AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.COST, rank);
                                 if (resource.getResource(weapon) >= cost) {
                                     resource.removeResource(weapon, cost);
                                     projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.AETHER.getType());
                                     projectileData.setArrowRank(aetherBow.getRank(weapon));
-                                    PacketHandler.sendToPlayer(new ArmoryResourcePacket(aetherBow.getUUID(weapon), resource.getResource(weapon)), player);
                                 }
                             }
                         }

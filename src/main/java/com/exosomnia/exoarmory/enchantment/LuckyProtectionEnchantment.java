@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
-import net.minecraftforge.common.Tags;
 
 public class LuckyProtectionEnchantment extends Enchantment {
     public LuckyProtectionEnchantment() {

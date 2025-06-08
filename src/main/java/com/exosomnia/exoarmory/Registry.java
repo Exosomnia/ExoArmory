@@ -1,33 +1,38 @@
 package com.exosomnia.exoarmory;
 
-import com.exosomnia.exoarmory.capabilities.aethersembrace.IAethersEmbraceStorage;
+import com.exosomnia.exoarmory.capabilities.armory.item.ArmoryItemStorage;
+import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityStorage;
+import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceStorage;
+import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceStorage;
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
-import com.exosomnia.exoarmory.capabilities.resource.IArmoryResourceStorage;
 import com.exosomnia.exoarmory.effects.*;
 import com.exosomnia.exoarmory.enchantment.FortifyingEnchantment;
 import com.exosomnia.exoarmory.enchantment.LuckyProtectionEnchantment;
 import com.exosomnia.exoarmory.enchantment.RallyingEnchantment;
 import com.exosomnia.exoarmory.enchantment.SoulboundEnchantment;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
-import com.exosomnia.exoarmory.items.NetheriteAnchorItem;
-import com.exosomnia.exoarmory.items.abilities.HerosCourageAbility;
-import com.exosomnia.exoarmory.items.ReinforcedBowItem;
-import com.exosomnia.exoarmory.items.ReinforcedShieldItem;
-import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
-import com.exosomnia.exoarmory.items.abilities.*;
-import com.exosomnia.exoarmory.items.armory.ArmoryItem;
-import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
-import com.exosomnia.exoarmory.items.armory.swords.*;
-import com.exosomnia.exoarmory.items.resource.AethersEmbraceResource;
-import com.exosomnia.exoarmory.items.resource.FrostbiteResource;
-import com.exosomnia.exoarmory.items.resource.ShadowsEdgeResource;
+import com.exosomnia.exoarmory.item.NetheriteAnchorItem;
+import com.exosomnia.exoarmory.item.ReinforcedBowItem;
+import com.exosomnia.exoarmory.item.ReinforcedShieldItem;
+import com.exosomnia.exoarmory.item.UpgradeTemplateItem;
+import com.exosomnia.exoarmory.item.ability.event.handlers.CriticalHitAbilityHandler;
+import com.exosomnia.exoarmory.item.ability.event.handlers.LivingDeathAbilityHandler;
+import com.exosomnia.exoarmory.item.ability.event.handlers.LivingHurtAbilityHandler;
+import com.exosomnia.exoarmory.item.armory.ArmoryItem;
+import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
+import com.exosomnia.exoarmory.item.armory.swords.*;
+import com.exosomnia.exoarmory.item.resource.AethersEmbraceResource;
+import com.exosomnia.exoarmory.item.resource.FrostbiteResource;
+import com.exosomnia.exoarmory.item.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.managers.ProjectileManager;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.recipes.smithing.SmithingUpgradeRecipe;
+import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -85,7 +90,7 @@ public class Registry {
             ExoArmory.MODID);
 
     public final RegistryObject<MobEffect> EFFECT_SUNFIRE_SURGE = MOB_EFFECTS.register("sunfire_surge",
-            () -> new StellarInfusionEffect(MobEffectCategory.BENEFICIAL, 0xff5025) );
+            () -> new SunfireSurgeEffect(MobEffectCategory.BENEFICIAL, 0xff5025) );
     public final RegistryObject<MobEffect> EFFECT_FROSTED = MOB_EFFECTS.register("frosted",
             () -> new FrostedEffect(MobEffectCategory.HARMFUL, 0x719BDE) );
     public final RegistryObject<MobEffect> EFFECT_BLIGHTED = MOB_EFFECTS.register("blighted",
@@ -174,7 +179,12 @@ public class Registry {
                     if (loopItem instanceof ArmoryItem armoryItem) {
                         for (var i = 0; i < 5; i++) {
                             ItemStack itemStack = new ItemStack(loopItem);
-                            armoryItem.setRank(itemStack, i);
+
+                            CompoundTag tag = new CompoundTag();
+                            tag.putInt("Rank", i);
+                            itemStack.setTag(tag);
+                            ArmoryItemUtils.setRank(itemStack, i);
+
                             output.accept(itemStack);
                         }
                     }
@@ -265,23 +275,6 @@ public class Registry {
 
     public KeyMapping KEY_ACTIVATE;
 
-    public final SolarFlareAbility ABILITY_SOLAR_FLARE = new SolarFlareAbility();
-    public final SunfireSurgeAbility ABILITY_SUNFIRE_SURGE = new SunfireSurgeAbility();
-
-    public final UmbralAssaultAbility ABILITY_UMBRAL_ASSAULT = new UmbralAssaultAbility();
-    public final VeilOfDarknessAbility ABILITY_VEIL_OF_DARKNESS = new VeilOfDarknessAbility();
-    public final ShadowStrikeAbility ABILITY_SHADOW_STRIKE = new ShadowStrikeAbility();
-
-    public final FrigidFlurryAbility ABILITY_FRIGID_FLURRY = new FrigidFlurryAbility();
-    public final ColdSnapAbility ABILITY_COLD_SNAP = new ColdSnapAbility();
-
-    public final AetherBarrageAbility ABILITY_AETHER_BARRAGE = new AetherBarrageAbility();
-    public final SpectralPierceAbility ABILITY_SPECTRAL_PIERCE = new SpectralPierceAbility();
-
-    public final HerosCourageAbility ABILITY_HEROS_COURAGE = new HerosCourageAbility();
-    public final HerosFortitudeAbility ABILITY_HEROS_FORTITUDE = new HerosFortitudeAbility();
-    public final HerosWillAbility ABILITY_HEROS_WILL = new HerosWillAbility();
-
     public void registerCommon() {
         PacketHandler.register();   //Register our packets
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::attributeModifyEvent);
@@ -295,12 +288,10 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addListener(ShadowsEdgeResource::livingAttackEvent);
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
         MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
-        MinecraftForge.EVENT_BUS.register(ABILITY_SOLAR_FLARE);
-        MinecraftForge.EVENT_BUS.register(ABILITY_SUNFIRE_SURGE);
-        MinecraftForge.EVENT_BUS.register(ABILITY_SHADOW_STRIKE);
-        MinecraftForge.EVENT_BUS.register(ABILITY_COLD_SNAP);
-        MinecraftForge.EVENT_BUS.register(ABILITY_HEROS_FORTITUDE);
-        MinecraftForge.EVENT_BUS.register(ABILITY_HEROS_COURAGE);
+
+        MinecraftForge.EVENT_BUS.register(new CriticalHitAbilityHandler());
+        MinecraftForge.EVENT_BUS.register(new LivingDeathAbilityHandler());
+        MinecraftForge.EVENT_BUS.register(new LivingHurtAbilityHandler());
     }
 
     public void registerObjects(IEventBus eventBus) {
@@ -323,9 +314,11 @@ public class Registry {
     }
 
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(IArmoryResourceStorage.class);
+        event.register(ArmoryItemStorage.class);
+        event.register(ArmoryAbilityStorage.class);
+        event.register(ArmoryResourceStorage.class);
+        event.register(AethersEmbraceStorage.class);
         event.register(IArmoryArrowStorage.class);
-        event.register(IAethersEmbraceStorage.class);
     }
 
     public void registerKeyMappings(RegisterKeyMappingsEvent event) {

@@ -1,13 +1,12 @@
 package com.exosomnia.exoarmory;
 
 import com.exosomnia.exoarmory.actions.ActionManager;
-import com.exosomnia.exoarmory.client.ClientArmoryResourceManager;
 import com.exosomnia.exoarmory.client.rendering.RenderingManager;
 import com.exosomnia.exoarmory.dist.ClientDistHelper;
 import com.exosomnia.exoarmory.dist.DistHelper;
 import com.exosomnia.exoarmory.dist.ServerDistHelper;
-import com.exosomnia.exoarmory.items.armory.ArmoryItem;
-import com.exosomnia.exoarmory.items.armory.bows.AethersEmbraceBow;
+import com.exosomnia.exoarmory.item.armory.ArmoryItem;
+import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.managers.AbilityManager;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exolib.recipes.brewing.BrewingRecipeHelper;
@@ -46,8 +45,6 @@ public class ExoArmory
 
     @OnlyIn(Dist.CLIENT)
     public static RenderingManager RENDERING_MANAGER;
-    @OnlyIn(Dist.CLIENT)
-    public static ClientArmoryResourceManager RESOURCE_MANAGER;
 
     public static ActionManager ACTION_MANAGER;
     public static ConditionalManager CONDITIONAL_MANAGER;
@@ -98,7 +95,6 @@ public class ExoArmory
     public void setupClient(FMLClientSetupEvent event) {
         DIST_HELPER = new ClientDistHelper();
         RENDERING_MANAGER = new RenderingManager();
-        RESOURCE_MANAGER = new ClientArmoryResourceManager();
 
         ItemProperties.registerGeneric(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "using"),
                 (itemStack, level, entity, data) -> entity != null && entity.isUsingItem() && entity.getUseItem() == itemStack ? 1.0F : 0.0F);

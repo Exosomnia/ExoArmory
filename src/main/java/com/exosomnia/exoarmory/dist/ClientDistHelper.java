@@ -1,7 +1,5 @@
 package com.exosomnia.exoarmory.dist;
 
-import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.Registry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;

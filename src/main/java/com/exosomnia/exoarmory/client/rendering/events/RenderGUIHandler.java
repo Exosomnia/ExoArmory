@@ -3,13 +3,14 @@ package com.exosomnia.exoarmory.client.rendering.events;
 import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.client.rendering.RenderingManager;
-import com.exosomnia.exoarmory.items.ActivatableItem;
-import com.exosomnia.exoarmory.items.abilities.ArmoryAbility;
-import com.exosomnia.exoarmory.items.resource.ArmoryResource;
-import com.exosomnia.exoarmory.items.abilities.AbilityItem;
-import com.exosomnia.exoarmory.items.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.ActivatableItem;
+import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.ability.AbilityItem;
+import com.exosomnia.exoarmory.item.resource.ResourcedItem;
 import com.exosomnia.exoarmory.utils.AttributeUtils;
 import com.exosomnia.exolib.utils.ColorUtils;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -80,9 +81,7 @@ public class RenderGUIHandler {
             if (visibility > 0) {
                 RenderSystem.enableBlend();
                 ArmoryResource resource = resourceItem.getResource();
-                //TODO: DEBUGGING
-                double resourceValue = ExoArmory.RESOURCE_MANAGER.getResource(resourceItem.getUUID(itemStack));
-                //double resourceValue = resourceItem.getResource().getResourceStorage(itemStack).getCharge();
+                double resourceValue = resource.getResource(itemStack);
                 double resourceMax = resource.getResourceMax();
                 double chargeAmount = resourceValue / resourceMax;
 
@@ -111,13 +110,13 @@ public class RenderGUIHandler {
         if (item instanceof AbilityItem abilityItem) {
             visibility = (float) renderingManager.getAbilityVisibility();
             if (visibility > 0) {
-                List<ArmoryAbility> abilities = abilityItem.getAbilities(itemStack);
+                ImmutableSet<ArmoryAbility> abilities = abilityItem.getAbilities(itemStack, player);
 
                 //Because we pad two pixels between each ability when drawing, start at -2 width
                 int abilitiesWidth = -2;
                 //Records that store the starting x draw location for each ability, avoids having to calculate them again after calculating total width
                 int[] drawSections = new int[abilities.size()];
-                int index = 0; //Keeps track of the array index
+                int index = 0;
 
                 /*
                     Logic:  1. Apply padding
@@ -135,7 +134,6 @@ public class RenderGUIHandler {
                 }
                 index = 0; //Reset this back to 0, as we will use it for the actual drawing
 
-                //Calculate initial x and...
                 int initialX = baseWidth - (abilitiesWidth / 2);
 
                 //Begin drawing

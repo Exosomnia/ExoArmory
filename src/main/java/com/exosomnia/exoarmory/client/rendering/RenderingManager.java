@@ -1,11 +1,9 @@
 package com.exosomnia.exoarmory.client.rendering;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.abilities.AbilityItem;
-import com.exosomnia.exoarmory.items.armory.ArmoryItem;
-import com.exosomnia.exoarmory.items.resource.ArmoryResource;
-import com.exosomnia.exoarmory.items.resource.ResourcedItem;
-import com.exosomnia.exoarmory.managers.AbilityManager;
+import com.exosomnia.exoarmory.item.ability.AbilityItem;
+import com.exosomnia.exoarmory.item.armory.ArmoryItem;
+import com.exosomnia.exoarmory.item.resource.ResourcedItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -45,10 +43,10 @@ public class RenderingManager {
 
         if (!sameItem && !sameUUID && (currentItem.getItem() instanceof AbilityItem)) { resetAbilityVisible(); }
         if (currentItem.getItem() instanceof ResourcedItem currentResourceItem) {
-            if ( (!sameItem && !sameUUID) || (sameUUID && ExoArmory.RESOURCE_MANAGER.getResource(currentResourceItem.getUUID(currentItem)) != previousResource) || ExoArmory.REGISTRY.KEY_ACTIVATE.isDown() ) {
+            if ( (!sameItem && !sameUUID) || (sameUUID && currentResourceItem.getResource().getResource(currentItem) != previousResource) || ExoArmory.REGISTRY.KEY_ACTIVATE.isDown() ) {
                 resetResourceVisible();
             }
-            previousResource = ExoArmory.RESOURCE_MANAGER.getResource(currentResourceItem.getUUID(currentItem));
+            previousResource = currentResourceItem.getResource().getResource(currentItem);
         }
         previousItem = currentItem;
     }

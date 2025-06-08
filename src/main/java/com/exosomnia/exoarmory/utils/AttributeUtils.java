@@ -15,14 +15,14 @@ public class AttributeUtils {
         if (attributes.isEmpty()) { return base; }
 
         Collection<AttributeModifier> modifiers = attributes.get(attribute);
-        double add = 0;
-        double multiBase = 1;
-        double multiTotal = 1;
+        double add = 0.0;
+        double multiBase = 1.0;
+        double multiTotal = 1.0;
         for (AttributeModifier mod : modifiers) {
             switch(mod.getOperation()) {
                 case ADDITION -> add += mod.getAmount();
-                case MULTIPLY_BASE -> add += mod.getAmount();
-                case MULTIPLY_TOTAL -> add += mod.getAmount();
+                case MULTIPLY_BASE -> multiBase += mod.getAmount();
+                case MULTIPLY_TOTAL -> multiTotal += mod.getAmount();
             }
         }
         return ((base * multiBase) + add) * multiTotal;

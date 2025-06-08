@@ -1,11 +1,10 @@
 package com.exosomnia.exoarmory.recipes.smithing;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.items.UpgradeTemplateItem;
-import com.exosomnia.exoarmory.items.armory.ArmoryItem;
+import com.exosomnia.exoarmory.item.UpgradeTemplateItem;
+import com.exosomnia.exoarmory.item.armory.ArmoryItem;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
