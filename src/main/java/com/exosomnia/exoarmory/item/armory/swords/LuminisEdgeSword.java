@@ -1,15 +1,16 @@
 package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
-import com.exosomnia.exoarmory.item.resource.LuminisEdgeResource;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.resource.LuminisEdgeResource;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,8 +26,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LuminisEdgeSword extends ArmorySwordItem implements ResourcedItem {
+public class LuminisEdgeSword extends ArmorySwordItem implements ResourceItem {
 
+    private static final Object2IntLinkedOpenHashMap<ArmoryAbility>[] RANK_ABILITIES = new Object2IntLinkedOpenHashMap[5];
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
@@ -53,17 +55,14 @@ public class LuminisEdgeSword extends ArmorySwordItem implements ResourcedItem {
 
     private static final ArmoryResource RESOURCE = new LuminisEdgeResource();
 
-
     public LuminisEdgeSword() {
         super();
     }
 
-    public ImmutableSet<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
-        return switch (getRank(itemStack)) {
-            case 0 -> ImmutableSet.of();
-            default -> ImmutableSet.of();
-        };
+    public Object2IntLinkedOpenHashMap<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
+        return RANK_ABILITIES[getRank(itemStack)] == null ? new Object2IntLinkedOpenHashMap<>() : RANK_ABILITIES[getRank(itemStack)];
     }
+
     public ArmoryResource getResource() { return RESOURCE; }
 
     public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
@@ -72,7 +71,7 @@ public class LuminisEdgeSword extends ArmorySwordItem implements ResourcedItem {
         components.add(Component.literal(""));
 
         //Ability Info
-        for (ArmoryAbility ability: getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer())) {
+        for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
             components.addAll(ability.getTooltip(detail, rank));
         }
 
@@ -85,7 +84,7 @@ public class LuminisEdgeSword extends ArmorySwordItem implements ResourcedItem {
     //region IForgeItem Overrides
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new ArmoryResourceProvider();
+        return new ArmoryResourceProvider(nbt);
     }
     //endregion
 

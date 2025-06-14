@@ -47,6 +47,11 @@ public class ArmoryItemUtils {
         return itemCapability.isPresent() ? itemCapability.get().getRank() : 0;
     }
 
+    public static UUID getUUID(ItemStack itemStack) {
+        Optional<ArmoryItemStorage> itemCapability = itemStack.getCapability(ArmoryItemProvider.ARMORY_ITEM).resolve();
+        return itemCapability.isPresent() ? itemCapability.get().getUUID() : null;
+    }
+
     public static void setRank(ItemStack itemStack, int rank) {
         itemStack.getCapability(ArmoryItemProvider.ARMORY_ITEM).resolve().ifPresent(armoryCapability ->
                 armoryCapability.setRank(rank));

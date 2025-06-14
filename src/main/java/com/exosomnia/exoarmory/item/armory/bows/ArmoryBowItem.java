@@ -2,7 +2,7 @@ package com.exosomnia.exoarmory.item.armory.bows;
 
 import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.item.armory.ArmoryItem;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
@@ -44,7 +44,7 @@ public abstract class ArmoryBowItem extends BowItem implements ArmoryItem {
         detail = Screen.hasControlDown() ? ComponentUtils.DetailLevel.STATISTICS : detail;
 
         //Add rank info
-        int rank = getRank(itemStack);
+        int rank = ArmoryItemUtils.getRank(itemStack);
         components.add(Component.translatable("item.exoarmory.info.rank")
                 .withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
                 .append(Component.literal(": ")
@@ -62,14 +62,14 @@ public abstract class ArmoryBowItem extends BowItem implements ArmoryItem {
 
     @Override
     public void writeItemNetworkData(ItemStack itemStack, FriendlyByteBuf buffer) {
-        if (itemStack.getItem() instanceof ResourcedItem resourcedItem) {
+        if (itemStack.getItem() instanceof ResourceItem resourcedItem) {
             buffer.writeDouble(resourcedItem.getResource().getResourceStorage(itemStack).getCharge());
         }
     }
 
     @Override
     public void readItemNetworkData(ItemStack itemStack, FriendlyByteBuf buffer) {
-        if (itemStack.getItem() instanceof ResourcedItem resourcedItem) {
+        if (itemStack.getItem() instanceof ResourceItem resourcedItem) {
             double charge = buffer.readDouble();
             resourcedItem.getResource().getResourceStorage(itemStack).setCharge(charge);
         }
@@ -77,7 +77,7 @@ public abstract class ArmoryBowItem extends BowItem implements ArmoryItem {
 
     @Override
     public boolean shouldResendData(ItemStack itemStack, ItemStack otherStack) {
-        if (itemStack.getItem() instanceof ResourcedItem thisResourceItem && otherStack.getItem() instanceof ResourcedItem otherResourceItem) {
+        if (itemStack.getItem() instanceof ResourceItem thisResourceItem && otherStack.getItem() instanceof ResourceItem otherResourceItem) {
             return thisResourceItem.getResource().getResource(itemStack) != otherResourceItem.getResource().getResource(otherStack);
         }
         else return false;

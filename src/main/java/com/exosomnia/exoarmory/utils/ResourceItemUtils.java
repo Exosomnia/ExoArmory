@@ -2,6 +2,7 @@ package com.exosomnia.exoarmory.utils;
 
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceStorage;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
@@ -27,6 +28,19 @@ public class ResourceItemUtils {
     public static void removeResourceCharge(ItemStack itemStack, double amount) {
         itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().ifPresent(resourceCapability ->
                 resourceCapability.removeCharge(amount));
+    }
+
+    /**
+     * Removes the specified amount of resource charge on the provided ItemStack, to a minimum of 0.
+     * If the item does not have resource data, no action is taken.
+     * @param itemStack the ItemStack to get the resource charge from
+     * @param amount the amount of charge cost to remove
+     */
+    public static void addResourceCharge(ItemStack itemStack, double amount) {
+        itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().ifPresent(resourceCapability -> {
+            double max = (itemStack.getItem() instanceof ResourceItem resourceItem) ? resourceItem.getResource().getResourceMax() : Double.MAX_VALUE;
+            resourceCapability.addCharge(amount, max);
+        });
     }
 
     /**

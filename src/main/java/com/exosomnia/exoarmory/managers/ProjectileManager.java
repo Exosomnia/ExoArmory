@@ -5,12 +5,12 @@ import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEm
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.AetherBarrageAbility;
-import com.exosomnia.exoarmory.item.ability.SpectralPierceAbility;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.AetherBarrageAbility;
+import com.exosomnia.exoarmory.item.perks.ability.SpectralPierceAbility;
 import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.item.armory.bows.ArmoryBowItem;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
 import com.exosomnia.exoarmory.mixin.mixins.AbstractArrowAccessor;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
@@ -90,7 +90,7 @@ public class ProjectileManager {
                             int rank = aetherBow.getRank(weapon);
                             //Check for Spectral Pierce ability
                             SpectralPierceAbility ability = Abilities.SPECTRAL_PIERCE;
-                            if (projectile instanceof SpectralArrow && aetherBow.getAbilities(weapon, owner).contains(Abilities.SPECTRAL_PIERCE)) {
+                            if (projectile instanceof SpectralArrow && aetherBow.getAbilities(weapon, owner).containsKey(Abilities.SPECTRAL_PIERCE)) {
                                 projectile.setPierceLevel((byte)ability.getStatForRank(SpectralPierceAbility.Stats.LEVEL, rank));
                             }
                             //Check for Aether Barrage ability

@@ -11,11 +11,20 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ArmoryResourceProvider implements ICapabilitySerializable<CompoundTag> {
 
     public static final Capability<ArmoryResourceStorage> ARMORY_RESOURCE = CapabilityManager.get(new CapabilityToken<>(){});
-    private final LazyOptional<ArmoryResourceStorage> instance = LazyOptional.of(() -> new ArmoryResourceStorage(null));
+    private final LazyOptional<ArmoryResourceStorage> instance;
+
+    public ArmoryResourceProvider() {
+        this(null);
+    }
+
+    public ArmoryResourceProvider(@Nullable CompoundTag tag) {
+        instance = LazyOptional.of(() -> new ArmoryResourceStorage(tag));
+    }
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, Direction side) {

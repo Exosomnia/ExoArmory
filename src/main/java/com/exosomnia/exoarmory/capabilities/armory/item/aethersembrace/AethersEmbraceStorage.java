@@ -11,8 +11,8 @@ public class AethersEmbraceStorage extends ArmoryResourceStorage implements INBT
 
     private static final UUID DEFAULT_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    private UUID target;
-    private long expire;
+    private UUID target = DEFAULT_UUID;
+    private long expire = 0;
 
     public AethersEmbraceStorage(@Nullable CompoundTag tag) {
         super(tag);
@@ -37,7 +37,7 @@ public class AethersEmbraceStorage extends ArmoryResourceStorage implements INBT
     public void deserializeNBT(CompoundTag nbt) {
         super.deserializeNBT(nbt);
 
-        target = nbt.contains("Target") ? nbt.getUUID("Target") : DEFAULT_UUID;
+        target = nbt.getUUID("Target");
         expire = nbt.getLong("Expire");
     }
 }

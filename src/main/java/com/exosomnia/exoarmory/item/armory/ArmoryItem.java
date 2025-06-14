@@ -1,9 +1,9 @@
 package com.exosomnia.exoarmory.item.armory;
 
 import com.exosomnia.exoarmory.mixin.interfaces.IItemMixin;
+import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.google.common.collect.Multimap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -19,23 +19,11 @@ import java.util.UUID;
 public interface ArmoryItem extends IForgeItem, IItemMixin {
 
     //region ArmoryTag methods
-    default CompoundTag getArmoryTag(ItemStack itemStack) {
-        CompoundTag rootTag = itemStack.getOrCreateTag();
-        if (!rootTag.contains("ArmoryData")) {
-            CompoundTag armoryTag = rootTag.getCompound("ArmoryData");
-            armoryTag.putUUID("UUID", UUID.randomUUID());
-            armoryTag.putInt("Rank", 0);
-            rootTag.put("ArmoryData", armoryTag);
-            return armoryTag;
-        }
-        return rootTag.getCompound("ArmoryData");
-    }
+    default UUID getUUID(ItemStack itemStack) { return ArmoryItemUtils.getUUID(itemStack); }
 
-    default UUID getUUID(ItemStack itemStack) { return getArmoryTag(itemStack).getUUID("UUID"); }
+    default int getRank(ItemStack itemStack) { return ArmoryItemUtils.getRank(itemStack); }
 
-    default int getRank(ItemStack itemStack) { return getArmoryTag(itemStack).getInt("Rank"); }
-
-    default void setRank(ItemStack itemStack, int rank) { getArmoryTag(itemStack).putInt("Rank", rank); }
+    default void setRank(ItemStack itemStack, int rank) { ArmoryItemUtils.setRank(itemStack, rank); }
     //endregion
 
     void addToHover(ItemStack itemStack, @Nullable Level level, List<Component> components, TooltipFlag flag, int rank, DetailLevel detail);

@@ -31,6 +31,8 @@
   "effect.exoarmory.sunfire_surge.description": "Increases movement and attack speed, and all criticals cause a Solar Flare.",
   "effect.exoarmory.fire_vulnerability": "Fire Weakness",
   "effect.exoarmory.fire_vulnerability.description": "Doubles all taken fire damage.",
+  "effect.exoarmory.umbral_assault": "Umbral Assault",
+  "effect.exoarmory.umbral_assault.description": "Causes the shadows to periodically damage entities around you.",
   "effect.exoarmory.frosted": "Frosted",
   "effect.exoarmory.frosted.description": "Reduces armor and armor toughness by 20% and movement speed by 10% per level.",
 
@@ -115,10 +117,21 @@
   "ability.exoarmory.stat.sunfire_surge.line.1": "Surge duration: 0{%d} seconds",
   "ability.exoarmory.stat.sunfire_surge.line.2": "Cooldown: 0{%d} seconds",
 
+  "ability.exoarmory.name.scorching_strike": "Scorching Strike",
+  "ability.exoarmory.desc.scorching_strike.line.1": "Attacking a burning entity gives them",
+  "ability.exoarmory.desc.scorching_strike.line.2": "0{Fire Vulnerability} and damages other",
+  "ability.exoarmory.desc.scorching_strike.line.3": "nearby, burning entities.",
+  "ability.exoarmory.stat.scorching_strike.line.1": "Effect duration: 0{%.1f} seconds",
+  "ability.exoarmory.stat.scorching_strike.line.2": "AoE range: 0{%.1f} blocks",
+  "ability.exoarmory.stat.scorching_strike.line.3": "Max AoE targets: 0{%d}",
+  "ability.exoarmory.stat.scorching_strike.line.4": "AoE damage: 0{%.1f}",
+
   "resource.exoarmory.name.solar_sword": "Energy",
-  "resource.exoarmory.desc.solar_sword.line.1": "Charges during the day while",
-  "resource.exoarmory.desc.solar_sword.line.2": "in direct sunlight or on fire.",
-  "resource.exoarmory.stat.solar_sword.line.1": "Charge rate: 0{%.1f}/s",
+  "resource.exoarmory.desc.solar_sword.line.1": "Charges during the day when in direct",
+  "resource.exoarmory.desc.solar_sword.line.2": "sunlight or while on fire. Attacking",
+  "resource.exoarmory.desc.solar_sword.line.3": "burning entities also generates charge.",
+  "resource.exoarmory.stat.solar_sword.line.1": "Passive charge: 0{%.1f}/s",
+  "resource.exoarmory.stat.solar_sword.line.2": "Attack charge: 0{%.1f}/attack",
 
   "_comment": "+===============+",
   "_comment": "| SHADOW'S EDGE |",

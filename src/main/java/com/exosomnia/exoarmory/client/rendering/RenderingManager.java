@@ -1,9 +1,9 @@
 package com.exosomnia.exoarmory.client.rendering;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.item.ability.AbilityItem;
+import com.exosomnia.exoarmory.item.perks.ability.AbilityItem;
 import com.exosomnia.exoarmory.item.armory.ArmoryItem;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +42,7 @@ public class RenderingManager {
         boolean sameUUID = sameUUID(currentItem, previousItem);
 
         if (!sameItem && !sameUUID && (currentItem.getItem() instanceof AbilityItem)) { resetAbilityVisible(); }
-        if (currentItem.getItem() instanceof ResourcedItem currentResourceItem) {
+        if (currentItem.getItem() instanceof ResourceItem currentResourceItem) {
             if ( (!sameItem && !sameUUID) || (sameUUID && currentResourceItem.getResource().getResource(currentItem) != previousResource) || ExoArmory.REGISTRY.KEY_ACTIVATE.isDown() ) {
                 resetResourceVisible();
             }

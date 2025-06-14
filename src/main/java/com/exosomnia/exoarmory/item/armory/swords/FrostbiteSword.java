@@ -2,19 +2,22 @@ package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.FrigidFlurryAction;
+import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
 import com.exosomnia.exoarmory.item.ActivatableItem;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.ability.FrigidFlurryAbility;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
-import com.exosomnia.exoarmory.item.resource.FrostbiteResource;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.ability.FrigidFlurryAbility;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.resource.FrostbiteResource;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
+import com.exosomnia.exoarmory.utils.AbilityItemUtils;
+import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,8 +43,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, ActivatableItem {
+public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, ActivatableItem {
 
+    private static final Object2IntLinkedOpenHashMap<ArmoryAbility>[] RANK_ABILITIES = new Object2IntLinkedOpenHashMap[5];
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
@@ -64,6 +68,28 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, Ac
                 .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.0, Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, Operation.ADDITION))
                 .build();
+
+        RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 1)
+                .build();
+        RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 1)
+                .addAbility(Abilities.COLD_SNAP, 1)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 2)
+                .addAbility(Abilities.COLD_SNAP, 2)
+                .build();
+        RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 2)
+                .addAbility(Abilities.COLD_SNAP, 2)
+                //TODO
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 3)
+                .addAbility(Abilities.COLD_SNAP, 3)
+                //TODO
+                .build();
     }
 
     private static final ArmoryResource RESOURCE = new FrostbiteResource();
@@ -73,12 +99,10 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, Ac
         super();
     }
 
-    public ImmutableSet<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
-        return switch (getRank(itemStack)) {
-            case 0, 1 -> ImmutableSet.of(Abilities.FRIGID_FLURRY);
-            default -> ImmutableSet.of(Abilities.FRIGID_FLURRY, Abilities.COLD_SNAP);
-        };
+    public Object2IntLinkedOpenHashMap<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
+        return RANK_ABILITIES[ArmoryItemUtils.getRank(itemStack)];
     }
+
     public ArmoryResource getResource() { return RESOURCE; }
     @Override
     public ResourceLocation getActivateIcon() {
@@ -91,7 +115,7 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, Ac
         components.add(Component.literal(""));
 
         //Ability Info
-        for (ArmoryAbility ability: getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer())) {
+        for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
             components.addAll(ability.getTooltip(detail, rank));
         }
 
@@ -104,13 +128,9 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourcedItem, Ac
     //region IForgeItem Overrides
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        ArmoryResourceProvider resourceProvider = new ArmoryResourceProvider();
-        if (nbt == null) return resourceProvider;
-        resourceProvider.deserializeNBT(nbt);
-        return resourceProvider;
+        return new ArmoryResourceProvider(nbt);
     }
     //endregion
-
     //region Item Overrides
     @Override
     public int getUseDuration(ItemStack itemStack) { return 72000; }

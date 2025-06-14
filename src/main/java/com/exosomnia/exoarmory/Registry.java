@@ -6,7 +6,8 @@ import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEm
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceStorage;
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
 import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
-import com.exosomnia.exoarmory.effects.*;
+import com.exosomnia.exoarmory.effect.*;
+import com.exosomnia.exoarmory.effect.perk.UmbralAssaultEffect;
 import com.exosomnia.exoarmory.enchantment.FortifyingEnchantment;
 import com.exosomnia.exoarmory.enchantment.LuckyProtectionEnchantment;
 import com.exosomnia.exoarmory.enchantment.RallyingEnchantment;
@@ -16,15 +17,15 @@ import com.exosomnia.exoarmory.item.NetheriteAnchorItem;
 import com.exosomnia.exoarmory.item.ReinforcedBowItem;
 import com.exosomnia.exoarmory.item.ReinforcedShieldItem;
 import com.exosomnia.exoarmory.item.UpgradeTemplateItem;
-import com.exosomnia.exoarmory.item.ability.event.handlers.CriticalHitAbilityHandler;
-import com.exosomnia.exoarmory.item.ability.event.handlers.LivingDeathAbilityHandler;
-import com.exosomnia.exoarmory.item.ability.event.handlers.LivingHurtAbilityHandler;
+import com.exosomnia.exoarmory.item.perks.event.handlers.CriticalHitPerkHandler;
+import com.exosomnia.exoarmory.item.perks.event.handlers.LivingDeathPerkHandler;
+import com.exosomnia.exoarmory.item.perks.event.handlers.LivingHurtPerkHandler;
 import com.exosomnia.exoarmory.item.armory.ArmoryItem;
 import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exoarmory.item.armory.swords.*;
-import com.exosomnia.exoarmory.item.resource.AethersEmbraceResource;
-import com.exosomnia.exoarmory.item.resource.FrostbiteResource;
-import com.exosomnia.exoarmory.item.resource.ShadowsEdgeResource;
+import com.exosomnia.exoarmory.item.perks.resource.AethersEmbraceResource;
+import com.exosomnia.exoarmory.item.perks.resource.FrostbiteResource;
+import com.exosomnia.exoarmory.item.perks.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.managers.ProjectileManager;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.recipes.smithing.SmithingUpgradeRecipe;
@@ -91,6 +92,8 @@ public class Registry {
 
     public final RegistryObject<MobEffect> EFFECT_SUNFIRE_SURGE = MOB_EFFECTS.register("sunfire_surge",
             () -> new SunfireSurgeEffect(MobEffectCategory.BENEFICIAL, 0xff5025) );
+    public final RegistryObject<MobEffect> EFFECT_UMBRAL_ASSAULT = MOB_EFFECTS.register("umbral_assault",
+            UmbralAssaultEffect::new);
     public final RegistryObject<MobEffect> EFFECT_FROSTED = MOB_EFFECTS.register("frosted",
             () -> new FrostedEffect(MobEffectCategory.HARMFUL, 0x719BDE) );
     public final RegistryObject<MobEffect> EFFECT_BLIGHTED = MOB_EFFECTS.register("blighted",
@@ -176,7 +179,7 @@ public class Registry {
             .displayItems((parameters, output) -> {
                 for (RegistryObject<Item> item : ITEMS.getEntries()) {
                     Item loopItem = item.get();
-                    if (loopItem instanceof ArmoryItem armoryItem) {
+                    if (loopItem instanceof ArmoryItem) {
                         for (var i = 0; i < 5; i++) {
                             ItemStack itemStack = new ItemStack(loopItem);
 
@@ -289,9 +292,9 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
         MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
 
-        MinecraftForge.EVENT_BUS.register(new CriticalHitAbilityHandler());
-        MinecraftForge.EVENT_BUS.register(new LivingDeathAbilityHandler());
-        MinecraftForge.EVENT_BUS.register(new LivingHurtAbilityHandler());
+        MinecraftForge.EVENT_BUS.register(new CriticalHitPerkHandler());
+        MinecraftForge.EVENT_BUS.register(new LivingDeathPerkHandler());
+        MinecraftForge.EVENT_BUS.register(new LivingHurtPerkHandler());
     }
 
     public void registerObjects(IEventBus eventBus) {

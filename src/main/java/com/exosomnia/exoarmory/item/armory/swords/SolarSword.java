@@ -2,17 +2,19 @@ package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.ability.SunfireSurgeAbility;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
-import com.exosomnia.exoarmory.item.resource.SolarSwordResource;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.ability.SunfireSurgeAbility;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
+import com.exosomnia.exoarmory.item.perks.resource.SolarSwordResource;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
+import com.exosomnia.exoarmory.utils.AbilityItemUtils;
+import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -34,8 +36,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarSword extends ArmorySwordItem implements ResourcedItem {
+public class SolarSword extends ArmorySwordItem implements ResourceItem {
 
+    private static final Object2IntLinkedOpenHashMap<ArmoryAbility>[] RANK_ABILITIES = new Object2IntLinkedOpenHashMap[5];
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
@@ -58,6 +61,28 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
                 .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.0, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.4, AttributeModifier.Operation.ADDITION))
                 .build();
+
+        RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 1)
+                .build();
+        RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 1)
+                .addAbility(Abilities.SUNFIRE_SURGE, 1)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 2)
+                .addAbility(Abilities.SUNFIRE_SURGE, 2)
+                .build();
+        RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 2)
+                .addAbility(Abilities.SUNFIRE_SURGE, 2)
+                .addAbility(Abilities.SCORCHING_STRIKE, 2)
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 3)
+                .addAbility(Abilities.SUNFIRE_SURGE, 3)
+                .addAbility(Abilities.SCORCHING_STRIKE, 3)
+                .build();
     }
 
     private static final ArmoryResource RESOURCE = new SolarSwordResource();
@@ -67,12 +92,10 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
         super();
     }
 
-    public ImmutableSet<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
-        return switch (getRank(itemStack)) {
-            case 0, 1 -> ImmutableSet.of(Abilities.SOLAR_FLARE);
-            default -> ImmutableSet.of(Abilities.SOLAR_FLARE, Abilities.SUNFIRE_SURGE);
-        };
+    public Object2IntLinkedOpenHashMap<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
+        return RANK_ABILITIES[ArmoryItemUtils.getRank(itemStack)];
     }
+
     public ArmoryResource getResource() { return RESOURCE; }
 
     public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
@@ -81,7 +104,7 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
         components.add(Component.literal(""));
 
         //Ability Info
-        for (ArmoryAbility ability: getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer())) {
+        for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
             components.addAll(ability.getTooltip(detail, rank));
         }
 
@@ -94,7 +117,7 @@ public class SolarSword extends ArmorySwordItem implements ResourcedItem {
     //region IForgeItem Overrides
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new ArmoryResourceProvider();
+        return new ArmoryResourceProvider(nbt);
     }
     //endregion
 

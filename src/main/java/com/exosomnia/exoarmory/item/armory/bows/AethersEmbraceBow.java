@@ -5,18 +5,19 @@ import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEm
 import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
 import com.exosomnia.exoarmory.item.ActivatableItem;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.AetherBarrageAbility;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.resource.AethersEmbraceResource;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.AetherBarrageAbility;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.resource.AethersEmbraceResource;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import com.exosomnia.exoarmory.networking.PacketHandler;
 import com.exosomnia.exoarmory.networking.packets.AethersEmbraceTargetPacket;
+import com.exosomnia.exoarmory.utils.AbilityItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,8 +46,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, ActivatableItem {
+public class AethersEmbraceBow extends ArmoryBowItem implements ResourceItem, ActivatableItem {
 
+    private static final Object2IntLinkedOpenHashMap<ArmoryAbility>[] RANK_ABILITIES = new Object2IntLinkedOpenHashMap[5];
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
@@ -64,6 +66,28 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
         RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get(), new AttributeModifier("Default", 0.25, AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
+
+        RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 1)
+                .build();
+        RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 1)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 1)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 2)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 2)
+                .build();
+        RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 2)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 2)
+                //TODO
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 3)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 3)
+                //TODO
+                .build();
     }
 
     private static final ArmoryResource RESOURCE = new AethersEmbraceResource();
@@ -71,12 +95,10 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
 
     public AethersEmbraceBow() { super(); }
 
-    public ImmutableSet<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
-        return switch (getRank(itemStack)) {
-            case 0, 1 -> ImmutableSet.of(Abilities.AETHER_BARRAGE);
-            default -> ImmutableSet.of(Abilities.AETHER_BARRAGE, Abilities.SPECTRAL_PIERCE);
-        };
+    public Object2IntLinkedOpenHashMap<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
+        return RANK_ABILITIES[getRank(itemStack)];
     }
+
     public ArmoryResource getResource() { return RESOURCE; }
 
     public boolean isTargeting(ItemStack itemStack, Level level) {
@@ -122,7 +144,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourcedItem, A
         components.add(Component.literal(""));
 
         //Ability Info
-        for (ArmoryAbility ability: getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer())) {
+        for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
             components.addAll(ability.getTooltip(detail, rank));
         }
 

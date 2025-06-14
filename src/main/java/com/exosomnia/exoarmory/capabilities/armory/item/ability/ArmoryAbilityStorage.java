@@ -1,8 +1,8 @@
 package com.exosomnia.exoarmory.capabilities.armory.item.ability;
 
 import com.exosomnia.exoarmory.capabilities.armory.item.ArmoryItemStorage;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;

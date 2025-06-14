@@ -1,15 +1,18 @@
 package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.item.ability.Abilities;
-import com.exosomnia.exoarmory.item.ability.AbilityItem;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.ability.HerosWillAbility;
+import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityProvider;
+import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
+import com.exosomnia.exoarmory.item.perks.ability.Abilities;
+import com.exosomnia.exoarmory.item.perks.ability.AbilityItem;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.ability.HerosWillAbility;
+import com.exosomnia.exoarmory.utils.AbilityItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.Minecraft;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -18,12 +21,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem {
 
+    private static final Object2IntLinkedOpenHashMap<ArmoryAbility>[] RANK_ABILITIES = new Object2IntLinkedOpenHashMap[5];
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
@@ -54,18 +59,36 @@ public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem 
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_HEALING_RECEIVED.get(), new AttributeModifier(BASE_HEALING_RECEIVED_UUID, "Default",
                         Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 4), AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
+
+        RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 1)
+                .build();
+        RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 1)
+                .addAbility(Abilities.HEROS_FORTITUDE, 1)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 2)
+                .addAbility(Abilities.HEROS_FORTITUDE, 2)
+                .build();
+        RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 2)
+                .addAbility(Abilities.HEROS_FORTITUDE, 2)
+                .addAbility(Abilities.HEROS_WILL, 2)
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 3)
+                .addAbility(Abilities.HEROS_FORTITUDE, 3)
+                .addAbility(Abilities.HEROS_WILL, 3)
+                .build();
     }
 
     public HerosTestamentSword() {
         super();
     }
 
-    public ImmutableSet<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
-        return switch (getRank(itemStack)) {
-            case 0 -> ImmutableSet.of(Abilities.HEROS_COURAGE);
-            case 1, 2 -> ImmutableSet.of(Abilities.HEROS_COURAGE, Abilities.HEROS_FORTITUDE);
-            default -> ImmutableSet.of(Abilities.HEROS_COURAGE, Abilities.HEROS_FORTITUDE, Abilities.HEROS_WILL);
-        };
+    public Object2IntLinkedOpenHashMap<ArmoryAbility> getAbilities(ItemStack itemStack, LivingEntity wielder) {
+        return RANK_ABILITIES[getRank(itemStack)];
     }
 
     public Multimap<Attribute, AttributeModifier>[] getAttributesForAllRanks() { return RANK_ATTRIBUTES; }
@@ -74,9 +97,15 @@ public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem 
         components.add(Component.literal(""));
 
         //Ability Info
-        for (ArmoryAbility ability: getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer())) {
+        for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
             components.addAll(ability.getTooltip(detail, rank));
         }
     }
 
+    //region IForgeItem Overrides
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new ArmoryAbilityProvider(nbt);
+    }
+    //endregion
 }

@@ -4,14 +4,14 @@ import com.exosomnia.exoarmory.Config;
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.client.rendering.RenderingManager;
 import com.exosomnia.exoarmory.item.ActivatableItem;
-import com.exosomnia.exoarmory.item.ability.ArmoryAbility;
-import com.exosomnia.exoarmory.item.resource.ArmoryResource;
-import com.exosomnia.exoarmory.item.ability.AbilityItem;
-import com.exosomnia.exoarmory.item.resource.ResourcedItem;
+import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
+import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
+import com.exosomnia.exoarmory.item.perks.ability.AbilityItem;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import com.exosomnia.exoarmory.utils.AttributeUtils;
 import com.exosomnia.exolib.utils.ColorUtils;
-import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.systems.RenderSystem;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,8 +25,6 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ExoArmory.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RenderGUIHandler {
@@ -76,7 +74,7 @@ public class RenderGUIHandler {
         }
 
         float visibility;
-        if (item instanceof ResourcedItem resourceItem) {
+        if (item instanceof ResourceItem resourceItem) {
             visibility = (float) renderingManager.getResourceVisibility();
             if (visibility > 0) {
                 RenderSystem.enableBlend();
@@ -110,7 +108,7 @@ public class RenderGUIHandler {
         if (item instanceof AbilityItem abilityItem) {
             visibility = (float) renderingManager.getAbilityVisibility();
             if (visibility > 0) {
-                ImmutableSet<ArmoryAbility> abilities = abilityItem.getAbilities(itemStack, player);
+                Object2IntLinkedOpenHashMap<ArmoryAbility> abilities = abilityItem.getAbilities(itemStack, player);
 
                 //Because we pad two pixels between each ability when drawing, start at -2 width
                 int abilitiesWidth = -2;
@@ -123,7 +121,7 @@ public class RenderGUIHandler {
                             2. Store the current width (Will be used to draw frame and icon)
                             3. Calculate text width and add to total width
                  */
-                for (ArmoryAbility ability : abilities) {
+                for (ArmoryAbility ability : abilities.keySet()) {
                     //Begin by applying padding and store the current width
                     abilitiesWidth += 2;
                     drawSections[index++] = abilitiesWidth;
@@ -138,7 +136,7 @@ public class RenderGUIHandler {
 
                 //Begin drawing
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, visibility);
-                for (ArmoryAbility ability : abilities) {
+                for (ArmoryAbility ability : abilities.keySet()) {
                     RenderSystem.enableBlend(); //We have to do this because the last step, drawing the text, disables blending after it finishes
                     ResourceLocation icon = ability.getIcon();
                     String name = ability.getDisplayName();
