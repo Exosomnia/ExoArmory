@@ -1,9 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": {
-      "tag": "forge:storage_blocks/iron"
-    },
     "I": {
       "tag": "forge:ingots/iron"
     },
@@ -13,7 +10,7 @@
   },
   "pattern": [
     "IoI",
-    "IBI",
+    "III",
     " I "
   ],
   "result": {

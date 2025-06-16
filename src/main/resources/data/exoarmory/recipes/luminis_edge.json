@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_sword"
+    },
+    "W": {
+      "item": "exoarmory:weapon_core"
+    },
+    "G": {
+      "item": "minecraft:glowstone"
+    },
+    "C": {
+      "item": "minecraft:prismarine_crystals"
+    }
+  },
+  "pattern": [
+    " G ",
+    "GWG",
+    "CDC"
+  ],
+  "result": {
+    "item": "exoarmory:luminis_edge"
+  },
+  "show_notification": true
+}

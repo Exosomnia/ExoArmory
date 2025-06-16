@@ -1,5 +1,6 @@
 package com.exosomnia.exoarmory.utils;
 
+import com.exosomnia.exoarmory.ExoArmory;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -27,5 +28,4 @@ public class AttributeUtils {
         }
         return ((base * multiBase) + add) * multiTotal;
     }
-
 }

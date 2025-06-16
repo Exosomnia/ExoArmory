@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_sword"
+    },
+    "W": {
+      "item": "exoarmory:weapon_core"
+    },
+    "C": {
+      "item": "minecraft:fire_charge"
+    },
+    "R": {
+      "item": "minecraft:blaze_rod"
+    }
+  },
+  "pattern": [
+    " R ",
+    "RWR",
+    "CDC"
+  ],
+  "result": {
+    "item": "exoarmory:solar_sword"
+  },
+  "show_notification": true
+}

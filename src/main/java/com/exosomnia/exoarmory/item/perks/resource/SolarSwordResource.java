@@ -9,6 +9,8 @@ import com.exosomnia.exolib.utils.ComponentUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
@@ -51,7 +53,11 @@ public class SolarSwordResource extends ArmoryResource implements LivingHurtPerk
 
     @Override
     public boolean livingHurtEvent(PerkHandler.Context<LivingHurtEvent> context) {
-        if (!context.event().getEntity().isOnFire()) return false;
+        LivingHurtEvent event = context.event();
+        DamageSource source = event.getSource();
+
+        if (source.getEntity() != context.triggerEntity()) return false;
+        if (!event.getEntity().isOnFire()) return false;
 
         ItemStack triggerStack = context.triggerStack();
         ResourceItemUtils.addResourceCharge(triggerStack, getStatForRank(Stats.CHARGE, ArmoryItemUtils.getRank(triggerStack)));

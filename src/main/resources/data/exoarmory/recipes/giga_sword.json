@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_sword"
+    },
+    "W": {
+      "item": "exoarmory:weapon_core"
+    },
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    }
+  },
+  "pattern": [
+    " I ",
+    "IWI",
+    "IDI"
+  ],
+  "result": {
+    "item": "exoarmory:giga_sword"
+  },
+  "show_notification": true
+}

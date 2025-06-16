@@ -35,14 +35,14 @@
         {
             "predicate": {
                 "exoarmory:using": 1.0,
-                "exoarmory:use_time": 13.0
+                "exoarmory:use_time": 9.0
             },
             "model": "exoarmory:item/etherium_bow_pulling_1"
         },
         {
             "predicate": {
                 "exoarmory:using": 1.0,
-                "exoarmory:use_time": 18.0
+                "exoarmory:use_time": 14.0
             },
             "model": "exoarmory:item/etherium_bow_pulling_2"
         }

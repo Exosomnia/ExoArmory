@@ -18,6 +18,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,10 +66,9 @@ public class RenderGUIHandler {
                 int ticksLeft = stabilityTicks - (usingStack.getUseDuration() - player.getUseItemRemainingTicks());
                 if (ticksLeft >= 0) {
                     String secondsLeft = String.format("%.1f", (ticksLeft / 20.0));
-                    int width = mc.font.width(secondsLeft);
                     int drawHeight = mc.getWindow().getGuiScaledHeight() / 2;
                     gui.blit(SHIELD_STABILITY_ICON, baseWidth - 9, drawHeight + 8, 0, 0, 18, 18, 18, 18);
-                    gui.drawString(mc.font, secondsLeft, baseWidth - (width / 2), drawHeight + 12, 0xFFFFFFFF);
+                    gui.drawString(mc.font, secondsLeft, baseWidth - (mc.font.width(secondsLeft) / 2), drawHeight + 12, 0xFFFFFFFF);
                 }
             }
         }
@@ -81,9 +81,8 @@ public class RenderGUIHandler {
                 ArmoryResource resource = resourceItem.getResource();
                 double resourceValue = resource.getResource(itemStack);
                 double resourceMax = resource.getResourceMax();
-                double chargeAmount = resourceValue / resourceMax;
 
-                int filledWidth = (int) (barWidth * chargeAmount);
+                int filledWidth = (int) (barWidth * (resourceValue / resourceMax));
                 float[] rgb = ColorUtils.intToFloats(resource.getRGB());
 
                 RenderSystem.setShaderColor(rgb[0], rgb[1], rgb[2], visibility);

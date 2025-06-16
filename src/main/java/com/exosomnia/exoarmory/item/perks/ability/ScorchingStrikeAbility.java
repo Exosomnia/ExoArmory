@@ -61,7 +61,7 @@ public class ScorchingStrikeAbility extends ArmoryAbility implements LivingHurtP
                 3.5, 4.5, 5.5, 6.0, 6.5, 7.0
         });
         RANK_STATS.put(Stats.RADIUS, new double[]{
-                2.5, 3.0, 3.5, 3.75, 4.0, 4.25
+                3.0, 3.5, 4.0, 4.33, 4.67, 5.0
         });
         RANK_STATS.put(Stats.MAX_TARGETS, new double[]{
                 1.0, 2.0, 2.0, 2.0, 2.0, 3.0
@@ -119,6 +119,8 @@ public class ScorchingStrikeAbility extends ArmoryAbility implements LivingHurtP
         nearbyEntities.sort((entityL, entityR) -> Double.compare(entityL.position().distanceToSqr(position), entityR.distanceToSqr(position)));
         spreadCount = Math.min(spreadCount, nearbyEntities.size());
 
+        if (nearbyEntities.isEmpty()) return;
+
         for (int i = 0; i < spreadCount; i++) {
             LivingEntity flaredEntity = nearbyEntities.get(i);
             flaredEntity.hurt(source, damage);
@@ -130,8 +132,6 @@ public class ScorchingStrikeAbility extends ArmoryAbility implements LivingHurtP
                 new ParticleShapeOptions.Line(flaredEntity.getEyePosition().subtract(0, flaredEntity.getEyeHeight() / 3.0, 0), 12))));
         }
 
-        if (nearbyEntities.isEmpty()) return;
-
         //Perform visual and audio effects
         level.playSeededSound(null, position.x, position.y, position.z, ExoArmory.REGISTRY.SOUND_FIERY_EXPLOSION.get(), SoundSource.PLAYERS,
                 0.34F, 1.75F, 0);
@@ -142,18 +142,20 @@ public class ScorchingStrikeAbility extends ArmoryAbility implements LivingHurtP
 
     @Override
     public boolean livingHurtEvent(PerkHandler.Context<LivingHurtEvent> context) {
-        LivingEntity attacker = context.triggerEntity();
-        LivingEntity defender = context.event().getEntity();
-        DamageSource source = context.event().getSource();
+        LivingHurtEvent event = context.event();
+        LivingEntity defender = event.getEntity();
+        DamageSource source = event.getSource();
 
-        if (!(attacker.level() instanceof ServerLevel level)) return false;
+        if (source.getEntity() != context.triggerEntity()) return false;
+        LivingEntity attacker = context.triggerEntity();
+
         if (context.slot() != EquipmentSlot.MAINHAND) return false;
         if (!source.is(DamageTypes.PLAYER_ATTACK) && !source.is(DamageTypes.MOB_ATTACK)) return false;
         if (!defender.isOnFire()) return false;
 
         ItemStack attackerItem = context.triggerStack();
         int rank = AbilityItemUtils.getAbilityRank(Abilities.SCORCHING_STRIKE, attackerItem, attacker);
-        scorchingStrikeEffect(level, rank, attacker, defender);
+        scorchingStrikeEffect((ServerLevel)defender.level(), rank, attacker, defender);
 
         return true;
     }

@@ -19,7 +19,9 @@ public class HerosWillAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.BONUS, new double[]{0.0, 0.0, 0.0, 0.1, 0.2});
+        RANK_STATS.put(Stats.BONUS, new double[]{
+                0.1, 0.1, 0.2, 0.2, 0.2
+        });
     }
 
     @Override

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_sword"
+    },
+    "W": {
+      "item": "exoarmory:weapon_core"
+    },
+    "A": {
+      "item": "minecraft:enchanted_golden_apple"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    " A ",
+    "GWG",
+    "GDG"
+  ],
+  "result": {
+    "item": "exoarmory:heros_testament"
+  },
+  "show_notification": true
+}

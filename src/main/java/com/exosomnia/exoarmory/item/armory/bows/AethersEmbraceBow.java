@@ -68,25 +68,25 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourceItem, Ac
                 .build();
 
         RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.AETHER_BARRAGE, 1)
+                .addAbility(Abilities.AETHER_BARRAGE, 0)
                 .build();
         RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.AETHER_BARRAGE, 0)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 0)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.AETHER_BARRAGE, 1)
                 .addAbility(Abilities.SPECTRAL_PIERCE, 1)
                 .build();
-        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.AETHER_BARRAGE, 2)
-                .addAbility(Abilities.SPECTRAL_PIERCE, 2)
-                .build();
         RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.AETHER_BARRAGE, 2)
-                .addAbility(Abilities.SPECTRAL_PIERCE, 2)
-                //TODO
+                .addAbility(Abilities.AETHER_BARRAGE, 1)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 1)
+                .addAbility(Abilities.LIGHTS_VENGEANCE, 1)
                 .build();
         RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.AETHER_BARRAGE, 3)
-                .addAbility(Abilities.SPECTRAL_PIERCE, 3)
-                //TODO
+                .addAbility(Abilities.AETHER_BARRAGE, 2)
+                .addAbility(Abilities.SPECTRAL_PIERCE, 2)
+                .addAbility(Abilities.LIGHTS_VENGEANCE, 2)
                 .build();
     }
 
@@ -144,8 +144,9 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourceItem, Ac
         components.add(Component.literal(""));
 
         //Ability Info
+        Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, rank));
+            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));

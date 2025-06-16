@@ -44,4 +44,14 @@ public class ReinforcedBowItem extends BowItem {
     public int getEnchantmentValue() {
         return 6;
     }
+
+    public static float getPowerForTime(int p_40662_) {
+        float f = (float)p_40662_ / 16.0F;
+        f = (f * f + f * 2.0F) / 3.0F;
+        if (f > 1.0F) {
+            f = 1.0F;
+        }
+
+        return f;
+    }
 }

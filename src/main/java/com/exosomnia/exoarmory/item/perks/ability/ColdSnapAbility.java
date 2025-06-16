@@ -1,16 +1,51 @@
 package com.exosomnia.exoarmory.item.perks.ability;
 
+import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.item.perks.event.handlers.PerkHandler;
+import com.exosomnia.exoarmory.item.perks.event.interfaces.LivingDeathPerk;
+import com.exosomnia.exoarmory.item.perks.event.interfaces.LivingHurtPerk;
+import com.exosomnia.exoarmory.utils.AbilityItemUtils;
+import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
+import com.exosomnia.exoarmory.utils.TargetUtils;
+import com.exosomnia.exolib.ExoLib;
+import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
+import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
+import com.exosomnia.exolib.particles.shapes.ParticleShapeLine;
+import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
+import com.exosomnia.exolib.particles.shapes.ParticleShapeRing;
+import com.exosomnia.exolib.utils.ColorUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class ColdSnapAbility extends ArmoryAbility {
+public class ColdSnapAbility extends ArmoryAbility implements LivingHurtPerk {
 
     public enum Stats implements AbilityStat {
-        RADIUS
+        RADIUS,
+        MAX_TARGETS,
+        DAMAGE
     }
 
     public ColdSnapAbility() {
@@ -19,7 +54,15 @@ public class ColdSnapAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.RADIUS, new double[]{0.0, 0.0, 4.0, 5.0, 6.0});
+        RANK_STATS.put(Stats.RADIUS, new double[]{
+                3.0, 3.5, 4.0, 4.33, 4.67, 5.0
+        });
+        RANK_STATS.put(Stats.MAX_TARGETS, new double[]{
+                1.0, 2.0, 2.0, 2.0, 2.0, 3.0
+        });
+        RANK_STATS.put(Stats.DAMAGE, new double[]{
+                2.0, 2.5, 3.0, 3.33, 3.67, 4.0
+        });
     }
 
     @Override
@@ -30,10 +73,15 @@ public class ColdSnapAbility extends ArmoryAbility {
             case DESCRIPTION:
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.cold_snap.line.1"),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
-                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.cold_snap.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.cold_snap.line.2"),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
                 break;
             case STATISTICS:
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.cold_snap.line.1", getStatForRank(Stats.RADIUS, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.cold_snap.line.2", (int)getStatForRank(Stats.MAX_TARGETS, rank)),
+                        ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.cold_snap.line.3", getStatForRank(Stats.DAMAGE, rank)),
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_STAT.getStyle()));
                 break;
         }
@@ -41,35 +89,65 @@ public class ColdSnapAbility extends ArmoryAbility {
     }
     //endregion
 
-//  TODO:REFACTOR TO NEW SYSTEM
-//    @SubscribeEvent
-//    public void livingDeathEvent(LivingDeathEvent event) {
-//        LivingEntity defender = event.getEntity();
-//        if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
-//            ItemStack itemStack = attacker.getMainHandItem();
-//            if (itemStack.getItem() instanceof AbilityItem weapon) {
-//                int rank = weapon.getRank(itemStack);
-//                ColdSnapAbility ability = weapon.getAbility(ExoArmory.REGISTRY.ABILITY_COLD_SNAP, itemStack, rank);
-//                if (defender.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get()) && ability != null) {
-//                    ServerLevel level = (ServerLevel)defender.level();
-//                    Vec3 center = defender.position();
-//                    level.playSound(null, defender.getX(), defender.getY(), defender.getZ(),
-//                            ExoArmory.REGISTRY.SOUND_MAGIC_ICE_CAST.get(), SoundSource.PLAYERS, 0.34F, 1.0F);
-//                    level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, center.x, center.y + 0.5, center.z, 30, 0, 0, 0, 0.125);
-//                    for(ServerPlayer player : level.players()) {
-//                        float[] color = ColorUtils.intToFloats(0x1695A6);
-//                        com.exosomnia.exolib.networking.PacketHandler.sendToPlayer(new ParticleShapePacket(new ParticleShapeRing(new RGBSParticleOptions(ExoLib.REGISTRY.SPARKLE_PARTICLE.get(), color[0], color[1], color[2], 0.2F), defender.position().add(0, .5, 0),
-//                                new ParticleShapeOptions.Ring((float)ability.getStatForRank(Stats.RADIUS, rank), 80))), player);
-//                    }
-//
-//                    double radius = ability.getStatForRank(Stats.RADIUS, rank);
-//                    AABB area = new AABB(center.x, center.y, center.z, center.x, center.y, center.z).inflate(radius);
-//                    List<LivingEntity> validTargets = defender.level().getEntitiesOfClass(LivingEntity.class, area, target -> TargetUtils.validTarget(attacker, target));
-//                    for (LivingEntity target : validTargets) {
-//                        target.addEffect(new MobEffectInstance(ExoArmory.REGISTRY.EFFECT_FROSTED.get(), 200, 0));
-//                    }
-//                }
-//            }
-//        }
-//    }
+    //region Ability Logic
+    public void coldSnapEffect(ServerLevel level, int rank, @Nullable LivingEntity attacker, LivingEntity defender) {
+        double radius = getStatForRank(Stats.RADIUS, rank);
+        int spreadCount = (int)getStatForRank(Stats.MAX_TARGETS, rank);
+        float damage = (float)getStatForRank(Stats.DAMAGE, rank);
+
+        DamageSource source = attacker == null ? level.damageSources().freeze() :
+                attacker.damageSources().freeze();
+
+        //AoE logic, damage nearby burning entities
+        Vec3 position = defender.getEyePosition();
+        Set<ParticleShapePacket> packetSet = new HashSet<>();
+        List<LivingEntity> nearbyEntities = defender.level().getEntitiesOfClass(LivingEntity.class, new AABB(position, position).inflate(radius), target ->
+                target.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get()) && target != defender &&
+                TargetUtils.validTarget(attacker, target) && target.distanceToSqr(position) <= radius * radius);
+
+        nearbyEntities.sort((entityL, entityR) -> Double.compare(entityL.position().distanceToSqr(position), entityR.distanceToSqr(position)));
+        spreadCount = Math.min(spreadCount, nearbyEntities.size());
+
+        if (nearbyEntities.isEmpty()) return;
+
+        float[] color = ColorUtils.intToFloats(0x1695A6);
+        for (int i = 0; i < spreadCount; i++) {
+            LivingEntity coldEntity = nearbyEntities.get(i);
+            coldEntity.hurt(source, damage);
+            Vec3 launchVec = coldEntity.position().subtract(position).normalize().multiply(0.333, 0.333, 0.333);
+            coldEntity.push(launchVec.x, launchVec.y + 0.333, launchVec.z);
+
+            packetSet.add(new ParticleShapePacket(
+                    new ParticleShapeLine(new RGBSParticleOptions(ExoLib.REGISTRY.SPARKLE_PARTICLE.get(), color[0], color[1], color[2], 0.1F), position,
+                            new ParticleShapeOptions.Line(coldEntity.getEyePosition().subtract(0, coldEntity.getEyeHeight() / 3.0, 0), 12))));
+        }
+
+        //Perform visual and audio effects
+        level.playSeededSound(null, position.x, position.y, position.z, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS,
+                0.5F, 1.5F, 0);
+        for(ServerPlayer player : level.players()) {
+            packetSet.forEach(packet -> com.exosomnia.exolib.networking.PacketHandler.sendToPlayer(packet, player));
+        }
+    }
+
+    @Override
+    public boolean livingHurtEvent(PerkHandler.Context<LivingHurtEvent> context) {
+        LivingHurtEvent event = context.event();
+        LivingEntity defender = event.getEntity();
+        DamageSource source = event.getSource();
+
+        if (source.getEntity() != context.triggerEntity()) return false;
+        LivingEntity attacker = context.triggerEntity();
+
+        if (context.slot() != EquipmentSlot.MAINHAND) return false;
+        if (!source.is(DamageTypes.PLAYER_ATTACK) && !source.is(DamageTypes.MOB_ATTACK)) return false;
+        if (!defender.hasEffect(ExoArmory.REGISTRY.EFFECT_FROSTED.get())) return false;
+
+        ItemStack attackerItem = context.triggerStack();
+        int rank = AbilityItemUtils.getAbilityRank(this, attackerItem, attacker);
+        coldSnapEffect((ServerLevel)defender.level(), rank, attacker, defender);
+
+        return true;
+    }
+    //endregion
 }

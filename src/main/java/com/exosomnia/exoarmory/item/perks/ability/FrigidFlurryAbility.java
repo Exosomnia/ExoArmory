@@ -25,11 +25,11 @@ public class FrigidFlurryAbility extends ArmoryAbility {
     //region ArmoryAbility Overrides
     public void buildStats() {
         RANK_STATS.put(Stats.COOLDOWN, new double[]{15.0, 15.0, 15.0, 15.0, 15.0});
-        RANK_STATS.put(Stats.ARMOR, new double[]{2.0, 2.0, 2.0, 2.0, 2.0});
+        RANK_STATS.put(Stats.ARMOR, new double[]{20.0, 20.0, 20.0, 20.0, 20.0});
         RANK_STATS.put(Stats.FROST_DURATION, new double[]{10.0, 10.0, 10.0, 10.0, 10.0});
         RANK_STATS.put(Stats.COST, new double[]{10.0, 10.0, 10.0, 10.0, 10.0});
         RANK_STATS.put(Stats.PROJECTILES, new double[]{20.0, 25.0, 30.0, 35.0, 40.0});
-        RANK_STATS.put(Stats.DAMAGE, new double[]{1.0, 1.5, 2.0, 2.5, 3.0});
+        RANK_STATS.put(Stats.DAMAGE, new double[]{2.0, 2.5, 3.0, 3.5, 4.0});
     }
 
     @Override
@@ -47,6 +47,7 @@ public class FrigidFlurryAbility extends ArmoryAbility {
                         ComponentUtils.Styles.DEFAULT_DESC.getStyle(), ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.frigid_flurry.line.5"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.frigid_flurry.line.6"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.frigid_flurry.line.7"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;
             case STATISTICS:
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.stat.frigid_flurry.line.1", (int)getStatForRank(Stats.COOLDOWN, rank)),

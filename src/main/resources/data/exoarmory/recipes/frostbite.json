@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_sword"
+    },
+    "W": {
+      "item": "exoarmory:weapon_core"
+    },
+    "S": {
+      "item": "minecraft:snow_block"
+    },
+    "I": {
+      "item": "minecraft:blue_ice"
+    }
+  },
+  "pattern": [
+    " S ",
+    "SWS",
+    "IDI"
+  ],
+  "result": {
+    "item": "exoarmory:frostbite"
+  },
+  "show_notification": true
+}

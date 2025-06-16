@@ -1,9 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "C": {
-      "tag": "forge:storage_blocks/diamond"
-    },
     "I": {
       "tag": "forge:gems/diamond"
     },
@@ -13,7 +10,7 @@
   },
   "pattern": [
     "IoI",
-    "ICI",
+    "III",
     " I "
   ],
   "result": {

@@ -63,25 +63,25 @@ public class SolarSword extends ArmorySwordItem implements ResourceItem {
                 .build();
 
         RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.SOLAR_FLARE, 1)
+                .addAbility(Abilities.SOLAR_FLARE, 0)
                 .build();
         RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 0)
+                .addAbility(Abilities.SUNFIRE_SURGE, 0)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.SOLAR_FLARE, 1)
                 .addAbility(Abilities.SUNFIRE_SURGE, 1)
                 .build();
-        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.SOLAR_FLARE, 2)
-                .addAbility(Abilities.SUNFIRE_SURGE, 2)
-                .build();
         RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.SOLAR_FLARE, 1)
+                .addAbility(Abilities.SUNFIRE_SURGE, 1)
+                .addAbility(Abilities.SCORCHING_STRIKE, 1)
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.SOLAR_FLARE, 2)
                 .addAbility(Abilities.SUNFIRE_SURGE, 2)
                 .addAbility(Abilities.SCORCHING_STRIKE, 2)
-                .build();
-        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.SOLAR_FLARE, 3)
-                .addAbility(Abilities.SUNFIRE_SURGE, 3)
-                .addAbility(Abilities.SCORCHING_STRIKE, 3)
                 .build();
     }
 
@@ -104,8 +104,9 @@ public class SolarSword extends ArmorySwordItem implements ResourceItem {
         components.add(Component.literal(""));
 
         //Ability Info
+        Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, rank));
+            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));

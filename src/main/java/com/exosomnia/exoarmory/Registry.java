@@ -17,6 +17,7 @@ import com.exosomnia.exoarmory.item.NetheriteAnchorItem;
 import com.exosomnia.exoarmory.item.ReinforcedBowItem;
 import com.exosomnia.exoarmory.item.ReinforcedShieldItem;
 import com.exosomnia.exoarmory.item.UpgradeTemplateItem;
+import com.exosomnia.exoarmory.item.perks.ability.HerosCourageAbility;
 import com.exosomnia.exoarmory.item.perks.event.handlers.CriticalHitPerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.handlers.LivingDeathPerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.handlers.LivingHurtPerkHandler;
@@ -135,6 +136,8 @@ public class Registry {
     public final RegistryObject<SoundEvent> SOUND_DARK_AMBIENT_CHARGE = SOUNDS.register("dark_ambient_charge", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "dark_ambient_charge")));
     public final RegistryObject<SoundEvent> SOUND_MAGIC_CLASH = SOUNDS.register("magic_clash", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_clash")));
     public final RegistryObject<SoundEvent> SOUND_MAGIC_TELEPORT = SOUNDS.register("magic_teleport", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_teleport")));
+    public final RegistryObject<SoundEvent> SOUND_MAGIC_BURST = SOUNDS.register("magic_burst", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_burst")));
+
     public final RegistryObject<SoundEvent> SOUND_MAGIC_ICE_CAST = SOUNDS.register("magic_ice_cast", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExoArmory.MODID, "magic_ice_cast")));
 
     public final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
@@ -161,9 +164,11 @@ public class Registry {
 
     public final RegistryObject<Item> ITEM_NETHERITE_ANCHOR = ITEMS.register("netherite_anchor", NetheriteAnchorItem::new);
 
-    public final RegistryObject<Item> ITEM_NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.05, 0.0));
-    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.1, 0.20));
-    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1612), 0.15, 0.50));
+    public final RegistryObject<Item> ITEM_NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
+    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.0, 0.25));
+    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.05, 0.50));
+
+    public final RegistryObject<Item> ITEM_WEAPON_CORE = ITEMS.register("weapon_core", () -> new SimpleFoiledItem(new Item.Properties().rarity(Rarity.UNCOMMON)));
 
     //public final RegistryObject<Item> ITEM_BLANK_TEMPLATE = ITEMS.register("blank_template", () -> new Item(new Item.Properties()));
     public final RegistryObject<Item> ITEM_TIER_2_TEMPLATE = ITEMS.register("tier_2_smithing_template", () -> new UpgradeTemplateItem(1, new Item.Properties().rarity(Rarity.COMMON)));
@@ -291,6 +296,7 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addListener(ShadowsEdgeResource::livingAttackEvent);
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
         MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
+        MinecraftForge.EVENT_BUS.addListener(HerosCourageAbility::playerTickEvent);
 
         MinecraftForge.EVENT_BUS.register(new CriticalHitPerkHandler());
         MinecraftForge.EVENT_BUS.register(new LivingDeathPerkHandler());
@@ -354,10 +360,10 @@ public class Registry {
         EquipmentSlot slot = event.getSlotType();
         if (!slot.equals(EquipmentSlot.OFFHAND) && !slot.equals(EquipmentSlot.MAINHAND)) { return; }
         ItemStack stack = event.getItemStack();
-        Item item = stack.getItem();
-        if (item.canPerformAction(stack, ToolActions.SHIELD_BLOCK)) {
+
+        if (stack.canPerformAction(ToolActions.SHIELD_BLOCK)) {
             if (event.getOriginalModifiers().isEmpty()) {
-                ResourceLocation location = ForgeRegistries.ITEMS.getKey(item);
+                ResourceLocation location = ForgeRegistries.ITEMS.getKey(stack.getItem());
                 if (location.equals(LEGACY_INFERNAL_SHIELD)) {
                     event.addModifier(ATTRIBUTE_SHIELD_STABILITY.get(), new AttributeModifier(SHIELD_STABILITY_UUID, "Default", 2.25, AttributeModifier.Operation.ADDITION));
                     event.addModifier(ATTRIBUTE_PASSIVE_BLOCK.get(), new AttributeModifier(PASSIVE_BLOCK_UUID, "Default", 0.10, AttributeModifier.Operation.MULTIPLY_BASE));

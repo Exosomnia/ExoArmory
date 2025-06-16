@@ -112,7 +112,7 @@ public class SolarFlareAbility extends ArmoryAbility implements CriticalHitPerk 
                 0.34F, 1.25F, 0);
         level.sendParticles(ParticleTypes.FLAME, position.x, position.y+.5, position.z, 25, 0, 0, 0, 0.075);
         ParticleShapePacket packet = new ParticleShapePacket(
-                new ParticleShapeDome(new RGBSParticleOptions(ExoLib.REGISTRY.SPIRAL_PARTICLE.get(), 1.0F, 0.5F, 0.0F, 0.1f),
+                new ParticleShapeDome(new RGBSParticleOptions(ExoLib.REGISTRY.SPIRAL_PARTICLE.get(), 1.0F, 0.5F, 0.0F, 0.1F),
                         position, new ParticleShapeOptions.Dome((float)radius, 128)));
         for(ServerPlayer player : level.players()) {
             com.exosomnia.exolib.networking.PacketHandler.sendToPlayer(packet, player);
@@ -120,21 +120,21 @@ public class SolarFlareAbility extends ArmoryAbility implements CriticalHitPerk 
     }
 
     public boolean criticalHitEvent(PerkHandler.Context<CriticalHitEvent> context) {
-        Player player = (Player)context.triggerEntity();
         CriticalHitEvent event = context.event();
+        Player player = event.getEntity();
 
-        if (!(player.level() instanceof ServerLevel level)) return false;
+        if (player != context.triggerEntity()) return false;
         if (context.slot() != EquipmentSlot.MAINHAND) return false;
         if (!(event.isVanillaCritical() || event.getResult().equals(Event.Result.ALLOW))) return false;
         if (!(event.getTarget() instanceof LivingEntity defender)) return false;
 
-        ServerPlayer attacker = (ServerPlayer) player;
+        ServerPlayer attacker = (ServerPlayer)player;
         ItemStack attackerItem = context.triggerStack();
 
         int rank = AbilityItemUtils.getAbilityRank(Abilities.SOLAR_FLARE, attackerItem, attacker);
         return ResourceItemUtils.spendChargeOn(attackerItem,
                 attacker.hasEffect(ExoArmory.REGISTRY.EFFECT_SUNFIRE_SURGE.get()) ? 0.0 : getStatForRank(Stats.COST, rank),
-                () -> createSolarFlare(defender.position(), level, rank, attacker, defender));
+                () -> createSolarFlare(defender.position(), (ServerLevel)defender.level(), rank, attacker, defender));
     }
     //endregion
 }

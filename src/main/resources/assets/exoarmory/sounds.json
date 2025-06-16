@@ -19,6 +19,11 @@
       "exoarmory:magic_clash"
     ]
   },
+  "magic_burst": {
+    "sounds": [
+      "exoarmory:magic_burst"
+    ]
+  },
   "magic_teleport": {
     "sounds": [
       "exoarmory:magic_teleport"

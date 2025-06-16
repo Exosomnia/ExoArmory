@@ -15,7 +15,7 @@ public class FrostedEffect extends MobEffect {
         super(typeIn, liquidColorIn);
 
         this.addAttributeModifier(Attributes.MOVEMENT_SPEED,
-                MOVEMENT_UUID, -0.1, AttributeModifier.Operation.MULTIPLY_BASE);
+                MOVEMENT_UUID, -0.10, AttributeModifier.Operation.MULTIPLY_BASE);
         this.addAttributeModifier(Attributes.ARMOR,
                 ARMOR_UUID, -0.20, AttributeModifier.Operation.MULTIPLY_TOTAL);
         this.addAttributeModifier(Attributes.ARMOR_TOUGHNESS,

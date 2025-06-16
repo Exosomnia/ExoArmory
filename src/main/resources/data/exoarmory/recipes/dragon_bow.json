@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "key": {
     "E": {
       "item": "minecraft:end_rod"
@@ -7,19 +8,17 @@
     "D": {
       "item": "minecraft:dragon_head"
     },
-    "B": {
-      "item": "exoarmory:dragon_bow"
-    },
-    "S": {
-      "item": "minecraft:nether_star"
+    "C": {
+      "item": "minecraft:popped_chorus_fruit"
     }
   },
   "pattern": [
-    " SE",
-    "DBE",
-    " SE"
+    " CE",
+    "D E",
+    " CE"
   ],
   "result": {
-    "item": "exoarmory:etherium_bow"
-  }
+    "item": "exoarmory:dragon_bow"
+  },
+  "show_notification": true
 }

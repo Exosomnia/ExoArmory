@@ -1,10 +1,8 @@
 package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.actions.UmbralAssaultAction;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.item.perks.ability.Abilities;
-import com.exosomnia.exoarmory.item.perks.ability.AbilityItem;
 import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
 import com.exosomnia.exoarmory.item.perks.ability.UmbralAssaultAbility;
 import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
@@ -13,11 +11,6 @@ import com.exosomnia.exoarmory.item.perks.resource.ShadowsEdgeResource;
 import com.exosomnia.exoarmory.managers.ConditionalManager;
 import com.exosomnia.exoarmory.utils.AbilityItemUtils;
 import com.exosomnia.exoarmory.utils.ResourceItemUtils;
-import com.exosomnia.exolib.ExoLib;
-import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
-import com.exosomnia.exolib.particles.shapes.ParticleShapeDome;
-import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
-import com.exosomnia.exolib.utils.ColorUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -74,25 +67,25 @@ public class ShadowsEdgeSword extends ArmorySwordItem implements ResourceItem {
                 .build();
 
         RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.UMBRAL_ASSAULT, 1)
+                .addAbility(Abilities.UMBRAL_ASSAULT, 0)
                 .build();
         RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.UMBRAL_ASSAULT, 0)
+                .addAbility(Abilities.VEIL_OF_DARKNESS, 0)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.UMBRAL_ASSAULT, 1)
                 .addAbility(Abilities.VEIL_OF_DARKNESS, 1)
                 .build();
-        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.UMBRAL_ASSAULT, 2)
-                .addAbility(Abilities.VEIL_OF_DARKNESS, 2)
-                .build();
         RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.UMBRAL_ASSAULT, 1)
+                .addAbility(Abilities.VEIL_OF_DARKNESS, 1)
+                .addAbility(Abilities.SHADOW_STRIKE, 1)
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.UMBRAL_ASSAULT, 2)
                 .addAbility(Abilities.VEIL_OF_DARKNESS, 2)
                 .addAbility(Abilities.SHADOW_STRIKE, 2)
-                .build();
-        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.UMBRAL_ASSAULT, 3)
-                .addAbility(Abilities.VEIL_OF_DARKNESS, 3)
-                .addAbility(Abilities.SHADOW_STRIKE, 3)
                 .build();
     }
 
@@ -112,8 +105,9 @@ public class ShadowsEdgeSword extends ArmorySwordItem implements ResourceItem {
         components.add(Component.literal(""));
 
         //Ability Info
+        Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, rank));
+            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));
@@ -192,20 +186,6 @@ public class ShadowsEdgeSword extends ArmorySwordItem implements ResourceItem {
                             (int)(ability.getStatForRank(UmbralAssaultAbility.Stats.DURATION, rank) * 20.0), rank)));
         }
         return itemStack;
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack itemStack, LivingEntity defender, LivingEntity attacker) {
-        super.hurtEnemy(itemStack, defender, attacker);
-
-        if (!(attacker instanceof Player player)) return true;
-
-        ItemStack offhandItem = player.getOffhandItem();
-        if (offhandItem.is(ExoArmory.REGISTRY.ITEM_LUMINIS_EDGE.get())) {
-
-        }
-
-        return true;
     }
     //endregion
 }

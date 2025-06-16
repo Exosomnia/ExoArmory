@@ -70,25 +70,25 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, Act
                 .build();
 
         RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.FRIGID_FLURRY, 1)
+                .addAbility(Abilities.FRIGID_FLURRY, 0)
                 .build();
         RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.FRIGID_FLURRY, 0)
+                .addAbility(Abilities.COLD_SNAP, 0)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.FRIGID_FLURRY, 1)
                 .addAbility(Abilities.COLD_SNAP, 1)
                 .build();
-        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.FRIGID_FLURRY, 2)
-                .addAbility(Abilities.COLD_SNAP, 2)
-                .build();
         RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.FRIGID_FLURRY, 2)
-                .addAbility(Abilities.COLD_SNAP, 2)
-                //TODO
+                .addAbility(Abilities.FRIGID_FLURRY, 1)
+                .addAbility(Abilities.COLD_SNAP, 1)
+                .addAbility(Abilities.BLIZZARD, 1)
                 .build();
         RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.FRIGID_FLURRY, 3)
-                .addAbility(Abilities.COLD_SNAP, 3)
-                //TODO
+                .addAbility(Abilities.FRIGID_FLURRY, 2)
+                .addAbility(Abilities.COLD_SNAP, 2)
+                .addAbility(Abilities.BLIZZARD, 2)
                 .build();
     }
 
@@ -115,8 +115,9 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, Act
         components.add(Component.literal(""));
 
         //Ability Info
+        Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, rank));
+            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));
@@ -131,6 +132,7 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, Act
         return new ArmoryResourceProvider(nbt);
     }
     //endregion
+
     //region Item Overrides
     @Override
     public int getUseDuration(ItemStack itemStack) { return 72000; }
@@ -154,7 +156,7 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, Act
         projectile.setItem(new ItemStack(Items.PACKED_ICE));
         projectile.getPersistentData().putBoolean("FROSTBITE", true);
         Vec3 looking = player.getLookAngle();
-        projectile.shoot(looking.x, looking.y, looking.z, 2.0F, 1.0F);
+        projectile.shoot(looking.x, looking.y, looking.z, 2.5F, 1.0F);
         level.addFreshEntity(projectile);
 
         player.getCooldowns().addCooldown(this, (int)Abilities.FRIGID_FLURRY.getStatForRank(FrigidFlurryAbility.Stats.COOLDOWN,

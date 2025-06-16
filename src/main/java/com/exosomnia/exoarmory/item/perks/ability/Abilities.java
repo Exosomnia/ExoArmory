@@ -17,6 +17,11 @@ public class Abilities {
 
     public final static FrigidFlurryAbility FRIGID_FLURRY = registerAbility(new FrigidFlurryAbility());
     public final static ColdSnapAbility COLD_SNAP = registerAbility(new ColdSnapAbility());
+    public final static BlizzardAbility BLIZZARD = registerAbility(new BlizzardAbility());
+
+    public final static RadiantSmiteAbility RADIANT_SMITE = registerAbility(new RadiantSmiteAbility());
+    public final static BlindingBurstAbility BLINDING_BURST = registerAbility(new BlindingBurstAbility());
+    public final static LightsVengeanceAbility LIGHTS_VENGEANCE = registerAbility(new LightsVengeanceAbility());
 
     public final static AetherBarrageAbility AETHER_BARRAGE = registerAbility(new AetherBarrageAbility());
     public final static SpectralPierceAbility SPECTRAL_PIERCE = registerAbility(new SpectralPierceAbility());

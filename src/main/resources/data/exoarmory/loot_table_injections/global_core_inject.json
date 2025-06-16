@@ -1,0 +1,61 @@
+{
+  "global_injects": {
+    "cause": "minecraft:chest"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "exoarmory:weapon_core",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "dimension": "minecraft:overworld"
+              }
+            },
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.01
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "exoarmory:weapon_core",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "dimension": "minecraft:the_nether"
+              }
+            },
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.025
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "exoarmory:weapon_core",
+          "conditions": [
+            {
+              "condition": "minecraft:location_check",
+              "predicate": {
+                "dimension": "minecraft:the_end"
+              }
+            },
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.05
+            }
+          ]
+        }
+      ],
+      "conditions": []
+    }
+  ]
+}

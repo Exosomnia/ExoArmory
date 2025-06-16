@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -47,39 +48,39 @@ public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem 
                 .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 10.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_CRITICAL_DAMAGE.get(), new AttributeModifier(BASE_CRITICAL_DAMAGE_UUID, "Default",
-                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 3), AttributeModifier.Operation.MULTIPLY_BASE))
+                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 1), AttributeModifier.Operation.MULTIPLY_BASE))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_HEALING_RECEIVED.get(), new AttributeModifier(BASE_HEALING_RECEIVED_UUID, "Default",
-                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 3), AttributeModifier.Operation.MULTIPLY_BASE))
+                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 1), AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
         RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
                 .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 11.5, AttributeModifier.Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -2.8, AttributeModifier.Operation.ADDITION))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_CRITICAL_DAMAGE.get(), new AttributeModifier(BASE_CRITICAL_DAMAGE_UUID, "Default",
-                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 4), AttributeModifier.Operation.MULTIPLY_BASE))
+                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 2), AttributeModifier.Operation.MULTIPLY_BASE))
                 .put(ExoArmory.REGISTRY.ATTRIBUTE_HEALING_RECEIVED.get(), new AttributeModifier(BASE_HEALING_RECEIVED_UUID, "Default",
-                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 4), AttributeModifier.Operation.MULTIPLY_BASE))
+                        Abilities.HEROS_WILL.getStatForRank(HerosWillAbility.Stats.BONUS, 2), AttributeModifier.Operation.MULTIPLY_BASE))
                 .build();
 
         RANK_ABILITIES[0] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.HEROS_COURAGE, 1)
+                .addAbility(Abilities.HEROS_COURAGE, 0)
                 .build();
         RANK_ABILITIES[1] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 0)
+                .addAbility(Abilities.HEROS_FORTITUDE, 0)
+                .build();
+        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.HEROS_COURAGE, 1)
                 .addAbility(Abilities.HEROS_FORTITUDE, 1)
                 .build();
-        RANK_ABILITIES[2] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.HEROS_COURAGE, 2)
-                .addAbility(Abilities.HEROS_FORTITUDE, 2)
-                .build();
         RANK_ABILITIES[3] = AbilityItemUtils.rankBuilder()
+                .addAbility(Abilities.HEROS_COURAGE, 1)
+                .addAbility(Abilities.HEROS_FORTITUDE, 1)
+                .addAbility(Abilities.HEROS_WILL, 1)
+                .build();
+        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
                 .addAbility(Abilities.HEROS_COURAGE, 2)
                 .addAbility(Abilities.HEROS_FORTITUDE, 2)
                 .addAbility(Abilities.HEROS_WILL, 2)
-                .build();
-        RANK_ABILITIES[4] = AbilityItemUtils.rankBuilder()
-                .addAbility(Abilities.HEROS_COURAGE, 3)
-                .addAbility(Abilities.HEROS_FORTITUDE, 3)
-                .addAbility(Abilities.HEROS_WILL, 3)
                 .build();
     }
 
@@ -97,8 +98,9 @@ public class HerosTestamentSword extends ArmorySwordItem implements AbilityItem 
         components.add(Component.literal(""));
 
         //Ability Info
+        Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, rank));
+            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
     }
 

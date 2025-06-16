@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "minecraft:nether_star"
+  },
+  "base": {
+    "item": "exoarmory:dragon_bow"
+  },
+  "result": {
+    "item": "exoarmory:etherium_bow"
+  },
+  "template": {
+    "item": "exoarmory:weapon_core"
+  }
+}
