@@ -30,7 +30,7 @@ public class UmbralAssaultAbility extends ArmoryAbility {
                 8.0, 10.0, 12.0, 13.0, 14.0, 15.0
         });
         RANK_STATS.put(Stats.RADIUS, new double[]{
-                5.0, 6.0, 6.0, 6.0, 6.0, 7.0
+                4.0, 4.5, 5.0, 5.33, 5.67, 6.0
         });
         RANK_STATS.put(Stats.MAX_TARGETS, new double[]{
                 1.0, 1.0, 2.0, 2.0, 2.0, 3.0

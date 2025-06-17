@@ -1,5 +1,6 @@
 {
   "item.modifiers.bothhand": "While in Either Hand:",
+  "item.reinforced_bow.draw_speed.bonus": "+20% Draw speed",
 
   "key.exoarmory.activate": "Activate Ability",
   "key.categories.exoarmory": "Exo Armory",
@@ -189,7 +190,7 @@
   "ability.exoarmory.stat.blinding_burst.line.4": "Charge gain: 0{%d}/entity",
 
   "ability.exoarmory.name.lights_vengeance": "Light's Vengeance",
-  "ability.exoarmory.desc.lights_vengeance.line.1": "When you take damage, gain 0{Radiance} charge",
+  "ability.exoarmory.desc.lights_vengeance.line.1": "When you take damage, gain 0{%s} charge",
   "ability.exoarmory.desc.lights_vengeance.line.2": "equal to a percentage of the damage taken.",
   "ability.exoarmory.stat.lights_vengeance.line.1": "Conversion ratio: 0{%.1f}%%",
 

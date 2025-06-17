@@ -23,10 +23,18 @@ public class AetherBarrageAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.INTERVAL, new double[]{8.0, 8.0, 7.0, 7.0, 6.0});
-        RANK_STATS.put(Stats.DURATION, new double[]{80.0, 80.0, 100.0, 100.0, 120.0});
-        RANK_STATS.put(Stats.DAMAGE, new double[]{1.50, 1.625, 1.75, 1.875, 2.0});
-        RANK_STATS.put(Stats.COST, new double[]{50.0, 50.0, 45.0, 45.0, 40.0});
+        RANK_STATS.put(Stats.INTERVAL, new double[]{
+                8.0, 7.0, 6.0
+        });
+        RANK_STATS.put(Stats.DURATION, new double[]{
+                80.0, 100.0, 120.0
+        });
+        RANK_STATS.put(Stats.DAMAGE, new double[]{
+                1.50, 1.75, 2.0
+        });
+        RANK_STATS.put(Stats.COST, new double[]{
+                30.0, 25.0, 20.0
+        });
     }
 
     @Override

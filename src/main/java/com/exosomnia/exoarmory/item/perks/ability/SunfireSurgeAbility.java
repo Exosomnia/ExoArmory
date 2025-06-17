@@ -25,8 +25,8 @@ public class SunfireSurgeAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.DURATION, new double[]{0.0, 15.0, 20.0, 25.0, 30.0});
-        RANK_STATS.put(Stats.COOLDOWN, new double[]{120.0, 120.0, 120.0, 120.0, 120.0});
+        RANK_STATS.put(Stats.DURATION, new double[]{15.0, 20.0, 25.0});
+        RANK_STATS.put(Stats.COOLDOWN, new double[]{120.0, 120.0, 120.0});
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SunfireSurgeAbility extends ArmoryAbility {
 
     //region Ability Logic
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         if (player.level().isClientSide ||
             event.phase.equals(TickEvent.Phase.END) ||

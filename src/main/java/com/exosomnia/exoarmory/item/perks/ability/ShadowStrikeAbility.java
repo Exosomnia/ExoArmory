@@ -33,8 +33,8 @@ public class ShadowStrikeAbility extends ArmoryAbility implements LivingHurtPerk
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.DAMAGE, new double[]{0.0, 0.0, 0.0, 1.0, 2.0});
-        RANK_STATS.put(Stats.DURATION, new double[]{0.0, 0.0, 0.0, 10.0, 10.0});
+        RANK_STATS.put(Stats.DAMAGE, new double[]{0.0, 1.0, 2.0});
+        RANK_STATS.put(Stats.DURATION, new double[]{10.0, 10.0, 10.0});
     }
 
     @Override

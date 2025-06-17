@@ -36,8 +36,8 @@ public class HerosFortitudeAbility extends ArmoryAbility implements LivingDeathP
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.CHANCE, new double[]{0.0, 0.10, 0.15, 0.20, 0.25});
-        RANK_STATS.put(Stats.AMOUNT, new double[]{0.0, 0.0, 0.0, 0.0, 0.0});
+        RANK_STATS.put(Stats.CHANCE, new double[]{0.10, 0.125, 0.25});
+        RANK_STATS.put(Stats.AMOUNT, new double[]{0.0, 0.0, 0.0});
     }
 
     @Override

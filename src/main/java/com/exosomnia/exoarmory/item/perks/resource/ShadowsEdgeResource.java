@@ -6,6 +6,9 @@ import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -25,7 +28,9 @@ public class ShadowsEdgeResource extends ArmoryResource {
     }
 
     public void buildRanks() {
-        RANK_STATS.put(Stats.CHARGE, new double[]{1.0, 1.25, 1.5, 1.75, 2.0});
+        RANK_STATS.put(Stats.CHARGE, new double[]{
+                1.5, 1.75, 2.0, 2.25, 2.5
+        });
     }
 
     @Override
@@ -47,7 +52,8 @@ public class ShadowsEdgeResource extends ArmoryResource {
 
     @SubscribeEvent
     public static void livingAttackEvent(LivingHurtEvent event) {
-        if (event.getSource().getEntity() instanceof ServerPlayer attacker) {
+        DamageSource source = event.getSource();
+        if (source.getEntity() instanceof ServerPlayer attacker && source.is(DamageTypes.PLAYER_ATTACK)) {
             ItemStack itemStack = attacker.getMainHandItem();
             if (itemStack.getItem() instanceof ShadowsEdgeSword weapon && attacker.hasEffect(MobEffects.INVISIBILITY)) {
                 int rank = weapon.getRank(itemStack);

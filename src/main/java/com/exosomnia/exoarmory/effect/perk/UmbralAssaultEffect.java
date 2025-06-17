@@ -50,16 +50,12 @@ public class UmbralAssaultEffect extends MobEffect {
         ServerPlayer serverPlayer = playerEffect ? (ServerPlayer)effectEntity : null;
         Vec3 position = effectEntity.position().add(0.0, effectEntity.getEyeHeight() / 3.0, 0.0);
         ServerLevel level = (ServerLevel)effectEntity.level();
-        DamageSource source;
+        DamageSource source = effectEntity.damageSources().indirectMagic(null, effectEntity);
 
         if (playerEffect) {
-            source = effectEntity.damageSources().playerAttack((ServerPlayer)effectEntity);
             float[] colors = ColorUtils.intToFloats(0x705685);
             new ParticleShapeRing(new RGBSParticleOptions(ExoLib.REGISTRY.TWINKLE_PARTICLE.get(), colors[0], colors[1], colors[2], 0.15F), position,
                     new ParticleShapeOptions.Ring((float)radius, 64)).sendToPlayers(serverPlayer.serverLevel(), List.of(serverPlayer));
-        }
-        else {
-            source = effectEntity.damageSources().mobAttack(effectEntity);
         }
 
         //AoE logic, damage nearby burning entities
@@ -74,11 +70,8 @@ public class UmbralAssaultEffect extends MobEffect {
         for (int i = 0; i < spreadCount; i++) {
             LivingEntity assaultEntity = nearbyEntities.get(i);
             assaultEntity.hurt(source, damage);
-            Vec3 launchVec = assaultEntity.position().subtract(position).normalize().multiply(0.0625, 0.0, 0.0625);
-            assaultEntity.push(launchVec.x, 0.015625, launchVec.z);
 
-            packetSet.add(new ParticleShapePacket(
-                    new ParticleShapeLine(ParticleTypes.ENCHANTED_HIT, position,
+            packetSet.add(new ParticleShapePacket(new ParticleShapeLine(ParticleTypes.ENCHANTED_HIT, position,
                             new ParticleShapeOptions.Line(assaultEntity.getEyePosition().subtract(0, assaultEntity.getEyeHeight() / 3.0, 0), 12))));
         }
 

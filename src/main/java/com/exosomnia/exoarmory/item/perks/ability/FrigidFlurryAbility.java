@@ -24,12 +24,12 @@ public class FrigidFlurryAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.COOLDOWN, new double[]{15.0, 15.0, 15.0, 15.0, 15.0});
-        RANK_STATS.put(Stats.ARMOR, new double[]{20.0, 20.0, 20.0, 20.0, 20.0});
-        RANK_STATS.put(Stats.FROST_DURATION, new double[]{10.0, 10.0, 10.0, 10.0, 10.0});
-        RANK_STATS.put(Stats.COST, new double[]{10.0, 10.0, 10.0, 10.0, 10.0});
-        RANK_STATS.put(Stats.PROJECTILES, new double[]{20.0, 25.0, 30.0, 35.0, 40.0});
-        RANK_STATS.put(Stats.DAMAGE, new double[]{2.0, 2.5, 3.0, 3.5, 4.0});
+        RANK_STATS.put(Stats.COOLDOWN, new double[]{15.0, 15.0, 15.0});
+        RANK_STATS.put(Stats.ARMOR, new double[]{20.0, 20.0, 20.0});
+        RANK_STATS.put(Stats.FROST_DURATION, new double[]{10.0, 10.0, 10.0});
+        RANK_STATS.put(Stats.COST, new double[]{10.0, 10.0, 10.0});
+        RANK_STATS.put(Stats.PROJECTILES, new double[]{20.0, 30.0, 40.0});
+        RANK_STATS.put(Stats.DAMAGE, new double[]{2.0, 3.0, 4.0});
     }
 
     @Override

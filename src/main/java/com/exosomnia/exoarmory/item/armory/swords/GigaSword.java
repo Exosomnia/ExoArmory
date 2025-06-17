@@ -24,16 +24,16 @@ public class GigaSword extends ArmorySwordItem {
     private static final Multimap<Attribute, AttributeModifier>[] RANK_ATTRIBUTES = new Multimap[5];
     static {
         RANK_ATTRIBUTES[0] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 10.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 9.0, Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.0, Operation.ADDITION))
                 .build();
         RANK_ATTRIBUTES[1] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 14.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 13.0, Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.1, Operation.ADDITION))
                 .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.025, Operation.MULTIPLY_TOTAL))
                 .build();
         RANK_ATTRIBUTES[2] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 18.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 17.0, Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.2, Operation.ADDITION))
                 .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.05, Operation.MULTIPLY_TOTAL))
                 .build();
@@ -43,7 +43,7 @@ public class GigaSword extends ArmorySwordItem {
                 .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.1, Operation.MULTIPLY_TOTAL))
                 .build();
         RANK_ATTRIBUTES[4] = ImmutableMultimap.<Attribute, AttributeModifier>builder()
-                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 32.0, Operation.ADDITION))
+                .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Default", 31.0, Operation.ADDITION))
                 .put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Default", -3.4, Operation.ADDITION))
                 .put(Attributes.MOVEMENT_SPEED, new AttributeModifier("Default", -0.2, Operation.MULTIPLY_TOTAL))
                 .build();

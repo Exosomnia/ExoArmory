@@ -3,6 +3,7 @@ package com.exosomnia.exoarmory.item.perks.resource;
 import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceStorage;
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
+import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.item.armory.bows.AethersEmbraceBow;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import com.exosomnia.exolib.utils.ComponentUtils.DetailLevel;
@@ -72,6 +73,7 @@ public class AethersEmbraceResource extends ArmoryResource {
         arrow.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
             UUID itemUUID = projectileData.getItemUUID();
             if (itemUUID == null) return;
+            if (projectileData.getArrowType() == IArmoryArrowStorage.ArmoryArrowType.AETHER.getType()) return;
 
             boolean doubled = arrow.isCritArrow();
             AethersEmbraceBow mainHandBow = checkIfItemValid(player.getMainHandItem(), itemUUID);

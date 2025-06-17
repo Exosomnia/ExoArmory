@@ -19,7 +19,7 @@ public class SpectralPierceAbility extends ArmoryAbility {
 
     //region ArmoryAbility Overrides
     public void buildStats() {
-        RANK_STATS.put(Stats.LEVEL, new double[]{0.0, 0.0, 1.0, 1.0, 2.0});
+        RANK_STATS.put(Stats.LEVEL, new double[]{0.0, 1.0, 2.0});
     }
 
     @Override

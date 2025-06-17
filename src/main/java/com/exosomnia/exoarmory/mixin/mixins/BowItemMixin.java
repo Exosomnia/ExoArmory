@@ -33,6 +33,6 @@ public abstract class BowItemMixin {
 
     @Redirect(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BowItem;getPowerForTime(I)F"))
     public float releaseUsingPowerForTime(int time) {
-        return (((Object)this) instanceof ReinforcedBowItem) ? ReinforcedBowItem.getPowerForTime(time) : BowItem.getPowerForTime(time);
+        return (((Object)this) instanceof ReinforcedBowItem reinforcedBowItem) ? ReinforcedBowItem.getPowerForTime(reinforcedBowItem, time) : BowItem.getPowerForTime(time);
     }
 }

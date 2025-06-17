@@ -18,6 +18,7 @@ import com.exosomnia.exoarmory.item.ReinforcedBowItem;
 import com.exosomnia.exoarmory.item.ReinforcedShieldItem;
 import com.exosomnia.exoarmory.item.UpgradeTemplateItem;
 import com.exosomnia.exoarmory.item.perks.ability.HerosCourageAbility;
+import com.exosomnia.exoarmory.item.perks.ability.SunfireSurgeAbility;
 import com.exosomnia.exoarmory.item.perks.event.handlers.CriticalHitPerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.handlers.LivingDeathPerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.handlers.LivingHurtPerkHandler;
@@ -164,9 +165,9 @@ public class Registry {
 
     public final RegistryObject<Item> ITEM_NETHERITE_ANCHOR = ITEMS.register("netherite_anchor", NetheriteAnchorItem::new);
 
-    public final RegistryObject<Item> ITEM_NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.1, 0.0));
-    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.0, 0.25));
-    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.05, 0.50));
+    public final RegistryObject<Item> ITEM_NETHERITE_BOW = ITEMS.register("netherite_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.15, 0.0, 0.0, false));
+    public final RegistryObject<Item> ITEM_DRAGON_BOW = ITEMS.register("dragon_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(960), 0.0, 0.25, 0.167, true));
+    public final RegistryObject<Item> ITEM_ETHERIUM_BOW = ITEMS.register("etherium_bow", () -> new ReinforcedBowItem(new Item.Properties().durability(1152), 0.05, 0.50, 0.333, true));
 
     public final RegistryObject<Item> ITEM_WEAPON_CORE = ITEMS.register("weapon_core", () -> new SimpleFoiledItem(new Item.Properties().rarity(Rarity.UNCOMMON)));
 
@@ -297,6 +298,7 @@ public class Registry {
         MinecraftForge.EVENT_BUS.addListener(FrostbiteResource::livingDeathEvent);
         MinecraftForge.EVENT_BUS.addListener(AethersEmbraceResource::arrowImpactLivingEvent);
         MinecraftForge.EVENT_BUS.addListener(HerosCourageAbility::playerTickEvent);
+        MinecraftForge.EVENT_BUS.addListener(SunfireSurgeAbility::onPlayerTick);
 
         MinecraftForge.EVENT_BUS.register(new CriticalHitPerkHandler());
         MinecraftForge.EVENT_BUS.register(new LivingDeathPerkHandler());
