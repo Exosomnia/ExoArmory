@@ -14,6 +14,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
@@ -38,8 +39,8 @@ public class ShadowStrikeAbility extends ArmoryAbility implements LivingHurtPerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

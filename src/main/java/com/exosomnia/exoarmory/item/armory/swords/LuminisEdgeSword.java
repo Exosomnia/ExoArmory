@@ -1,14 +1,11 @@
 package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
-import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
 import com.exosomnia.exoarmory.item.ActivatableItem;
 import com.exosomnia.exoarmory.item.perks.ability.Abilities;
 import com.exosomnia.exoarmory.item.perks.ability.ArmoryAbility;
 import com.exosomnia.exoarmory.item.perks.ability.BlindingBurstAbility;
-import com.exosomnia.exoarmory.item.perks.ability.FrigidFlurryAbility;
 import com.exosomnia.exoarmory.item.perks.resource.ArmoryResource;
 import com.exosomnia.exoarmory.item.perks.resource.LuminisEdgeResource;
 import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
@@ -21,8 +18,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,10 +26,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,7 +106,7 @@ public class LuminisEdgeSword extends ArmorySwordItem implements ResourceItem, A
         //Ability Info
         Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
+            components.addAll(ability.getTooltip(detail, itemStack, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));

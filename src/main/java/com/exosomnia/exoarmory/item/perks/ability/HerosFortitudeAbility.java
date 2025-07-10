@@ -7,7 +7,6 @@ import com.exosomnia.exoarmory.utils.AbilityItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -41,8 +40,8 @@ public class HerosFortitudeAbility extends ArmoryAbility implements LivingDeathP
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

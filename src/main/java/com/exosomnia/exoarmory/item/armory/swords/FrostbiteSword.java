@@ -2,7 +2,6 @@ package com.exosomnia.exoarmory.item.armory.swords;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.actions.FrigidFlurryAction;
-import com.exosomnia.exoarmory.capabilities.armory.item.ability.ArmoryAbilityProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.resource.ArmoryResourceProvider;
 import com.exosomnia.exoarmory.entities.projectiles.GenericProjectile;
 import com.exosomnia.exoarmory.item.ActivatableItem;
@@ -117,7 +116,7 @@ public class FrostbiteSword extends ArmorySwordItem implements ResourceItem, Act
         //Ability Info
         Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
+            components.addAll(ability.getTooltip(detail, itemStack, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));

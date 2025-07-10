@@ -4,7 +4,6 @@ import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceProvider;
 import com.exosomnia.exoarmory.capabilities.armory.item.aethersembrace.AethersEmbraceStorage;
 import com.exosomnia.exoarmory.capabilities.projectile.ArmoryArrowProvider;
-import com.exosomnia.exoarmory.capabilities.projectile.IArmoryArrowStorage;
 import com.exosomnia.exoarmory.entities.projectiles.EphemeralArrow;
 import com.exosomnia.exoarmory.item.ActivatableItem;
 import com.exosomnia.exoarmory.item.perks.ability.Abilities;
@@ -148,7 +147,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourceItem, Ac
         //Ability Info
         Player player = ExoArmory.DIST_HELPER.getDefaultPlayer();
         for (ArmoryAbility ability : getAbilities(itemStack, ExoArmory.DIST_HELPER.getDefaultPlayer()).keySet()) {
-            components.addAll(ability.getTooltip(detail, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
+            components.addAll(ability.getTooltip(detail, itemStack, AbilityItemUtils.getAbilityRank(ability, itemStack, player)));
         }
 
         components.add(Component.literal(""));
@@ -211,9 +210,7 @@ public class AethersEmbraceBow extends ArmoryBowItem implements ResourceItem, Ac
 
             Vec3 arrowPosData = new Vec3(xTarget + xRelative, yTarget + yRelative, zTarget + zRelative);
             Arrow skyArrow = new EphemeralArrow(EntityType.ARROW, serverLevel);
-            skyArrow.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
-                projectileData.setArrowType(IArmoryArrowStorage.ArmoryArrowType.AETHER.getType());
-            });
+            skyArrow.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> projectileData.setEphemeral(true));
             skyArrow.setPos(arrowPosData.x, arrowPosData.y, arrowPosData.z);
             skyArrow.setDeltaMovement(arrowPosData.subtract(target.position()).add(0, -1, 0).normalize().multiply(-1.75, -1.75, -1.75));
 

@@ -36,9 +36,9 @@ public class AethersEmbraceResource extends ArmoryResource {
     }
 
     @Override
-    public double getResource(ItemStack itemStack) { return ((ArmoryResourceStorage)itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get()).getCharge(); }
+    public double getResource(ItemStack itemStack) { return itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get().getCharge(); }
     @Override
-    public ArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return ((ArmoryResourceStorage)itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get()); }
+    public ArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return itemStack.getCapability(AethersEmbraceProvider.AETHERS_EMBRACE).resolve().get(); }
 
     @Override
     public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) {
@@ -73,7 +73,7 @@ public class AethersEmbraceResource extends ArmoryResource {
         arrow.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
             UUID itemUUID = projectileData.getItemUUID();
             if (itemUUID == null) return;
-            if (projectileData.getArrowType() == IArmoryArrowStorage.ArmoryArrowType.AETHER.getType()) return;
+            if (projectileData.isEphemeral()) return;
 
             boolean doubled = arrow.isCritArrow();
             AethersEmbraceBow mainHandBow = checkIfItemValid(player.getMainHandItem(), itemUUID);

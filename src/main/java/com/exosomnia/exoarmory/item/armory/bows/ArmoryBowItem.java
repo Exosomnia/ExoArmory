@@ -87,5 +87,10 @@ public abstract class ArmoryBowItem extends BowItem implements ArmoryItem {
     public boolean ignoreCapabilitiesForMatch() {
         return true;
     }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack p_43311_, ItemStack p_43312_) {
+        return p_43312_.is(Items.DIAMOND);
+    }
     //endregion
 }

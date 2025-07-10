@@ -11,7 +11,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -53,8 +52,8 @@ public class RadiantSmiteAbility extends ArmoryAbility implements LivingHurtPerk
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

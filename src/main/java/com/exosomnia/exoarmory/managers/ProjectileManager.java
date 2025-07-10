@@ -95,7 +95,6 @@ public class ProjectileManager {
                             }
                             //Check for Aether Barrage ability
                             if (ExoArmory.ABILITY_MANAGER.isPlayerActive(player)) {
-
                                 ArmoryResource resource = aetherBow.getResource();
                                 double cost = Abilities.AETHER_BARRAGE.getStatForRank(AetherBarrageAbility.Stats.COST, rank);
                                 if (resource.getResource(weapon) >= cost) {
@@ -123,9 +122,6 @@ public class ProjectileManager {
     public void projectileImpact(ProjectileImpactEvent event) {
         Projectile projectile = event.getProjectile();
         if (projectile.level().isClientSide || !(projectile instanceof AbstractArrow arrow)) { return; }
-        projectile.getCapability(ArmoryArrowProvider.ARMORY_PROJECTILE).ifPresent(projectileData -> {
-            if (projectileData.isEphemeral()) { projectile.remove(Entity.RemovalReason.DISCARDED); }
-        });
 
         if (arrow.getOwner() instanceof Player player && event.getRayTraceResult().getType().equals(HitResult.Type.BLOCK) &&
                 arrow.getPersistentData().getBoolean("Recovery")) {

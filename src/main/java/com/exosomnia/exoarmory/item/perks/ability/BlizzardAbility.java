@@ -1,33 +1,18 @@
 package com.exosomnia.exoarmory.item.perks.ability;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.actions.ActionManager;
 import com.exosomnia.exoarmory.actions.BlizzardAction;
 import com.exosomnia.exoarmory.item.perks.event.handlers.PerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.interfaces.LivingDeathPerk;
 import com.exosomnia.exoarmory.utils.AbilityItemUtils;
-import com.exosomnia.exoarmory.utils.ArmoryItemUtils;
-import com.exosomnia.exoarmory.utils.TargetUtils;
-import com.exosomnia.exolib.ExoLib;
-import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
-import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
-import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
-import com.exosomnia.exolib.particles.shapes.ParticleShapeRing;
-import com.exosomnia.exolib.utils.ColorUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import java.util.ArrayList;
@@ -59,8 +44,8 @@ public class BlizzardAbility extends ArmoryAbility implements LivingDeathPerk {
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

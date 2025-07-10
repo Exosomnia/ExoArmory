@@ -2,6 +2,7 @@ package com.exosomnia.exoarmory.item.perks.ability;
 
 import com.exosomnia.exoarmory.item.perks.event.handlers.PerkHandler;
 import com.exosomnia.exoarmory.item.perks.event.interfaces.LivingHurtPerk;
+import com.exosomnia.exoarmory.item.perks.resource.ResourceItem;
 import com.exosomnia.exoarmory.utils.AbilityItemUtils;
 import com.exosomnia.exoarmory.utils.ResourceItemUtils;
 import com.exosomnia.exolib.utils.ComponentUtils;
@@ -32,12 +33,14 @@ public class LightsVengeanceAbility extends ArmoryAbility implements LivingHurtP
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
+
+        String resourceName = (itemStack.getItem() instanceof ResourceItem resourceItem) ? resourceItem.getResource().getDisplayName() : "Unknown";
 
         switch (detail) {
             case DESCRIPTION:
-                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.lights_vengeance.line.1"), ComponentUtils.Styles.DEFAULT_DESC.getStyle(),
+                description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.lights_vengeance.line.1", resourceName), ComponentUtils.Styles.DEFAULT_DESC.getStyle(),
                         ComponentUtils.Styles.HIGHLIGHT_DESC.getStyle()));
                 description.add(ComponentUtils.formatLine(I18n.get("ability.exoarmory.desc.lights_vengeance.line.2"), ComponentUtils.Styles.DEFAULT_DESC.getStyle()));
                 break;

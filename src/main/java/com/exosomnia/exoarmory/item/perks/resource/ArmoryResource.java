@@ -35,17 +35,35 @@ public abstract class ArmoryResource implements ItemPerk {
     public int getRGB() { return rgb; }
 
     public String getInternalID() { return id; }
-    public String getDisplayName() { return I18n.get(String.format(NAME_TRANSLATION_FORMAT, id)); }
 
     public double getResourceMax() { return max; }
-    public ArmoryResourceStorage getResourceStorage(ItemStack itemStack) { return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get(); }
-    public double getResource(ItemStack itemStack) { return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get().getCharge(); }
-    public void addResource(ItemStack itemStack, double amount) { getResourceStorage(itemStack).addCharge(amount, max); }
-    public void removeResource(ItemStack itemStack, double amount) { getResourceStorage(itemStack).removeCharge(amount); }
 
-    public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) { return List.of(getDefaultTooltip(itemStack)); }
+    public String getDisplayName() {
+        return I18n.get(String.format(NAME_TRANSLATION_FORMAT, id));
+    }
+
+    public ArmoryResourceStorage getResourceStorage(ItemStack itemStack) {
+        return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get();
+    }
+
+    public double getResource(ItemStack itemStack) {
+        return itemStack.getCapability(ArmoryResourceProvider.ARMORY_RESOURCE).resolve().get().getCharge();
+    }
+
+    public void addResource(ItemStack itemStack, double amount) {
+        getResourceStorage(itemStack).addCharge(amount, max);
+    }
+
+    public void removeResource(ItemStack itemStack, double amount) {
+        getResourceStorage(itemStack).removeCharge(amount);
+    }
+
+    public List<MutableComponent> getTooltip(DetailLevel detail, int rank, ItemStack itemStack) {
+        return List.of(getDefaultTooltip(itemStack));
+    }
+
     protected MutableComponent getDefaultTooltip(ItemStack itemStack) {
-        if (!(itemStack.getItem() instanceof ResourceItem resourcedItem)) { return null; }
+        if (!(itemStack.getItem() instanceof ResourceItem)) { return null; }
         return Component.translatable(String.format(NAME_TRANSLATION_FORMAT, id)).withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle())
             .append(Component.literal(": ").withStyle(ComponentUtils.Styles.INFO_HEADER.getStyle().withUnderlined(false)))
             .append(Component.literal(String.valueOf((int)getResource(itemStack))).withStyle(ComponentUtils.Styles.BLANK.getStyle().withColor(ChatFormatting.AQUA)))
@@ -54,6 +72,7 @@ public abstract class ArmoryResource implements ItemPerk {
     }
 
     public abstract void buildRanks();
+
     public double getStatForRank(ResourceStat stat, int rank) {
         double[] stats = RANK_STATS.get(stat);
         if (stats == null) return 0.0;

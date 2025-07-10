@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public abstract class ArmoryAbility implements ItemPerk {
 
     public int getRGB() { return rgb; }
 
-    public List<MutableComponent> getTooltip(DetailLevel detail, int rank) { return List.of(getDefaultTooltip()); }
+    public List<MutableComponent> getTooltip(DetailLevel detail, ItemStack itemStack, int rank) { return List.of(getDefaultTooltip()); }
     protected MutableComponent getDefaultTooltip() { return defaultTooltip; }
 
     public abstract void buildStats();

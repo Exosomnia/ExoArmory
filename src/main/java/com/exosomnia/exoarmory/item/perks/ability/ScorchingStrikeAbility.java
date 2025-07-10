@@ -2,16 +2,10 @@ package com.exosomnia.exoarmory.item.perks.ability;
 
 import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoarmory.item.perks.event.handlers.PerkHandler;
-import com.exosomnia.exoarmory.item.perks.event.interfaces.CriticalHitPerk;
 import com.exosomnia.exoarmory.item.perks.event.interfaces.LivingHurtPerk;
 import com.exosomnia.exoarmory.utils.AbilityItemUtils;
-import com.exosomnia.exoarmory.utils.ResourceItemUtils;
 import com.exosomnia.exoarmory.utils.TargetUtils;
-import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
-import com.exosomnia.exolib.particles.options.RGBSParticleOptions;
-import com.exosomnia.exolib.particles.shapes.ParticleShape;
-import com.exosomnia.exolib.particles.shapes.ParticleShapeDome;
 import com.exosomnia.exolib.particles.shapes.ParticleShapeLine;
 import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
 import com.exosomnia.exolib.utils.ComponentUtils;
@@ -22,22 +16,16 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.CriticalHitEvent;
-import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -72,8 +60,8 @@ public class ScorchingStrikeAbility extends ArmoryAbility implements LivingHurtP
     }
 
     @Override
-    public List<MutableComponent> getTooltip(DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

@@ -64,8 +64,8 @@ public class SolarFlareAbility extends ArmoryAbility implements CriticalHitPerk 
     }
 
     @Override
-    public List<MutableComponent> getTooltip(DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:

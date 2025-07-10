@@ -1,7 +1,6 @@
 package com.exosomnia.exoarmory.item.perks.ability;
 
 import com.exosomnia.exoarmory.ExoArmory;
-import com.exosomnia.exoarmory.utils.ResourceItemUtils;
 import com.exosomnia.exoarmory.utils.TargetUtils;
 import com.exosomnia.exolib.ExoLib;
 import com.exosomnia.exolib.networking.PacketHandler;
@@ -19,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +52,8 @@ public class BlindingBurstAbility extends ArmoryAbility {
     }
 
     @Override
-    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, int rank) {
-        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, rank));
+    public List<MutableComponent> getTooltip(ComponentUtils.DetailLevel detail, ItemStack itemStack, int rank) {
+        List<MutableComponent> description = new ArrayList<>(super.getTooltip(detail, itemStack, rank));
 
         switch (detail) {
             case DESCRIPTION:
